@@ -260,7 +260,7 @@ st.markdown(f"""
   .cup-subtitle {{ color: var(--muted); font-size: 1.08rem; font-weight: 500; margin-top: -1.4rem!important; margin-bottom: 1.0rem!important; letter-spacing: .1px; }}
 </style>
 <div class="cup-hero"><h1>Stay or Skip</h1><img src="{icon_datauri}" alt="play icon" /></div>
-<p class="cup-subtitle">Retention is the new acquisition.</p>
+<p class="cup-subtitle">Streaming Subscription Analysis with AARRR Framework</p>
 """, unsafe_allow_html=True)
 vgap(36)
 
