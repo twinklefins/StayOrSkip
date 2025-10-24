@@ -1,0 +1,20 @@
+{
+  "rows": 3120,
+  "distinct_users": 520,
+  "duplicates": 0,
+  "na_top5": {
+    "userid": 0,
+    "music_Influencial_mood": 0,
+    "timestamp_dt": 0,
+    "month_key": 0,
+    "revenue_num": 0
+  },
+  "month_range": {
+    "min": "2023-01",
+    "max": "2023-06"
+  },
+  "plan_counts": {
+    "Free": 2334,
+    "Premium": 786
+  }
+}
