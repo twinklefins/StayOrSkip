@@ -524,7 +524,7 @@ if section == "PROJECT OVERVIEW":
         vgap(18)
 
         # 4) 데이터 정합성 & 결측치
-        section_title("Data Quality Check", "데이터 정합성 및 결측치 현황")
+        section_title("Data Quality Check", "결측치 현황 및 데이터 정합성")
         st.markdown(f"""
         <div class="cup-card">
         - 병합 기준: <b>userid</b> (매출 ⟷ 원본 설문)<br>
