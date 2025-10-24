@@ -382,6 +382,47 @@ if section == "PROJECT OVERVIEW":
         </div>
         """, unsafe_allow_html=True)
 
+        # --- Project brief ---
+        st.markdown("""
+        <div class="cup-card" style="margin-top:1.4rem;">
+        <h4 style="margin:0 0 .6rem 0;">🎬 프로젝트 개요 (요약)</h4>
+        <p style="color:#D7E4DC; line-height:1.75; margin:.2rem 0 .8rem 0;">
+            • 문제의식: 유입은 충분하지만 Free ↔ Premium 변동이 잦고, 1–2개월 내 이탈이 발생함.<br>
+            • 분석목표: 6개월 데이터에서 <b>전환·유지·이탈</b>을 정량화하고, 유지에 기여하는 행동/속성을 규명.<br>
+            • 분석틀: <b>AARRR</b> — Acquisition → Activation → <b>Retention</b> → Revenue → Referral.<br>
+            • 이번 데이터: Kaggle <i>Spotify User Behavior Dataset</i>에 <b>추가 생성한 프리미엄 구독료(6개월)</b> 컬럼을 병합(merged).<br>
+            • 산출물: 핵심 KPI 시계열/분포, 전환 퍼널, 코호트·유지율, LTV 인사이트 및 실행 전략.
+        </p>
+
+        <h4 style="margin:1.0rem 0 .4rem 0;">👥 팀 역할 & 포커스</h4>
+        <table style="width:100%; font-size:0.95rem; color:#D7E4DC; border-collapse:collapse;">
+            <thead>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.10);">
+                <th style="text-align:left; padding:.4rem .3rem;">Stage</th>
+                <th style="text-align:left; padding:.4rem .3rem;">담당</th>
+                <th style="text-align:left; padding:.4rem .3rem;">핵심 과제</th>
+                <th style="text-align:left; padding:.4rem .3rem;">핵심 질문</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr><td style="padding:.38rem .3rem;">Acquisition</td><td style="padding:.38rem .3rem;">서별</td><td style="padding:.38rem .3rem;">신규 유입 구조 파악</td><td style="padding:.38rem .3rem;">누가 처음 들어오는가?</td></tr>
+            <tr><td style="padding:.38rem .3rem;">Activation</td><td style="padding:.38rem .3rem;">천지우</td><td style="padding:.38rem .3rem;">Free→Premium 전환</td><td style="padding:.38rem .3rem;">무엇이 전환을 만든가?</td></tr>
+            <tr><td style="padding:.38rem .3rem;">Retention ⭐</td><td style="padding:.38rem .3rem;">김채린</td><td style="padding:.38rem .3rem;">Premium 유지 요인 규명</td><td style="padding:.38rem .3rem;">누가, 왜 남는가?</td></tr>
+            <tr><td style="padding:.38rem .3rem;">Revenue</td><td style="padding:.38rem .3rem;">이유주</td><td style="padding:.38rem .3rem;">수익/LTV 영향</td><td style="padding:.38rem .3rem;">유지가 수익에 얼마나 기여?</td></tr>
+            </tbody>
+        </table>
+
+        <h4 style="margin:1.0rem 0 .4rem 0;">📏 핵심 KPI (정의)</h4>
+        <ul style="margin:.2rem 0 0 1.1rem; padding:0; line-height:1.75;">
+            <li><b>전환율</b> = (Free→Premium 사용자 수) / (기준 Free 사용자 수)</li>
+            <li><b>유지율</b> = (t월 Premium &amp; t+1월 Premium) / (t월 Premium)</li>
+            <li><b>이탈율</b> = 1 − 유지율</li>
+            <li><b>ARPU</b> = (기간 구독료 합계) / (활성 사용자 수)</li>
+            <li><b>LTV(간단)</b> = ARPU × 평균 유지개월</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
         # --- 기존 핵심 요약표 아래에 추가 ---
         section_title("Full Column List", "머지드 데이터셋의 전체 컬럼 및 설명 요약", top_gap=10, bottom_gap=6)
 
@@ -429,7 +470,7 @@ if section == "PROJECT OVERVIEW":
         muted = "rgba(255,255,255,0.65)"
 
         # 1) 월별 매출 라인 (툴팁+줌)
-        section_title("Monthly Revenue Trend", "월별 총매출 추이(₩) – 툴팁/드래그 줌 지원")
+        section_title("Monthly Revenue Trend", "월별 총매출 추이(₩)")
         rev_col = "revenue_num" if "revenue_num" in tidy.columns else "revenue"
         df_rev = tidy[["month", rev_col]].copy()
         # revenue 문자열일 수 있어 숫자화 한번 더 안전 처리
