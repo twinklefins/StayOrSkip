@@ -1,0 +1,134 @@
+,importance
+is_premium,0.5
+subscription_plan_Premium,0.5
+premium_sub_willingness,0.0
+fav_pod_genre_Everything,0.0
+pod_lis_frequency_Rarely,0.0
+pod_lis_frequency_Several times a week,0.0
+fav_pod_genre_Comedy,0.0
+fav_pod_genre_Dance and Relevant cases,0.0
+fav_pod_genre_Educational,0.0
+fav_pod_genre_Finance related and current affairs,0.0
+pod_lis_frequency_Never,0.0
+fav_pod_genre_Food and cooking,0.0
+fav_pod_genre_General knowledge,0.0
+fav_pod_genre_Health and Fitness,0.0
+fav_pod_genre_Informative stuff,0.0
+fav_pod_genre_Lifestyle and Health,0.0
+fav_pod_genre_Murder Mystery,0.0
+pod_lis_frequency_Once a week,0.0
+"music_expl_method_recommendations,Others, Social media",0.0
+fav_pod_genre_Novels,0.0
+"music_expl_method_recommendations, Radio, Others",0.0
+"music_expl_method_recommendations, Radio",0.0
+"music_expl_method_recommendations, Playlists, Radio, Others",0.0
+"music_expl_method_recommendations, Playlists, Radio",0.0
+"music_expl_method_recommendations, Playlists, Others",0.0
+"music_expl_method_recommendations, Playlists",0.0
+"music_expl_method_recommendations, Others, Social media",0.0
+"music_expl_method_recommendations, Others",0.0
+music_expl_method_recommendations,0.0
+"music_expl_method_Radio, Others",0.0
+music_expl_method_Radio,0.0
+"music_expl_method_Playlists, Radio, Others",0.0
+"music_expl_method_Playlists, Radio",0.0
+fav_pod_genre_No preference / Not applicable,0.0
+fav_pod_genre_Self help,0.0
+"fav_pod_genre_Political, informative, topics that interests me",0.0
+music_expl_method_Playlists,0.0
+"spotify_listening_device_Smartphone, Wearable devices",0.0
+"spotify_listening_device_Smartphone, Smart speakers or voice assistants, Wearable devices",0.0
+"spotify_listening_device_Smartphone, Smart speakers or voice assistants",0.0
+"spotify_listening_device_Smartphone, Computer or laptop, Wearable devices",0.0
+"spotify_listening_device_Smartphone, Computer or laptop, Smart speakers or voice assistants, Wearable devices",0.0
+"spotify_listening_device_Smartphone, Computer or laptop, Smart speakers or voice assistants",0.0
+"spotify_listening_device_Smartphone, Computer or laptop",0.0
+spotify_listening_device_Smartphone,0.0
+"spotify_listening_device_Smart speakers or voice assistants, Wearable devices",0.0
+spotify_listening_device_Smart speakers or voice assistants,0.0
+"spotify_listening_device_Computer or laptop, Wearable devices",0.0
+"spotify_listening_device_Computer or laptop, Smart speakers or voice assistants, Wearable devices",0.0
+"spotify_listening_device_Computer or laptop, Smart speakers or voice assistants",0.0
+pod_variety_satisfaction_Satisfied,0.0
+pod_variety_satisfaction_Neutral,0.0
+preffered_pod_duration_Shorter,0.0
+preffered_pod_duration_No preference / Not applicable,0.0
+preffered_pod_duration_Longer,0.0
+pod_host_preference_unknown Podcasters,0.0
+pod_host_preference_Well known individuals,0.0
+pod_host_preference_No preference / Not applicable,0.0
+preffered_pod_format_Story telling,0.0
+preffered_pod_format_No preference / Not applicable,0.0
+preffered_pod_format_Interview,0.0
+preffered_pod_format_Educational,0.0
+fav_pod_genre_Technology,0.0
+fav_pod_genre_Stories,0.0
+fav_pod_genre_Sports,0.0
+fav_pod_genre_Spiritual and devotional,0.0
+"music_expl_method_Playlists, Others",0.0
+"music_expl_method_Others, Social media",0.0
+music_recc_rating,0.0
+"music_lis_frequency_Office hours, Study Hours, While Traveling, Workout session, leisure time,",0.0
+"music_lis_frequency_Office hours, Study Hours, While Traveling, Workout session",0.0
+"music_lis_frequency_Office hours, Study Hours, While Traveling",0.0
+"music_Influencial_mood_Uplifting and motivational, Social gatherings or parties",0.0
+"music_Influencial_mood_Uplifting and motivational, Sadness or melancholy, Social gatherings or parties",0.0
+"music_Influencial_mood_Uplifting and motivational, Sadness or melancholy",0.0
+music_Influencial_mood_Uplifting and motivational,0.0
+music_Influencial_mood_Social gatherings or parties,0.0
+"music_Influencial_mood_Sadness or melancholy, Social gatherings or parties",0.0
+music_Influencial_mood_Sadness or melancholy,0.0
+"music_Influencial_mood_Relaxation and stress relief, Uplifting and motivational, Social gatherings or parties",0.0
+"music_Influencial_mood_Relaxation and stress relief, Uplifting and motivational, Sadness or melancholy, Social gatherings or parties",0.0
+"music_Influencial_mood_Relaxation and stress relief, Uplifting and motivational, Sadness or melancholy",0.0
+"music_Influencial_mood_Relaxation and stress relief, Uplifting and motivational",0.0
+"music_Influencial_mood_Relaxation and stress relief, Social gatherings or parties",0.0
+"music_Influencial_mood_Relaxation and stress relief, Sadness or melancholy, Social gatherings or parties",0.0
+"music_Influencial_mood_Relaxation and stress relief, Sadness or melancholy",0.0
+music_time_slot_Night,0.0
+music_time_slot_Morning,0.0
+fav_music_genre_trending songs random,0.0
+fav_music_genre_classical,0.0
+fav_music_genre_Rock,0.0
+fav_music_genre_Rap,0.0
+fav_music_genre_Pop,0.0
+fav_music_genre_Old songs,0.0
+fav_music_genre_Melody,0.0
+fav_music_genre_Kpop,0.0
+fav_music_genre_Electronic/Dance,0.0
+"fav_music_genre_Classical & melody, dance",0.0
+preferred_listening_content_Podcast,0.0
+"music_lis_frequency_Office hours, Study Hours, While Traveling, Workout session, leisure time",0.0
+"music_lis_frequency_Office hours, Study Hours, While Traveling, leisure time",0.0
+"music_expl_method_Others, Search",0.0
+"music_lis_frequency_Office hours, Study Hours, Workout session",0.0
+"music_expl_method_Others, Friends",0.0
+music_lis_frequency_leisure time,0.0
+"music_lis_frequency_Workout session, leisure time",0.0
+music_lis_frequency_Workout session,0.0
+"music_lis_frequency_While Traveling, leisure time",0.0
+"music_lis_frequency_While Traveling, Workout session, leisure time, Night time, when cooking",0.0
+"music_lis_frequency_While Traveling, Workout session, leisure time",0.0
+"music_lis_frequency_While Traveling, Workout session",0.0
+"music_lis_frequency_While Traveling, Before bed",0.0
+music_lis_frequency_While Traveling,0.0
+"music_lis_frequency_Study Hours, leisure time",0.0
+"music_lis_frequency_Study Hours, Workout session, leisure time",0.0
+"music_lis_frequency_Study Hours, Workout session",0.0
+"music_lis_frequency_Study Hours, While Traveling, leisure time",0.0
+"music_lis_frequency_Study Hours, While Traveling, Workout session, leisure time",0.0
+"music_lis_frequency_Study Hours, While Traveling, Workout session",0.0
+"music_lis_frequency_Study Hours, While Traveling",0.0
+music_lis_frequency_Study Hours,0.0
+music_lis_frequency_Social gatherings,0.0
+music_lis_frequency_Random,0.0
+"music_lis_frequency_Office hours,Study Hours, While Traveling, leisure time",0.0
+"music_lis_frequency_Office hours, leisure time",0.0
+"music_lis_frequency_Office hours, Workout session, leisure time",0.0
+"music_lis_frequency_Office hours, Workout session",0.0
+"music_lis_frequency_Office hours, While Traveling, leisure time",0.0
+"music_lis_frequency_Office hours, While Traveling, Workout session, leisure time",0.0
+"music_lis_frequency_Office hours, While Traveling, Workout session",0.0
+"music_lis_frequency_Office hours, While Traveling,",0.0
+"music_lis_frequency_Office hours, While Traveling",0.0
+spotify_listening_device_Wearable devices,0.0

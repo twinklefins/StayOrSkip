@@ -1,0 +1,26 @@
+feature,test_type,p_value,note
+premium_sub_willingness,ANOVA (LTV),8.885362964334628e-11,p<0.05 → LTV 평균 차이가 유의미함
+preffered_pod_duration,ANOVA (LTV),1.263550226737403e-08,p<0.05 → LTV 평균 차이가 유의미함
+preffered_premium_plan,ANOVA (LTV),2.399703214179435e-08,p<0.05 → LTV 평균 차이가 유의미함
+premium_sub_willingness,chi2 (conversion),6.09385952182027e-07,p<0.05 → 전환율 차이가 유의미함
+music_recc_rating,ANOVA (LTV),4.1289076091270204e-05,p<0.05 → LTV 평균 차이가 유의미함
+preffered_premium_plan,chi2 (conversion),0.0001188696852247346,p<0.05 → 전환율 차이가 유의미함
+preferred_listening_content,ANOVA (LTV),0.0002742748248152904,p<0.05 → LTV 평균 차이가 유의미함
+pod_host_preference,ANOVA (LTV),0.005180074895590689,p<0.05 → LTV 평균 차이가 유의미함
+music_time_slot,ANOVA (LTV),0.010476668647844602,p<0.05 → LTV 평균 차이가 유의미함
+pod_lis_frequency,ANOVA (LTV),0.02212103223020404,p<0.05 → LTV 평균 차이가 유의미함
+music_lis_frequency,chi2 (conversion),0.03911298116498982,p<0.05 → 전환율 차이가 유의미함
+preffered_pod_duration,chi2 (conversion),0.044831313804734936,p<0.05 → 전환율 차이가 유의미함
+preferred_listening_content,chi2 (conversion),0.05884611883823598,p<0.05 → 전환율 차이가 유의미함
+music_expl_method,chi2 (conversion),0.07583480827489866,p<0.05 → 전환율 차이가 유의미함
+pod_host_preference,chi2 (conversion),0.08368024335602516,p<0.05 → 전환율 차이가 유의미함
+fav_pod_genre,chi2 (conversion),0.08728536773652336,p<0.05 → 전환율 차이가 유의미함
+pod_variety_satisfaction,chi2 (conversion),0.0924637987637562,p<0.05 → 전환율 차이가 유의미함
+preffered_pod_format,ANOVA (LTV),0.10045132665697126,p<0.05 → LTV 평균 차이가 유의미함
+music_time_slot,chi2 (conversion),0.12843478265934608,p<0.05 → 전환율 차이가 유의미함
+pod_variety_satisfaction,ANOVA (LTV),0.14290736577306923,p<0.05 → LTV 평균 차이가 유의미함
+music_Influencial_mood,chi2 (conversion),0.21702394100498168,p<0.05 → 전환율 차이가 유의미함
+preffered_pod_format,chi2 (conversion),0.21706799296470553,p<0.05 → 전환율 차이가 유의미함
+music_recc_rating,chi2 (conversion),0.28422767949983324,p<0.05 → 전환율 차이가 유의미함
+fav_music_genre,chi2 (conversion),0.3814143077434611,p<0.05 → 전환율 차이가 유의미함
+pod_lis_frequency,chi2 (conversion),0.46145373348855934,p<0.05 → 전환율 차이가 유의미함
