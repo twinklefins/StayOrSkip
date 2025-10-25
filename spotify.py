@@ -400,119 +400,60 @@ if section == "PROJECT OVERVIEW":
             <div class="cup-one-liner">“Retention is the new acquisition — 남게 만드는 전략이 Spotify Korea의 성장을 결정한다.”</div>
             """, unsafe_allow_html=True)
 
-            # (2) 시네마틱 박스
-            st.markdown("""
-            <div style="
-            background:linear-gradient(135deg, rgba(25,20,20,0.95), rgba(0,0,0,0.85));
-            border:1px solid rgba(255,255,255,0.08);
-            border-radius:14px;
-            padding:2.2rem 2.5rem;
-            text-align:center;
-            color:#F9FCF9;
-            line-height:1.75;
-            box-shadow:0 0 25px rgba(29,185,84,.25);
-            margin-top: 1.2rem;
-            ">
-            <p style="font-size:1.3rem; margin-bottom:1.2rem;">🎧 <b>“Skip Generation — 스킵은 빠르지만, 이탈은 더 빨랐다.”</b></p>
-
-            <p style="font-size:1.05rem; color:rgba(255,255,255,.85);">
-                스트리밍 세상의 체험 유목민들.<br>
-                한 곡 듣고 넘기고, 한 달 듣고 떠난 사람들.
-            </p>
-
-            <p style="margin-top:1.2rem; font-size:1.05rem; color:rgba(255,255,255,.9);">
-                <b>Spotify Korea TF 데이터컵밥팀</b>은 그들의 <b>패턴</b>을 데이터로 추적해,<br>
-                ‘<b>스킵 제너레이션</b>’을 이탈로부터 구하고<br>
-                ‘<b>스테이 제너레이션</b>’으로 재탄생시키기 위한 <b>작전</b>을 시작했다.
-            </p>
-            </div>
-            """, unsafe_allow_html=True)
-
-            # (3) 미션 임파서블 스타일: 타자 효과 + 스캔라인
-            st.markdown("""
-            <style>
-            .mi-wrap{
-            margin-top: 1.0rem;
-            padding: 1.6rem 1.8rem;
-            border: 1px solid rgba(255,255,255,.12);
+        # (2) 시네마틱 박스 — 카드와 동일한 스타일 + 그린 포인트 + 인라인 미션코드
+        st.markdown("""
+        <style>
+        /* 카드와 동일한 톤 */
+        .cup-scene {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.10);
             border-radius: 12px;
-            background:
-                repeating-linear-gradient(
-                to bottom,
-                rgba(255,255,255,0.03) 0px,
-                rgba(255,255,255,0.03) 2px,
-                rgba(0,0,0,0.0) 3px,
-                rgba(0,0,0,0.0) 6px
-                ),
-                linear-gradient(145deg, rgba(29,185,84,.08), rgba(255,255,255,.02));
-            position: relative;
-            overflow: hidden;
+            padding: 2.0rem 2.2rem;
             text-align: center;
-            box-shadow: 0 0 25px rgba(29,185,84,.18);
-            }
-            .mi-heading{
-            display:inline-block;
-            font-weight:800;
-            letter-spacing:.18em;
-            font-size:.88rem;
-            color:#FF4D4D;
-            padding:.18rem .55rem;
-            border:1px solid rgba(255,77,77,.5);
-            border-radius:6px;
-            text-transform:uppercase;
-            box-shadow: 0 0 8px rgba(255,77,77,.25), inset 0 0 6px rgba(255,77,77,.15);
-            background: rgba(255,77,77,.06);
-            }
-            .mi-body{
-            margin-top:.9rem;
-            font-family: "SFMono-Regular", Menlo, Consolas, monospace;
-            font-size:1.35rem;
-            color:#F9FCF9;
-            letter-spacing:.06em;
-            }
-            .mi-type{
-            display:inline-block;
-            overflow:hidden;
-            white-space:nowrap;
-            border-right:2px solid #1ED760;
-            box-sizing:border-box;
-            width:0;
-            animation: mi-typing 1.8s steps(5, end) forwards, mi-caret .7s step-end infinite;
-            }
-            @keyframes mi-typing{
-            from{ width:0; }
-            to{ width: 5.2ch; }
-            }
-            @keyframes mi-caret{
-            50% { border-color: transparent; }
-            }
-            .mi-foot{
-            margin-top:.75rem;
-            font-size:.82rem;
-            letter-spacing:.12em;
-            color:#D7E4DC;
-            opacity:.9;
-            }
-            .mi-wrap:before, .mi-wrap:after{
-            content:"";
-            position:absolute;
-            width:18px; height:18px;
-            border:2px solid rgba(29,185,84,.55);
-            filter: drop-shadow(0 0 6px rgba(29,185,84,.35));
-            }
-            .mi-wrap:before{ left:10px; top:10px; border-right:none; border-bottom:none; }
-            .mi-wrap:after{ right:10px; bottom:10px; border-left:none; border-top:none; }
-            </style>
+            color: #F9FCF9;
+            line-height: 1.82;
+            box-shadow: 0 0 15px rgba(29,185,84,.18);
+            margin-top: 1.2rem;
+        }
+        .cup-scene .brand { color:#1ED760; font-weight:700; }
+        .cup-scene .em { color:rgba(255,255,255,.88); font-style: italic; }
 
-            <div class="mi-wrap">
-            <div class="mi-heading">MISSION CODE</div>
-            <div class="mi-body">
-                <span style="opacity:.8;">▶</span>
-                <span class="mi-type">AARRR</span>
-            </div>
-            <div class="mi-foot">AUTHORIZATION: LEVEL GREEN · CHANNEL: STAY OR SKIP</div>
-            </div>
-            """, unsafe_allow_html=True)
+        /* 미션코드 배지(작게, 하단에 살짝) */
+        .cup-mission {
+            display:inline-block;
+            margin-top: 1.2rem;
+            padding: .24rem .6rem;
+            border-radius: 6px;
+            border:1px solid rgba(29,185,84,.45);
+            background: rgba(29,185,84,.10);
+            color:#1ED760;
+            font-weight:800;
+            font-size:.86rem;
+            letter-spacing:.14em;
+            text-transform:uppercase;
+        }
+        </style>
+
+        <div class="cup-scene">
+        <p style="font-size:1.28rem; margin-bottom:1.1rem;">
+            🎧 <b>“Skip Generation — 스킵은 빠르지만, 이탈은 더 빨랐다.”</b>
+        </p>
+
+        <p style="font-size:1.05rem; color:rgba(255,255,255,.86);">
+            스트리밍 세상의 <span class="em">체험 유목민들</span>.<br>
+            한 곡 듣고 넘기고, 한 달 듣고 떠난 사람들.
+        </p>
+
+        <p style="margin-top:1.0rem; font-size:1.05rem;">
+            <b>Spotify Korea TF <span class="brand">데이터컵밥팀</span></b>은 그들의
+            <b class="brand">패턴</b>을 데이터로 추적해,<br>
+            ‘<b class="brand">스킵 제너레이션</b>’을 이탈로부터 구하고<br>
+            ‘<b class="brand">스테이 제너레이션</b>’으로 재탄생시키기 위한 <b class="brand">작전</b>을 시작했다.
+        </p>
+
+        <div class="cup-mission">MISSION CODE · AARRR</div>
+        </div>
+        """, unsafe_allow_html=True)
 
     # ---- Dataset (tabs[3]) ----
     with tabs[3]:
