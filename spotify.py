@@ -432,6 +432,103 @@ if section == "PROJECT OVERVIEW":
             🎯 미션 코드: <span style="color:#1ED760;">AARRR</span>
         </p>
         </div>
+
+        /* ====== Mission:Impossible 분위기 ====== */
+        .mi-wrap{
+        margin-top: 1.6rem;
+        padding: 1.6rem 1.8rem;
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 12px;
+        background:
+            /* scanline */
+            repeating-linear-gradient(
+            to bottom,
+            rgba(255,255,255,0.03) 0px,
+            rgba(255,255,255,0.03) 2px,
+            rgba(0,0,0,0.0) 3px,
+            rgba(0,0,0,0.0) 6px
+            ),
+            linear-gradient(145deg, rgba(29,185,84,.08), rgba(255,255,255,.02));
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        box-shadow: 0 0 25px rgba(29,185,84,.18);
+        }
+
+        /* 상단 라벨 (MISSION CODE) */
+        .mi-heading{
+        display:inline-block;
+        font-weight:800;
+        letter-spacing:.18em;
+        font-size:.88rem;
+        color:#FF4D4D; /* 미션 임파서블 느낌의 레드 라벨 */
+        padding:.18rem .55rem;
+        border:1px solid rgba(255,77,77,.5);
+        border-radius:6px;
+        text-transform:uppercase;
+        box-shadow: 0 0 8px rgba(255,77,77,.25), inset 0 0 6px rgba(255,77,77,.15);
+        background: rgba(255,77,77,.06);
+        }
+
+        /* 본문 라인 */
+        .mi-body{
+        margin-top:.9rem;
+        font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+        font-size:1.35rem;
+        color:#F9FCF9;
+        letter-spacing:.06em;
+        }
+
+        /* AARRR 타자기 효과 + 커서 깜빡임 */
+        .mi-type{
+        display:inline-block;
+        overflow:hidden;
+        white-space:nowrap;
+        border-right:2px solid #1ED760;            /* 커서 */
+        box-sizing: border-box;
+        /* 글자수 5 (A A R R R) → steps(5, end) */
+        width:0;
+        animation: mi-typing 1.8s steps(5, end) forwards, mi-caret .7s step-end infinite;
+        }
+
+        @keyframes mi-typing{
+        from{ width:0; }
+        to{ width: 5.2ch; } /* 글자수에 맞춰 살짝 여유 */
+        }
+
+        @keyframes mi-caret{
+        50% { border-color: transparent; }
+        }
+
+        /* 하단 권한 라인 (옵션) */
+        .mi-foot{
+        margin-top:.75rem;
+        font-size:.82rem;
+        letter-spacing:.12em;
+        color:#D7E4DC;
+        opacity:.9;
+        }
+
+        /* 좌우 브래킷 느낌 (액션무비 톤) */
+        .mi-wrap:before, .mi-wrap:after{
+        content:"";
+        position:absolute;
+        width:18px; height:18px;
+        border:2px solid rgba(29,185,84,.55);
+        filter: drop-shadow(0 0 6px rgba(29,185,84,.35));
+        }
+        .mi-wrap:before{ left:10px; top:10px; border-right:none; border-bottom:none; }
+        .mi-wrap:after{ right:10px; bottom:10px; border-left:none; border-top:none; }
+        </style>
+
+        <div class="mi-wrap">
+        <div class="mi-heading">MISSION CODE</div>
+        <div class="mi-body">
+            <span style="opacity:.8;">▶</span>
+            <span class="mi-type">AARRR</span>
+        </div>
+        <div class="mi-foot">AUTHORIZATION: LEVEL GREEN · CHANNEL: STAY OR SKIP</div>
+        </div>
         """, unsafe_allow_html=True)
 
     # ---- Dataset (tabs[3]) ----
