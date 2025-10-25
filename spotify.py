@@ -413,7 +413,7 @@ if section == "PROJECT OVERVIEW":
             color: #F9FCF9;
             line-height: 1.82;
             box-shadow: 0 0 15px rgba(29,185,84,.18);
-            margin-top: 1.2rem;
+            margin-top: 1.6rem;
         }
         .cup-scene .brand { color:#1ED760; font-weight:700; }
         .cup-scene .em { color:rgba(255,255,255,.88); font-style: italic; }
