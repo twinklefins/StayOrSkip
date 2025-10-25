@@ -774,88 +774,39 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
         st.subheader("Revenue")
         st.caption("CSV(export) 기반 KPI / 트렌드 / 취향별 LTV / 중요 요인")
 
-        # sections/revenue.py
+        # sections/revenue.py  (심플/필수만)
         import os
-        from pathlib import Path
         import pandas as pd
-        import numpy as np
         import streamlit as st
         import matplotlib.pyplot as plt
 
-        # --------------------
-        # Theme / Colors
-        # --------------------
         SPOTIFY_GREEN = "#1DB954"
         ACCENT_CYAN   = "#80DEEA"
         BG_DARK       = "#121212"
         PLOT_DARK     = "#191414"
         TICK_COLOR    = "#CFE3D8"
-        SPINE_COLOR   = "#2E2E2E"
 
-        DATA_DIR = Path("data")
-
+        # -------------------- 기본 로더 --------------------
         @st.cache_data(show_spinner=False)
-        def load_csv_any(name: str):
-            """/data/name 우선 → ./name 보조"""
-            for p in (DATA_DIR / name, Path(name)):
-                if p.exists():
+        def load_csv(name: str):
+            for p in (os.path.join("data", name), name):  # /data 우선, 루트 보조
+                if os.path.exists(p):
                     return pd.read_csv(p)
             return None
 
-        # 깔끔 View: 변수명(variable)과 그 변수의 '그룹명'만 추출
-        def build_summary_view(summary_pref: pd.DataFrame) -> pd.DataFrame:
-            df = summary_pref.copy()
-            def pick_group(row):
-                col = row["variable"]
-                return row[col] if col in row.index else None
-            df["group"] = df.apply(pick_group, axis=1)
-            cols = [
-                "variable","group","users",
-                "avg_ltv","avg_premium_duration","avg_monthly_revenue","free_to_premium_rate"
-            ]
-            return df[cols].sort_values("avg_ltv", ascending=False)
-
-        def style_axes(ax):
-            ax.set_facecolor(PLOT_DARK)
-            ax.tick_params(colors=TICK_COLOR)
-            for spine in ax.spines.values():
-                spine.set_color(SPINE_COLOR)
-
-        def line_plot(x_labels, y_values, ylabel, color):
-            fig, ax = plt.subplots(figsize=(6, 3))
-            ax.plot(range(len(x_labels)), y_values, marker="o", linewidth=2.0, color=color)
-            ax.set_xticks(range(len(x_labels)))
-            ax.set_xticklabels(x_labels, rotation=0)  # 가로 표시
-            style_axes(ax)
-            fig.set_facecolor(BG_DARK)
-            ax.set_ylabel(ylabel, color=TICK_COLOR)
-            return fig
-
-        def bar_plot(labels, values, ylabel, color):
-            fig, ax = plt.subplots(figsize=(10, 3.2))
-            ax.bar(range(len(labels)), values, color=color)
-            ax.set_xticks(range(len(labels)))
-            ax.set_xticklabels(labels, rotation=0)  # 가로 표시
-            style_axes(ax)
-            fig.set_facecolor(BG_DARK)
-            ax.set_ylabel(ylabel, color=TICK_COLOR)
-            return fig
-
+        # -------------------- 메인 렌더 --------------------
         def render():
-            st.title("💰 Revenue Dashboard")
-            st.caption("CSV(export) 기반 KPI / 트렌드 / 취향별 LTV / 중요 요인")
+            st.title("💰 Revenue")
 
-            # --------------------
-            # Load
-            # --------------------
-            kpi   = load_csv_any("out_revenue_kpis.csv")
-            retm  = load_csv_any("out_premium_retention_monthly.csv")
-            arpu  = load_csv_any("out_arpu_monthly.csv")
-            pref  = load_csv_any("out_pref_group_summary.csv")
-            sig   = load_csv_any("out_pref_significance_tests.csv")
-            imp   = load_csv_any("out_feature_importance_ltv.csv")
+            # 1) 파일 로드
+            kpi  = load_csv("out_revenue_kpis.csv")
+            retm = load_csv("out_premium_retention_monthly.csv")
+            arpu = load_csv("out_arpu_monthly.csv")
+            pref = load_csv("out_pref_group_summary.csv")
+            sig  = load_csv("out_pref_significance_tests.csv")
+            imp  = load_csv("out_feature_importance_ltv.csv")
 
-            missing = [n for n, d in {
+            missing = [n for n,d in {
                 "out_revenue_kpis.csv":kpi,
                 "out_premium_retention_monthly.csv":retm,
                 "out_arpu_monthly.csv":arpu,
@@ -865,87 +816,87 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
             }.items() if d is None]
 
             if missing:
-                st.warning("다음 파일이 없어 Revenue 섹션을 렌더링할 수 없습니다:\n- " + "\n- ".join(missing))
-                st.info("Jupyter Step 6에서 export된 CSV를 프로젝트 폴더 또는 /data 폴더에 넣어주세요.")
+                st.warning("다음 파일을 찾지 못했습니다:\n- " + "\n- ".join(missing))
+                st.info("노트북 STEP6에서 /data 폴더로 export 후, 앱을 Rerun 하세요.")
                 return
 
-            # --------------------
-            # KPI Cards
-            # --------------------
-            conv = float(kpi.loc[kpi["metric"]=="conversion_rate","value"])
-            rmean= float(kpi.loc[kpi["metric"]=="premium_retention_mean","value"])
-            arpu_v = float(kpi.loc[kpi["metric"]=="arpu_overall","value"])
-            dur  = float(kpi.loc[kpi["metric"]=="avg_premium_duration","value"])
+            # 2) KPI 카드
+            conv  = float(kpi.loc[kpi.metric=="conversion_rate","value"])
+            rmean = float(kpi.loc[kpi.metric=="premium_retention_mean","value"])
+            arpu_v= float(kpi.loc[kpi.metric=="arpu_overall","value"])
+            dur   = float(kpi.loc[kpi.metric=="avg_premium_duration","value"])
 
             c1,c2,c3,c4 = st.columns(4)
-            c1.metric("전환율", f"{conv*100:.1f}%")
-            c2.metric("유지율(평균)", f"{rmean*100:.1f}%")
-            c3.metric("ARPU(원)", f"{arpu_v:,.0f}")
+            c1.metric("전환율",           f"{conv*100:.1f}%")
+            c2.metric("유지율(평균)",      f"{rmean*100:.1f}%")
+            c3.metric("ARPU(원)",         f"{arpu_v:,.0f}")
             c4.metric("평균 Premium 기간", f"{dur:.2f}개월")
 
-            # 🔽 KPI 밑 토글: "분자/분모" 설명 + 데이터 정의
-            with st.expander("KPI 분자/분모 설명 (클릭하여 보기)"):
+            # (토글) 분자/분모 간단 설명
+            with st.expander("KPI 계산식(분자/분모)"):
                 st.markdown(
-                    """
-        **전환율** = (1월 Free였다가 이후 Premium으로 바뀐 사용자 수) / (1월 Free 사용자 수)  
-        **유지율(A→B)** = (월 A와 월 B 모두 Premium인 사용자 수) / (월 A Premium 사용자 수)  
-        **유지율(평균)** = 월→월 유지율들의 평균  
-        **ARPU** = 전체 `revenue` 합 / 전체 유저-월 수 (유료 기준 ARPPU가 필요하면 따로 계산)  
-        **평균 Premium 기간** = 모든 사용자의 Premium 개월수 합 / 사용자 수  
-        **LTV(유저별)** = 사용자별 `revenue` 합 (표에서는 그룹 평균을 표기)
-                    """
+                    "- **전환율** = 이후 Premium으로 바뀐 사용자 수 / 처음 Free 사용자 수\n"
+                    "- **유지율(A→B)** = A,B 둘 다 Premium 사용자 수 / A의 Premium 사용자 수\n"
+                    "- **ARPU** = revenue 총합 / 전체 유저-월 수\n"
+                    "- **평균 Premium 기간** = 사용자별 Premium 개월수 평균\n"
+                    "- **LTV(유저)** = 사용자별 revenue 합 (표는 그룹 평균)"
                 )
 
-            # --------------------
-            # Trend: Retention & ARPU (커스텀 색/가로 X축)
-            # --------------------
+            # 3) 트렌드 (Matplotlib로 간단 커스텀: 색상/가로 X축)
             st.markdown("### 📈 Retention & ARPU Trend")
             col1, col2 = st.columns(2)
 
             with col1:
-                x = retm["from_to"].tolist()
-                y = retm["premium_retention"].tolist()
-                fig = line_plot(x, y, "Retention", SPOTIFY_GREEN)
-                # 0~1 스케일 기준으로 조금 여유
-                plt.ylim(0, 1.05)
+                x, y = retm["from_to"].tolist(), retm["premium_retention"].tolist()
+                fig, ax = plt.subplots(figsize=(6,3))
+                ax.plot(range(len(x)), y, marker="o", color=SPOTIFY_GREEN, linewidth=2)
+                ax.set_xticks(range(len(x))); ax.set_xticklabels(x, rotation=0)
+                ax.set_ylim(0,1.05); ax.set_facecolor(PLOT_DARK); fig.set_facecolor(BG_DARK)
+                ax.tick_params(colors=TICK_COLOR)
                 st.pyplot(fig, use_container_width=True)
 
             with col2:
-                x2 = arpu["month"].tolist()
-                y2 = arpu["arpu"].tolist()
-                fig = line_plot(x2, y2, "ARPU (₩)", ACCENT_CYAN)
+                x2, y2 = arpu["month"].tolist(), arpu["arpu"].tolist()
+                fig, ax = plt.subplots(figsize=(6,3))
+                ax.plot(range(len(x2)), y2, marker="o", color=ACCENT_CYAN, linewidth=2)
+                ax.set_xticks(range(len(x2))); ax.set_xticklabels(x2, rotation=0)
+                ax.set_facecolor(PLOT_DARK); fig.set_facecolor(BG_DARK)
+                ax.tick_params(colors=TICK_COLOR)
                 st.pyplot(fig, use_container_width=True)
 
-            # --------------------
-            # Segment LTV (토글로 깔끔 표)
-            # --------------------
-            st.subheader("🎧 취향별 평균 LTV")
-            summary_view = build_summary_view(pref)
+            # 4) 취향별 LTV 표 (깔끔 뷰: variable + group만)
+            st.markdown("### 🎧 취향별 평균 LTV")
+            def pick_group(row):
+                col = row["variable"]
+                return row[col] if col in row.index else None
+            view = pref.copy()
+            view["group"] = view.apply(pick_group, axis=1)
+            cols = ["variable","group","users","avg_ltv","avg_premium_duration","avg_monthly_revenue","free_to_premium_rate"]
+            view = view[cols].sort_values("avg_ltv", ascending=False)
 
-            with st.expander("Top 10 보기 (변수/그룹명 중심)"):
-                st.dataframe(summary_view.head(10), use_container_width=True)
+            with st.expander("Top 10 보기"):
+                st.dataframe(view.head(10), use_container_width=True)
 
-            # --------------------
-            # Significant Features
-            # --------------------
-            st.subheader("🔍 통계적으로 유의한 요인 (p < 0.05)")
-            sig_view = sig.query("p_value < 0.05").sort_values("p_value")
-            st.dataframe(sig_view.head(10), use_container_width=True)
+            # 5) 유의 변수
+            st.markdown("### 🔍 통계적으로 유의한 요인 (p<0.05)")
+            st.dataframe(sig.query("p_value < 0.05").sort_values("p_value").head(10), use_container_width=True)
 
-            # --------------------
-            # Feature Importance (커스텀 색/가로 X축)
-            # --------------------
-            st.subheader("🌲 LTV 영향 요인 (Feature Importance)")
+            # 6) Feature Importance (Top10 막대)
+            st.markdown("### 🌲 LTV 영향 요인")
             if imp.shape[1] == 2:
                 imp.columns = ["feature","importance"]
             else:
                 imp = imp.rename(columns={imp.columns[0]:"feature", imp.columns[1]:"importance"})
             topk = imp.sort_values("importance", ascending=False).head(10)
 
-            fig = bar_plot(topk["feature"].tolist(), topk["importance"].tolist(), "Importance", SPOTIFY_GREEN)
+            fig, ax = plt.subplots(figsize=(10,3.2))
+            ax.bar(range(len(topk)), topk["importance"], color=SPOTIFY_GREEN)
+            ax.set_xticks(range(len(topk))); ax.set_xticklabels(topk["feature"], rotation=0)
+            ax.set_facecolor(PLOT_DARK); fig.set_facecolor(BG_DARK); ax.tick_params(colors=TICK_COLOR)
+            ax.set_ylabel("Importance", color=TICK_COLOR)
             st.pyplot(fig, use_container_width=True)
 
-            st.caption("※ LTV = ARPU × Premium 지속개월(추정), CAC 별도. 파일은 Jupyter Step6 export 사용.")
+            st.caption("※ 파일은 Jupyter STEP6 export 결과(/data 또는 프로젝트 루트)에서 읽습니다.")
 
 else:
     tabs = st.tabs(["Insights", "Strategy", "Next Steps"])
