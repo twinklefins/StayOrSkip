@@ -334,95 +334,96 @@ if section == "PROJECT OVERVIEW":
         """, unsafe_allow_html=True)
         st.caption("*Spotify 공식 회사 정보 기준 요약")
 
-# ---- Background & Objectives ----
-with tabs[2]:
-    section_title("Background & Objectives")
-    tight_top(-24)
+        # ---- Background & Objectives ----
+        with tabs[2]:
+            section_title("Background & Objectives")
+            tight_top(-24)
 
-    # 🎥 시네마틱 인트로 (가상 비즈니스 시나리오)
-    st.markdown("""
-    <div style='background:linear-gradient(135deg,#1DB95422 0%,#1ED76022 100%);
-                border:1px solid rgba(255,255,255,.1);
-                border-radius:14px; padding:2.0rem 1.8rem 2.2rem 1.8rem;
-                text-align:center; box-shadow:0 0 15px rgba(29,185,84,.15);'>
+            # 🎥 시네마틱 인트로 (가상 비즈니스 시나리오)
+            st.markdown("""
+            <div style='background:linear-gradient(135deg,#1DB95422 0%,#1ED76022 100%);
+                        border:1px solid rgba(255,255,255,.1);
+                        border-radius:14px; padding:2.0rem 1.8rem 2.2rem 1.8rem;
+                        text-align:center; box-shadow:0 0 15px rgba(29,185,84,.15);'>
 
-      <h3 style='margin-top:0; font-weight:800; font-size:1.4rem; letter-spacing:-.3px;'>
-        🎧 "한 달 무료 체험 후, 그들은 왜 돌아오지 않았을까?"
-      </h3>
-      <p style='margin:.8rem 0 1.2rem 0; font-size:1.1rem; color:rgba(255,255,255,.88); line-height:1.8;'>
-        무료의 단맛만 즐기고 사라진 <b>‘스킵 제너레이션’</b> —  
-        <br>체험만 하고 증발한 구독 유목민들을 다시 붙잡기 위한,  
-        <b>스포티코리아 TF</b>의 탐정 프로젝트가 시작된다. 🕵️‍♀️
-      </p>
-      <p style='font-size:1.0rem; color:rgba(255,255,255,.75); line-height:1.7;'>
-        Rentention is the new acquisition.<br>
-        우리는 이탈한 유저의 흔적 속에서 다음 Revenue를 찾아낸다.
-      </p>
-    </div>
-    """, unsafe_allow_html=True)
+            <h3 style='margin-top:0; font-weight:800; font-size:1.4rem; letter-spacing:-.3px;'>
+                🎧 "한 달 무료 체험 후, 그들은 왜 돌아오지 않았을까?"
+            </h3>
+            <p style='margin:.8rem 0 1.2rem 0; font-size:1.1rem; color:rgba(255,255,255,.88); line-height:1.8;'>
+                무료의 단맛만 즐기고 사라진 <b>‘스킵 제너레이션’</b> —  
+                <br>체험만 하고 증발한 구독 유목민들을 다시 붙잡기 위한,  
+                <b>스포티코리아 TF</b>의 탐정 프로젝트가 시작된다. 🕵️‍♀️
+            </p>
+            <p style='font-size:1.0rem; color:rgba(255,255,255,.75); line-height:1.7;'>
+                Rentention is the new acquisition.<br>
+                우리는 이탈한 유저의 흔적 속에서 다음 Revenue를 찾아낸다.
+            </p>
+            </div>
+            """, unsafe_allow_html=True)
 
-    vgap(28)
+            vgap(28)
 
-    # 🎯 인사이트 기반 카드 3개
-    st.markdown("""
-    <style>
-      .cup-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.2rem;
-        margin-top: 0.8rem;
-      }
-      .cup-hover-card {
-        transition: all .25s ease;
-        background: rgba(255,255,255,.03);
-        border: 1px solid rgba(255,255,255,.10);
-        border-radius: 12px;
-        padding: clamp(1.2rem, 2vw, 1.8rem);
-        text-align: center;
-      }
-      .cup-hover-card:hover {
-        background: rgba(255,255,255,.08);
-        border-color: rgba(255,255,255,.18);
-        transform: translateY(-4px);
-        box-shadow: 0 0 15px rgba(29,185,84,.25);
-      }
-      .cup-hover-card p { margin: 0; }
-      .cup-hover-card .emoji { font-size: 1.6rem; }
-      .cup-hover-card .title {
-        font-weight: 800; font-size: 1.1rem; margin: 0.8rem 0 1rem 0;
-      }
-      .cup-hover-card .text {
-        color: rgba(255,255,255,.9);
-        font-size: clamp(0.92rem, 1vw + 0.6rem, 1.05rem);
-        line-height: 1.8;
-      }
-    </style>
+            # 🎯 인사이트 기반 카드 3개
+            st.markdown("""
+            <style>
+            .cup-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1.2rem;
+                margin-top: 0.8rem;
+            }
+            .cup-hover-card {
+                transition: all .25s ease;
+                background: rgba(255,255,255,.03);
+                border: 1px solid rgba(255,255,255,.10);
+                border-radius: 12px;
+                padding: clamp(1.2rem, 2vw, 1.8rem);
+                text-align: center;
+            }
+            .cup-hover-card:hover {
+                background: rgba(255,255,255,.08);
+                border-color: rgba(255,255,255,.18);
+                transform: translateY(-4px);
+                box-shadow: 0 0 15px rgba(29,185,84,.25);
+            }
+            .cup-hover-card p { margin: 0; }
+            .cup-hover-card .emoji { font-size: 1.6rem; }
+            .cup-hover-card .title {
+                font-weight: 800; font-size: 1.1rem; margin: 0.8rem 0 1rem 0;
+            }
+            .cup-hover-card .text {
+                color: rgba(255,255,255,.9);
+                font-size: clamp(0.92rem, 1vw + 0.6rem, 1.05rem);
+                line-height: 1.8;
+            }
+            </style>
 
-    <div class="cup-grid">
-      <div class="cup-hover-card">
-        <p class="emoji">📈</p>
-        <p class="title">스트리밍 시장 성장과 도전</p>
-        <p class="text">글로벌 시장 급성장과 함께 유입률은 높아졌지만<br>
-        구독 전환과 유지율은 하락 중.<br>
-        체험 후 이탈, 콘텐츠 피로도가 핵심 과제로 부상.</p>
-      </div>
+            <div class="cup-grid">
+            <div class="cup-hover-card">
+                <p class="emoji">📈</p>
+                <p class="title">스트리밍 시장 성장과 도전</p>
+                <p class="text">글로벌 시장 급성장과 함께 유입률은 높아졌지만<br>
+                구독 전환과 유지율은 하락 중.<br>
+                체험 후 이탈, 콘텐츠 피로도가 핵심 과제로 부상.</p>
+            </div>
 
-      <div class="cup-hover-card">
-        <p class="emoji">🎧</p>
-        <p class="title">Spotify의 강점</p>
-        <p class="text">세계 최대 청취 로그와 오디오 피처 데이터 기반.<br>
-        유저 행동 여정과 이탈 패턴을 정밀하게 추적할 수 있는<br>
-        완벽한 분석 무대.</p>
-      </div>
+            <div class="cup-hover-card">
+                <p class="emoji">🎧</p>
+                <p class="title">Spotify의 강점</p>
+                <p class="text">세계 최대 청취 로그와 오디오 피처 데이터 기반.<br>
+                유저 행동 여정과 이탈 패턴을 정밀하게 추적할 수 있는<br>
+                완벽한 분석 무대.</p>
+            </div>
 
-      <div class="cup-hover-card">
-        <p class="emoji">🧭</p>
-        <p class="title">AARRR 기반 분석 방향</p>
-        <p class="text">Acquisition → Retention → Revenue<br>
-        단계별 핵심 지표 정의 후, 데이터 기반 리텐션·LTV 개선 전략 수립.</p>
-      </div>
-    </div>
-    """, unsafe_allow_html=True)
+            <div class="cup-hover-card">
+                <p class="emoji">🧭</p>
+                <p class="title">AARRR 기반 분석 방향</p>
+                <p class="text">Acquisition → Retention → Revenue<br>
+                단계별 핵심 지표 정의 후, 데이터 기반 리텐션·LTV 개선 전략 수립.</p>
+            </div>
+            </div>
+            """, unsafe_allow_html=True)
+
 
     # ---- Dataset (tabs[3]) ----
     with tabs[3]:
