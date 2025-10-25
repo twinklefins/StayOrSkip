@@ -339,69 +339,74 @@ if section == "PROJECT OVERVIEW":
             section_title("Background & Objectives")
             tight_top(-36)
 
-            # 스타일 한 번만 주입
+            # ===================== CSS =====================
             st.markdown("""
             <style>
-            /* 3열 카드 공통 */
-            .cup-3col{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; }
-            .cup-hover-card{
-                transition:all .25s ease;
-                background:rgba(255,255,255,.03);
-                border:1px solid rgba(255,255,255,.10);
-                border-radius:12px;
-                padding:1.6rem 1.8rem;
-                text-align:center;
+            /* 3열 카드 */
+            .cup-3col {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.2rem;
             }
-            .cup-hover-card:hover{
-                background:rgba(255,255,255,.08);
-                border-color:rgba(255,255,255,.18);
-                transform:translateY(-4px);
-                box-shadow:0 0 15px rgba(29,185,84,.25);
+            .cup-hover-card {
+                transition: all .25s ease;
+                background: rgba(255,255,255,.03);
+                border: 1px solid rgba(255,255,255,.10);
+                border-radius: 12px;
+                padding: 1.6rem 1.8rem;
+                text-align: center;
             }
-
-            /* 시네마틱 박스 (카드와 톤 통일) */
-            .cup-scene{
-                background:rgba(255,255,255,.03);
-                border:1px solid rgba(255,255,255,.10);
-                border-radius:12px;
-                padding:2.0rem 2.2rem;
-                text-align:center;
-                color:#F9FCF9;
-                line-height:1.82;
-                box-shadow:0 0 15px rgba(29,185,84,.18);
-                margin-top:1.2rem;
-            }
-            .cup-scene .brand{ color:#1ED760; font-weight:700; }
-            .cup-scene .em{ color:rgba(255,255,255,.88); font-style:italic; }
-
-            /* 하단 미션코드 뱃지 */
-            .cup-mission{
-                display:inline-block;
-                margin-top:1.2rem;
-                padding:.24rem .6rem;
-                border-radius:6px;
-                border:1px solid rgba(29,185,84,.45);
-                background:rgba(29,185,84,.10);
-                color:#1ED760;
-                font-weight:800;
-                font-size:.86rem;
-                letter-spacing:.14em;
-                text-transform:uppercase;
+            .cup-hover-card:hover {
+                background: rgba(255,255,255,.08);
+                border-color: rgba(255,255,255,.18);
+                transform: translateY(-4px);
+                box-shadow: 0 0 15px rgba(29,185,84,.25);
             }
 
-            /* 최종 원라이너(엔딩 자막 느낌) */
-            .cup-one-liner-bottom{
-                font-size:1.05rem;
-                font-weight:500;
-                color:#D7E4DC;
-                text-align:center;
-                margin-top:1.6rem;
-                letter-spacing:.2px;
+            /* 🎬 시네마틱 섹션 */
+            .cup-scene {
+                background: rgba(255,255,255,.03);
+                border: 1px solid rgba(255,255,255,.10);
+                border-radius: 12px;
+                padding: 2.2rem 2.6rem;
+                text-align: center;
+                color: #F9FCF9;
+                line-height: 1.9;
+                box-shadow: 0 0 15px rgba(29,185,84,.18);
+                margin-top: 1.4rem;
+            }
+            .cup-scene .brand { color: #1ED760; font-weight: 700; }
+            .cup-scene .em { color: rgba(255,255,255,.85); font-style: italic; }
+            .cup-scene strong { color: #FFF; }
+
+            /* 🎯 미션 코드 */
+            .cup-mission {
+                display: inline-block;
+                margin-top: 1.4rem;
+                padding: .32rem .75rem;
+                border-radius: 6px;
+                border: 1px solid rgba(29,185,84,.45);
+                background: rgba(29,185,84,.08);
+                color: #1ED760;
+                font-weight: 800;
+                font-size: .88rem;
+                letter-spacing: .13em;
+                text-transform: uppercase;
+            }
+
+            /* 💬 엔딩 원라이너 */
+            .cup-one-liner-bottom {
+                font-size: 1.05rem;
+                font-weight: 500;
+                color: #D7E4DC;
+                text-align: center;
+                margin-top: 1.5rem;
+                letter-spacing: .2px;
             }
             </style>
             """, unsafe_allow_html=True)
 
-            # 기존 3열 카드
+            # ===================== 카드 섹션 =====================
             st.markdown("""
             <div class="cup-3col">
             <div class="cup-hover-card">
@@ -435,7 +440,7 @@ if section == "PROJECT OVERVIEW":
             </div>
             """, unsafe_allow_html=True)
 
-            # 🎬 시네마틱 도입부 (문구/배지/원라이너 반영)
+            # ===================== 시네마틱 박스 =====================
             st.markdown("""
             <div class="cup-scene">
             <p style="font-size:1.28rem; margin-bottom:1.1rem;">
@@ -447,11 +452,11 @@ if section == "PROJECT OVERVIEW":
                 한 곡 듣고 넘기고, 한 달 듣고 떠난 사람들.
             </p>
 
-            <p style="margin-top:1.0rem; font-size:1.05rem;">
-                <b><span class="brand">Spotify Korea TF</span>데이터컵밥팀</b>은
-                <b class="brand">유저의 행동 여정</b>을 데이터로 추적해,<br>
-                ‘<b class="brand">스킵 제너레이션</b>’을 이탈로부터 구하고<br>
-                ‘<b class="brand">스테이 제너레이션</b>’으로 재탄생시키기 위한 <b class="brand">작전</b>을 시작했다.
+            <p style="margin-top:1.1rem; font-size:1.05rem;">
+                <b><span class="brand">Spotify Korea TF</span></b> <strong>데이터컵밥팀</strong>은<br>
+                <span class="brand">유저의 행동 여정</span>을 데이터로 추적해,<br>
+                ‘<span class="brand">스킵 제너레이션</span>’을 이탈로부터 구하고<br>
+                ‘<span class="brand">스테이 제너레이션</span>’으로 재탄생시키기 위한 작전을 시작했다.
             </p>
 
             <div class="cup-mission">MISSION CODE · AARRR</div>
@@ -461,7 +466,7 @@ if section == "PROJECT OVERVIEW":
             </div>
             </div>
             """, unsafe_allow_html=True)
-
+            
     # ---- Dataset (tabs[3]) ----
     with tabs[3]:
         # --- Dataset Overview (간격 통일: section_title 사용) ---
