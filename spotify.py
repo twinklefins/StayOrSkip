@@ -403,7 +403,6 @@ if section == "PROJECT OVERVIEW":
         # (2) 시네마틱 박스
         st.markdown("""
         <style>
-        /* 카드와 동일한 톤 */
         .cup-scene {
             background: rgba(255,255,255,.03);
             border: 1px solid rgba(255,255,255,.10);
@@ -413,12 +412,11 @@ if section == "PROJECT OVERVIEW":
             color: #F9FCF9;
             line-height: 1.82;
             box-shadow: 0 0 15px rgba(29,185,84,.18);
-            margin-top: 2.2rem;
+            margin-top: 1.2rem;
         }
         .cup-scene .brand { color:#1ED760; font-weight:700; }
         .cup-scene .em { color:rgba(255,255,255,.88); font-style: italic; }
 
-        /* 미션코드 배지(작게, 하단에 살짝) */
         .cup-mission {
             display:inline-block;
             margin-top: 1.2rem;
@@ -431,6 +429,15 @@ if section == "PROJECT OVERVIEW":
             font-size:.86rem;
             letter-spacing:.14em;
             text-transform:uppercase;
+        }
+
+        .cup-one-liner-bottom {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #D7E4DC;
+            text-align: center;
+            margin-top: 1.6rem;
+            letter-spacing: 0.2px;
         }
         </style>
 
@@ -445,13 +452,17 @@ if section == "PROJECT OVERVIEW":
         </p>
 
         <p style="margin-top:1.0rem; font-size:1.05rem;">
-            <b>Spotify Korea TF <span class="brand">데이터컵밥팀</span></b>은 그들의
-            <b class="brand">패턴</b>을 데이터로 추적해,<br>
+            <b>Spotify Korea TF <span class="brand">데이터컵밥팀</span></b>은
+            <b class="brand">유저의 행동 여정</b>을 데이터로 추적해,<br>
             ‘<b class="brand">스킵 제너레이션</b>’을 이탈로부터 구하고<br>
             ‘<b class="brand">스테이 제너레이션</b>’으로 재탄생시키기 위한 <b class="brand">작전</b>을 시작했다.
         </p>
 
         <div class="cup-mission">MISSION CODE · AARRR</div>
+
+        <div class="cup-one-liner-bottom">
+            “Retention is the new acquisition — 남게 만드는 전략이 Spotify Korea의 성장을 결정한다.”
+        </div>
         </div>
         """, unsafe_allow_html=True)
 
