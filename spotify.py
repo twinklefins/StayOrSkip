@@ -334,131 +334,105 @@ if section == "PROJECT OVERVIEW":
         """, unsafe_allow_html=True)
         st.caption("*Spotify 공식 회사 정보 기준 요약")
 
-        # ---- Background & Objectives ----
-        with tabs[2]:
-            section_title("Background & Objectives")
-            tight_top(-36)
-            st.markdown("""
-            <style>
-            .cup-hover-card {
-                transition: all .25s ease;
-                background: rgba(255,255,255,.03);
-                border: 1px solid rgba(255,255,255,.10);
-                border-radius: 12px;
-                padding: 1.6rem 1.8rem;
-            }
-            .cup-hover-card:hover {
-                background: rgba(255,255,255,.08);
-                border-color: rgba(255,255,255,.18);
-                transform: translateY(-4px);
-                box-shadow: 0 0 15px rgba(29,185,84,.25);
-            }
-            .cup-scene {
-                background: linear-gradient(145deg, rgba(29,185,84,.10), rgba(255,255,255,.02));
-                border: 1px solid rgba(29,185,84,.25);
-                border-radius: 14px;
-                padding: 2.2rem 2.8rem;
-                margin-top: 2.2rem;
-                text-align: center;
-                font-size: 1.08rem;
-                line-height: 1.95;
-                color: rgba(255,255,255,.92);
-                box-shadow: 0 0 20px rgba(29,185,84,.15);
-            }
-            .cup-scene strong { color: #1ED760; font-weight: 700; }
-            .cup-scene em { color: rgba(255,255,255,.85); font-style: italic; }
-            .cup-scene-title {
-                font-weight: 800;
-                font-size: 1.3rem;
-                color: #1DB954;
-                margin-bottom: 1.0rem;
-            }
-            .cup-one-liner {
-                font-size: 1.1rem;
-                font-weight: 600;
-                color: #D7E4DC;
-                text-align: center;
-                margin-top: 2.0rem;
-                margin-bottom: -0.8rem;
-                letter-spacing: 0.2px;
-            }
-            </style>
+    # ---- Background & Objectives ----
+    with tabs[2]:
+        section_title("Background & Objectives")
+        tight_top(-36)
 
-            <!-- 기존 3열 카드 -->
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;">
-            <div class="cup-hover-card" style="text-align:center;">
-                <p style="font-size:1.5rem;">📈</p>
-                <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">스트리밍 시장 성장과 도전</p>
-                <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
-                글로벌 시장 급성장, 유입률↑ 이탈률↑<br>
-                높은 경쟁 속 체험 후 구독 전환율 하락<br>
-                콘텐츠 피로도·사용자 유지가 핵심 과제로 부상
-                </p>
-            </div>
+        # 1) 스타일 + 3열 카드 + 한 줄 요약 (한 덩어리)
+        st.markdown("""
+        <style>
+        .cup-hover-card {
+            transition: all .25s ease;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 12px;
+            padding: 1.6rem 1.8rem;
+        }
+        .cup-hover-card:hover {
+            background: rgba(255,255,255,.08);
+            border-color: rgba(255,255,255,.18);
+            transform: translateY(-4px);
+            box-shadow: 0 0 15px rgba(29,185,84,.25);
+        }
+        .cup-one-liner {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #D7E4DC;
+            text-align: center;
+            margin-top: 2.0rem;
+            margin-bottom: -0.8rem;
+            letter-spacing: 0.2px;
+        }
+        </style>
 
-            <div class="cup-hover-card" style="text-align:center;">
-                <p style="font-size:1.5rem;">🎧</p>
-                <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">Spotify의 강점</p>
-                <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
-                세계 최대 규모 청취 로그 및 오디오 피처 데이터 보유<br>
-                유저 행동 여정·이탈 패턴 분석에 최적화된 플랫폼
-                </p>
-            </div>
+        <!-- 기존 3열 카드 -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;">
+        <div class="cup-hover-card" style="text-align:center;">
+            <p style="font-size:1.5rem;">📈</p>
+            <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">스트리밍 시장 성장과 도전</p>
+            <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
+            글로벌 시장 급성장, 유입률↑ 이탈률↑<br>
+            높은 경쟁 속 체험 후 구독 전환율 하락<br>
+            콘텐츠 피로도·사용자 유지가 핵심 과제로 부상
+            </p>
+        </div>
 
-            <div class="cup-hover-card" style="text-align:center;">
-                <p style="font-size:1.5rem;">🧭</p>
-                <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">AARRR 기반 분석 방향</p>
-                <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
-                Acquisition → Retention → Revenue<br>
-                단계별 핵심 지표 정의<br>
-                데이터 기반 리텐션·LTV 개선 전략 제안
-                </p>
-            </div>
-            </div>
+        <div class="cup-hover-card" style="text-align:center;">
+            <p style="font-size:1.5rem;">🎧</p>
+            <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">Spotify의 강점</p>
+            <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
+            세계 최대 규모 청취 로그 및 오디오 피처 데이터 보유<br>
+            유저 행동 여정·이탈 패턴 분석에 최적화된 플랫폼
+            </p>
+        </div>
 
-            <!-- 🎬 시네마틱 도입부 -->
-            <div class="cup-one-liner">“Retention is the new acquisition — 남게 만드는 전략이 Spotify Korea의 성장을 결정한다.”</div>
+        <div class="cup-hover-card" style="text-align:center;">
+            <p style="font-size:1.5rem;">🧭</p>
+            <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">AARRR 기반 분석 방향</p>
+            <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
+            Acquisition → Retention → Revenue<br>
+            단계별 핵심 지표 정의<br>
+            데이터 기반 리텐션·LTV 개선 전략 제안
+            </p>
+        </div>
+        </div>
 
-            <div class="cup-scene">
-            <div class="cup-scene-title">🎬 가상 시나리오 — <strong>Spotify Korea TF</strong></div>
-            <p>한때 ‘음악은 스킵, 구독은 무료’로 시작된 그들의 여정.<br>
-            한 달 무료 체험만 즐기고 사라진 <strong>‘스킵 제너레이션(Skip Generation)’</strong>이 등장했다.<br>
-            무료의 단맛만 맛보고 증발한 그들은, <em>‘구독 유목민’</em>이라 불렸다.</p>
+        <!-- 🎬 시네마틱 한 줄 요약 -->
+        <div class="cup-one-liner">“Retention is the new acquisition — 남게 만드는 전략이 Spotify Korea의 성장을 결정한다.”</div>
+        """, unsafe_allow_html=True)
 
-            <p>Spotify Korea TF는 이제 데이터로 그들의 발자국을 추적한다.<br>
-            <em>“그들은 왜 떠났을까? 그리고 어떻게 다시 머물게 할 수 있을까?”</em><br>
-            리텐션 미션을 위해 모인 <strong>데이터컵밥 팀</strong>의 분석이 지금 시작된다.</p>
-            </div>
-            """, unsafe_allow_html=True)
-            st.markdown("""
-                <div style="
-                background:linear-gradient(135deg, rgba(25,20,20,0.95), rgba(0,0,0,0.85));
-                border:1px solid rgba(255,255,255,0.08);
-                border-radius:14px;
-                padding:2.2rem 2.5rem;
-                text-align:center;
-                color:#F9FCF9;
-                line-height:1.75;
-                box-shadow:0 0 25px rgba(29,185,84,.25);
-            ">
-                <p style="font-size:1.3rem; margin-bottom:1.2rem;">🎧 <b>“Skip Generation — 스킵은 빠르지만, 이탈은 더 빨랐다.”</b></p>
+        # 2) 시네마틱 박스 (별도의 st.markdown으로 분리!)
+        st.markdown("""
+        <div style="
+        background:linear-gradient(135deg, rgba(25,20,20,0.95), rgba(0,0,0,0.85));
+        border:1px solid rgba(255,255,255,0.08);
+        border-radius:14px;
+        padding:2.2rem 2.5rem;
+        text-align:center;
+        color:#F9FCF9;
+        line-height:1.75;
+        box-shadow:0 0 25px rgba(29,185,84,.25);
+        margin-top: 1.2rem;
+        ">
+        <p style="font-size:1.3rem; margin-bottom:1.2rem;">🎧 <b>“Skip Generation — 스킵은 빠르지만, 이탈은 더 빨랐다.”</b></p>
 
-                <p style="font-size:1.05rem; color:rgba(255,255,255,.85);">
-                스트리밍 세상의 체험 유목민들.<br>
-                한 곡 듣고 넘기고, 한 달 듣고 떠난 사람들.
-                </p>
+        <p style="font-size:1.05rem; color:rgba(255,255,255,.85);">
+            스트리밍 세상의 체험 유목민들.<br>
+            한 곡 듣고 넘기고, 한 달 듣고 떠난 사람들.
+        </p>
 
-                <p style="margin-top:1.2rem; font-size:1.05rem; color:rgba(255,255,255,.9);">
-                <b>Spotify Korea TF 데이터컵밥팀</b>은 그들의 <b>패턴</b>을 데이터로 추적해,<br>
-                ‘<b>스킵 제너레이션</b>’을 이탈로부터 구하고<br>
-                ‘<b>스테이 제너레이션</b>’으로 재탄생시키기 위한 <b>작전</b>을 시작했다.
-                </p>
+        <p style="margin-top:1.2rem; font-size:1.05rem; color:rgba(255,255,255,.9);">
+            <b>Spotify Korea TF 데이터컵밥팀</b>은 그들의 <b>패턴</b>을 데이터로 추적해,<br>
+            ‘<b>스킵 제너레이션</b>’을 이탈로부터 구하고<br>
+            ‘<b>스테이 제너레이션</b>’으로 재탄생시키기 위한 <b>작전</b>을 시작했다.
+        </p>
 
-                <p style="margin-top:1.6rem; font-size:1.1rem; color:#1DB954; font-weight:700;">
-                🎯 미션 코드: <span style="color:#1ED760;">AARRR</span>
-                </p>
-            </div>
-            """, unsafe_allow_html=True)
+        <p style="margin-top:1.6rem; font-size:1.1rem; color:#1DB954; font-weight:700;">
+            🎯 미션 코드: <span style="color:#1ED760;">AARRR</span>
+        </p>
+        </div>
+        """, unsafe_allow_html=True)
 
     # ---- Dataset (tabs[3]) ----
     with tabs[3]:
