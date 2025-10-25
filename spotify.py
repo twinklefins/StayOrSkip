@@ -420,15 +420,15 @@ if section == "PROJECT OVERVIEW":
             <div class="cup-one-liner">“Retention is the new acquisition — 남게 만드는 전략이 Spotify Korea의 성장을 결정한다.”</div>
 
             <div class="cup-scene">
-                <div class="cup-scene-title">🎬 가상 시나리오 — <strong>Spotify Korea TF</strong></div>
-                <p>한때 ‘음악은 스킵, 구독은 무료’로 시작된 그들의 여정.<br>
-                한 달 무료 체험만 즐기고 사라진 <strong>‘스킵 제너레이션(Skip Generation)’</strong>이 등장했다.<br>
-                무료의 단맛만 맛보고 증발한 그들은, <em>‘구독 유목민’</em>이라 불렸다.</p>
-
-                <p>Spotify Korea TF는 이제 데이터로 그들의 발자국을 추적한다.<br>
-                <em>“그들은 왜 떠났을까? 그리고 어떻게 다시 머물게 할 수 있을까?”</em><br>
-                리텐션 미션을 위해 모인 <strong>데이터컵밥 팀</strong>의 분석이 지금 시작된다.</p>
+            <div class="cup-scene-title">🎬 가상 시나리오 — <strong>Spotify Korea TF</strong></div>
+            <p>한때 ‘음악은 스킵, 구독은 무료’로 시작된 그들의 여정.<br>
+            무료의 달콤함만 맛보고 사라진 <strong>‘구독 유목민들’</strong>이 늘어났다.<br>
+            <p><strong>Spotify Korea TF</strong>는 데이터로 그들의 발자국을 추적한다.<br>
+            <em>“그들은 왜 떠났을까? 그리고 어떻게 다시 머물게 할 수 있을까?”</em><br>
+            리텐션 미션을 위해 모인 <strong>데이터컵밥 팀</strong>의 분석이 시작된다.</p>
             </div>
+            """, unsafe_allow_html=True)
+
 
     # ---- Dataset (tabs[3]) ----
     with tabs[3]:
