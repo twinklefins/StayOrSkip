@@ -339,30 +339,6 @@ if section == "PROJECT OVERVIEW":
             section_title("Background & Objectives")
             tight_top(-24)
 
-            # 🎥 시네마틱 인트로 (가상 비즈니스 시나리오)
-            st.markdown("""
-            <div style='background:linear-gradient(135deg,#1DB95422 0%,#1ED76022 100%);
-                        border:1px solid rgba(255,255,255,.1);
-                        border-radius:14px; padding:2.0rem 1.8rem 2.2rem 1.8rem;
-                        text-align:center; box-shadow:0 0 15px rgba(29,185,84,.15);'>
-
-            <h3 style='margin-top:0; font-weight:800; font-size:1.4rem; letter-spacing:-.3px;'>
-                🎧 "한 달 무료 체험 후, 그들은 왜 돌아오지 않았을까?"
-            </h3>
-            <p style='margin:.8rem 0 1.2rem 0; font-size:1.1rem; color:rgba(255,255,255,.88); line-height:1.8;'>
-                무료의 단맛만 즐기고 사라진 <b>‘스킵 제너레이션’</b> —  
-                <br>체험만 하고 증발한 구독 유목민들을 다시 붙잡기 위한,  
-                <b>스포티코리아 TF</b>의 탐정 프로젝트가 시작된다. 🕵️‍♀️
-            </p>
-            <p style='font-size:1.0rem; color:rgba(255,255,255,.75); line-height:1.7;'>
-                Rentention is the new acquisition.<br>
-                우리는 이탈한 유저의 흔적 속에서 다음 Revenue를 찾아낸다.
-            </p>
-            </div>
-            """, unsafe_allow_html=True)
-
-            vgap(28)
-
             # 🎯 인사이트 기반 카드 3개
             st.markdown("""
             <style>
@@ -398,6 +374,8 @@ if section == "PROJECT OVERVIEW":
             }
             </style>
 
+            vgap(28)
+                        
             <div class="cup-grid">
             <div class="cup-hover-card">
                 <p class="emoji">📈</p>
@@ -421,6 +399,28 @@ if section == "PROJECT OVERVIEW":
                 <p class="text">Acquisition → Retention → Revenue<br>
                 단계별 핵심 지표 정의 후, 데이터 기반 리텐션·LTV 개선 전략 수립.</p>
             </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            # 🎥 시네마틱 인트로 (가상 비즈니스 시나리오)
+            st.markdown("""
+            <div style='background:linear-gradient(135deg,#1DB95422 0%,#1ED76022 100%);
+                        border:1px solid rgba(255,255,255,.1);
+                        border-radius:14px; padding:2.0rem 1.8rem 2.2rem 1.8rem;
+                        text-align:center; box-shadow:0 0 15px rgba(29,185,84,.15);'>
+
+            <h3 style='margin-top:0; font-weight:800; font-size:1.4rem; letter-spacing:-.3px;'>
+                🎧 "한 달 무료 체험 후, 그들은 왜 돌아오지 않았을까?"
+            </h3>
+            <p style='margin:.8rem 0 1.2rem 0; font-size:1.1rem; color:rgba(255,255,255,.88); line-height:1.8;'>
+                무료의 단맛만 즐기고 사라진 <b>‘스킵 제너레이션’</b> —  
+                <br>체험만 하고 증발한 구독 유목민들을 다시 붙잡기 위한,  
+                <b>스포티코리아 TF</b>의 탐정 프로젝트가 시작된다. 🕵️‍♀️
+            </p>
+            <p style='font-size:1.0rem; color:rgba(255,255,255,.75); line-height:1.7;'>
+                Rentention is the new acquisition.<br>
+                우리는 이탈한 유저의 흔적 속에서 다음 Revenue를 찾아낸다.
+            </p>
             </div>
             """, unsafe_allow_html=True)
 
