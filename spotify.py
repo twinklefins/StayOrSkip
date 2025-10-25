@@ -334,113 +334,109 @@ if section == "PROJECT OVERVIEW":
         """, unsafe_allow_html=True)
         st.caption("*Spotify 공식 회사 정보 기준 요약")
 
-    # ---- Background & Objectives ----
-    with tabs[2]:
-        section_title("Background & Objectives")
-        tight_top(-36)
+        # ---- Background & Objectives ----
+        with tabs[2]:
+            section_title("Background & Objectives")
+            tight_top(-36)
 
-        # 1) 스타일 + 3열 카드 + 한 줄 요약 (한 덩어리)
-        st.markdown("""
-        <style>
-        .cup-hover-card {
-            transition: all .25s ease;
-            background: rgba(255,255,255,.03);
-            border: 1px solid rgba(255,255,255,.10);
-            border-radius: 12px;
-            padding: 1.6rem 1.8rem;
-        }
-        .cup-hover-card:hover {
-            background: rgba(255,255,255,.08);
-            border-color: rgba(255,255,255,.18);
-            transform: translateY(-4px);
-            box-shadow: 0 0 15px rgba(29,185,84,.25);
-        }
-        .cup-one-liner {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #D7E4DC;
-            text-align: center;
-            margin-top: 2.0rem;
-            margin-bottom: -0.8rem;
-            letter-spacing: 0.2px;
-        }
-        </style>
+            # (1) 카드 + 한 줄 요약
+            st.markdown("""
+            <style>
+            .cup-hover-card {
+                transition: all .25s ease;
+                background: rgba(255,255,255,.03);
+                border: 1px solid rgba(255,255,255,.10);
+                border-radius: 12px;
+                padding: 1.6rem 1.8rem;
+            }
+            .cup-hover-card:hover {
+                background: rgba(255,255,255,.08);
+                border-color: rgba(255,255,255,.18);
+                transform: translateY(-4px);
+                box-shadow: 0 0 15px rgba(29,185,84,.25);
+            }
+            .cup-one-liner {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #D7E4DC;
+                text-align: center;
+                margin-top: 2.0rem;
+                margin-bottom: -0.2rem;
+                letter-spacing: 0.2px;
+            }
+            </style>
 
-        <!-- 기존 3열 카드 -->
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;">
-        <div class="cup-hover-card" style="text-align:center;">
-            <p style="font-size:1.5rem;">📈</p>
-            <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">스트리밍 시장 성장과 도전</p>
-            <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
-            글로벌 시장 급성장, 유입률↑ 이탈률↑<br>
-            높은 경쟁 속 체험 후 구독 전환율 하락<br>
-            콘텐츠 피로도·사용자 유지가 핵심 과제로 부상
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;">
+            <div class="cup-hover-card" style="text-align:center;">
+                <p style="font-size:1.5rem;">📈</p>
+                <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">스트리밍 시장 성장과 도전</p>
+                <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
+                글로벌 시장 급성장, 유입률↑ 이탈률↑<br>
+                높은 경쟁 속 체험 후 구독 전환율 하락<br>
+                콘텐츠 피로도·사용자 유지가 핵심 과제로 부상
+                </p>
+            </div>
+
+            <div class="cup-hover-card" style="text-align:center;">
+                <p style="font-size:1.5rem;">🎧</p>
+                <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">Spotify의 강점</p>
+                <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
+                세계 최대 규모 청취 로그 및 오디오 피처 데이터 보유<br>
+                유저 행동 여정·이탈 패턴 분석에 최적화된 플랫폼
+                </p>
+            </div>
+
+            <div class="cup-hover-card" style="text-align:center;">
+                <p style="font-size:1.5rem;">🧭</p>
+                <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">AARRR 기반 분석 방향</p>
+                <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
+                Acquisition → Retention → Revenue<br>
+                단계별 핵심 지표 정의<br>
+                데이터 기반 리텐션·LTV 개선 전략 제안
+                </p>
+            </div>
+            </div>
+
+            <div class="cup-one-liner">“Retention is the new acquisition — 남게 만드는 전략이 Spotify Korea의 성장을 결정한다.”</div>
+            """, unsafe_allow_html=True)
+
+            # (2) 시네마틱 박스
+            st.markdown("""
+            <div style="
+            background:linear-gradient(135deg, rgba(25,20,20,0.95), rgba(0,0,0,0.85));
+            border:1px solid rgba(255,255,255,0.08);
+            border-radius:14px;
+            padding:2.2rem 2.5rem;
+            text-align:center;
+            color:#F9FCF9;
+            line-height:1.75;
+            box-shadow:0 0 25px rgba(29,185,84,.25);
+            margin-top: 1.2rem;
+            ">
+            <p style="font-size:1.3rem; margin-bottom:1.2rem;">🎧 <b>“Skip Generation — 스킵은 빠르지만, 이탈은 더 빨랐다.”</b></p>
+
+            <p style="font-size:1.05rem; color:rgba(255,255,255,.85);">
+                스트리밍 세상의 체험 유목민들.<br>
+                한 곡 듣고 넘기고, 한 달 듣고 떠난 사람들.
             </p>
-        </div>
 
-        <div class="cup-hover-card" style="text-align:center;">
-            <p style="font-size:1.5rem;">🎧</p>
-            <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">Spotify의 강점</p>
-            <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
-            세계 최대 규모 청취 로그 및 오디오 피처 데이터 보유<br>
-            유저 행동 여정·이탈 패턴 분석에 최적화된 플랫폼
+            <p style="margin-top:1.2rem; font-size:1.05rem; color:rgba(255,255,255,.9);">
+                <b>Spotify Korea TF 데이터컵밥팀</b>은 그들의 <b>패턴</b>을 데이터로 추적해,<br>
+                ‘<b>스킵 제너레이션</b>’을 이탈로부터 구하고<br>
+                ‘<b>스테이 제너레이션</b>’으로 재탄생시키기 위한 <b>작전</b>을 시작했다.
             </p>
-        </div>
+            </div>
+            """, unsafe_allow_html=True)
 
-        <div class="cup-hover-card" style="text-align:center;">
-            <p style="font-size:1.5rem;">🧭</p>
-            <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">AARRR 기반 분석 방향</p>
-            <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
-            Acquisition → Retention → Revenue<br>
-            단계별 핵심 지표 정의<br>
-            데이터 기반 리텐션·LTV 개선 전략 제안
-            </p>
-        </div>
-        </div>
-
-        <!-- 🎬 시네마틱 한 줄 요약 -->
-        <div class="cup-one-liner">“Retention is the new acquisition — 남게 만드는 전략이 Spotify Korea의 성장을 결정한다.”</div>
-        """, unsafe_allow_html=True)
-
-        # 2) 시네마틱 박스 (별도의 st.markdown으로 분리!)
-        st.markdown("""
-        <div style="
-        background:linear-gradient(135deg, rgba(25,20,20,0.95), rgba(0,0,0,0.85));
-        border:1px solid rgba(255,255,255,0.08);
-        border-radius:14px;
-        padding:2.2rem 2.5rem;
-        text-align:center;
-        color:#F9FCF9;
-        line-height:1.75;
-        box-shadow:0 0 25px rgba(29,185,84,.25);
-        margin-top: 1.2rem;
-        ">
-        <p style="font-size:1.3rem; margin-bottom:1.2rem;">🎧 <b>“Skip Generation — 스킵은 빠르지만, 이탈은 더 빨랐다.”</b></p>
-
-        <p style="font-size:1.05rem; color:rgba(255,255,255,.85);">
-            스트리밍 세상의 체험 유목민들.<br>
-            한 곡 듣고 넘기고, 한 달 듣고 떠난 사람들.
-        </p>
-
-        <p style="margin-top:1.2rem; font-size:1.05rem; color:rgba(255,255,255,.9);">
-            <b>Spotify Korea TF 데이터컵밥팀</b>은 그들의 <b>패턴</b>을 데이터로 추적해,<br>
-            ‘<b>스킵 제너레이션</b>’을 이탈로부터 구하고<br>
-            ‘<b>스테이 제너레이션</b>’으로 재탄생시키기 위한 <b>작전</b>을 시작했다.
-        </p>
-
-        <p style="margin-top:1.6rem; font-size:1.1rem; color:#1DB954; font-weight:700;">
-            🎯 미션 코드: <span style="color:#1ED760;">AARRR</span>
-        </p>
-        </div>
-
-        /* ====== Mission:Impossible 분위기 ====== */
-        .mi-wrap{
-            margin-top: 1.6rem;
+            # (3) 미션 임파서블 스타일: 타자 효과 + 스캔라인
+            st.markdown("""
+            <style>
+            .mi-wrap{
+            margin-top: 1.0rem;
             padding: 1.6rem 1.8rem;
             border: 1px solid rgba(255,255,255,.12);
             border-radius: 12px;
             background:
-                /* scanline */
                 repeating-linear-gradient(
                 to bottom,
                 rgba(255,255,255,0.03) 0px,
@@ -453,83 +449,70 @@ if section == "PROJECT OVERVIEW":
             overflow: hidden;
             text-align: center;
             box-shadow: 0 0 25px rgba(29,185,84,.18);
-        }
-
-        /* 상단 라벨 (MISSION CODE) */
-        .mi-heading{
+            }
+            .mi-heading{
             display:inline-block;
             font-weight:800;
             letter-spacing:.18em;
             font-size:.88rem;
-            color:#FF4D4D; /* 미션 임파서블 느낌의 레드 라벨 */
+            color:#FF4D4D;
             padding:.18rem .55rem;
             border:1px solid rgba(255,77,77,.5);
             border-radius:6px;
             text-transform:uppercase;
             box-shadow: 0 0 8px rgba(255,77,77,.25), inset 0 0 6px rgba(255,77,77,.15);
             background: rgba(255,77,77,.06);
-        }
-
-        /* 본문 라인 */
-        .mi-body{
+            }
+            .mi-body{
             margin-top:.9rem;
             font-family: "SFMono-Regular", Menlo, Consolas, monospace;
             font-size:1.35rem;
             color:#F9FCF9;
             letter-spacing:.06em;
-        }
-
-        /* AARRR 타자기 효과 + 커서 깜빡임 */
-        .mi-type{
+            }
+            .mi-type{
             display:inline-block;
             overflow:hidden;
             white-space:nowrap;
-            border-right:2px solid #1ED760;            /* 커서 */
-            box-sizing: border-box;
-            /* 글자수 5 (A A R R R) → steps(5, end) */
+            border-right:2px solid #1ED760;
+            box-sizing:border-box;
             width:0;
             animation: mi-typing 1.8s steps(5, end) forwards, mi-caret .7s step-end infinite;
-        }
-
-        @keyframes mi-typing{
+            }
+            @keyframes mi-typing{
             from{ width:0; }
-            to{ width: 5.2ch; } /* 글자수에 맞춰 살짝 여유 */
-        }
-
-        @keyframes mi-caret{
+            to{ width: 5.2ch; }
+            }
+            @keyframes mi-caret{
             50% { border-color: transparent; }
-        }
-
-        /* 하단 권한 라인 (옵션) */
-        .mi-foot{
+            }
+            .mi-foot{
             margin-top:.75rem;
             font-size:.82rem;
             letter-spacing:.12em;
             color:#D7E4DC;
             opacity:.9;
-        }
-
-        /* 좌우 브래킷 느낌 (액션무비 톤) */
-        .mi-wrap:before, .mi-wrap:after{
+            }
+            .mi-wrap:before, .mi-wrap:after{
             content:"";
             position:absolute;
             width:18px; height:18px;
             border:2px solid rgba(29,185,84,.55);
             filter: drop-shadow(0 0 6px rgba(29,185,84,.35));
-        }
-        .mi-wrap:before{ left:10px; top:10px; border-right:none; border-bottom:none; }
-        .mi-wrap:after{ right:10px; bottom:10px; border-left:none; border-top:none; }
-        </style>
+            }
+            .mi-wrap:before{ left:10px; top:10px; border-right:none; border-bottom:none; }
+            .mi-wrap:after{ right:10px; bottom:10px; border-left:none; border-top:none; }
+            </style>
 
-        <div class="mi-wrap">
+            <div class="mi-wrap">
             <div class="mi-heading">MISSION CODE</div>
             <div class="mi-body">
                 <span style="opacity:.8;">▶</span>
                 <span class="mi-type">AARRR</span>
             </div>
             <div class="mi-foot">AUTHORIZATION: LEVEL GREEN · CHANNEL: STAY OR SKIP</div>
-        </div>
-        """, unsafe_allow_html=True)
+            </div>
+            """, unsafe_allow_html=True)
 
     # ---- Dataset (tabs[3]) ----
     with tabs[3]:
