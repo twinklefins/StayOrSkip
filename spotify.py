@@ -334,73 +334,73 @@ if section == "PROJECT OVERVIEW":
         """, unsafe_allow_html=True)
         st.caption("*Spotify 공식 회사 정보 기준 요약")
 
-        # ---- Background & Objectives ----
-        with tabs[2]:
-            section_title("Background & Objectives")
-            tight_top(-36)
+    # ---- Background & Objectives ----
+    with tabs[2]:
+        section_title("Background & Objectives")
+        tight_top(-36)
 
-            # (1) 카드 + 한 줄 요약
-            st.markdown("""
-            <style>
-            .cup-hover-card {
-                transition: all .25s ease;
-                background: rgba(255,255,255,.03);
-                border: 1px solid rgba(255,255,255,.10);
-                border-radius: 12px;
-                padding: 1.6rem 1.8rem;
-            }
-            .cup-hover-card:hover {
-                background: rgba(255,255,255,.08);
-                border-color: rgba(255,255,255,.18);
-                transform: translateY(-4px);
-                box-shadow: 0 0 15px rgba(29,185,84,.25);
-            }
-            .cup-one-liner {
-                font-size: 1.1rem;
-                font-weight: 600;
-                color: #D7E4DC;
-                text-align: center;
-                margin-top: 2.0rem;
-                margin-bottom: -0.2rem;
-                letter-spacing: 0.2px;
-            }
-            </style>
+        # (1) 카드 + 한 줄 요약
+        st.markdown("""
+        <style>
+        .cup-hover-card {
+            transition: all .25s ease;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 12px;
+            padding: 1.6rem 1.8rem;
+        }
+        .cup-hover-card:hover {
+            background: rgba(255,255,255,.08);
+            border-color: rgba(255,255,255,.18);
+            transform: translateY(-4px);
+            box-shadow: 0 0 15px rgba(29,185,84,.25);
+        }
+        .cup-one-liner {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #D7E4DC;
+            text-align: center;
+            margin-top: 2.0rem;
+            margin-bottom: -0.2rem;
+            letter-spacing: 0.2px;
+        }
+        </style>
 
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;">
-            <div class="cup-hover-card" style="text-align:center;">
-                <p style="font-size:1.5rem;">📈</p>
-                <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">스트리밍 시장 성장과 도전</p>
-                <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
-                글로벌 시장 급성장, 유입률↑ 이탈률↑<br>
-                높은 경쟁 속 체험 후 구독 전환율 하락<br>
-                콘텐츠 피로도·사용자 유지가 핵심 과제로 부상
-                </p>
-            </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;">
+        <div class="cup-hover-card" style="text-align:center;">
+            <p style="font-size:1.5rem;">📈</p>
+            <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">스트리밍 시장 성장과 도전</p>
+            <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
+            글로벌 시장 급성장, 유입률↑ 이탈률↑<br>
+            높은 경쟁 속 체험 후 구독 전환율 하락<br>
+            콘텐츠 피로도·사용자 유지가 핵심 과제로 부상
+            </p>
+        </div>
 
-            <div class="cup-hover-card" style="text-align:center;">
-                <p style="font-size:1.5rem;">🎧</p>
-                <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">Spotify의 강점</p>
-                <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
-                세계 최대 규모 청취 로그 및 오디오 피처 데이터 보유<br>
-                유저 행동 여정·이탈 패턴 분석에 최적화된 플랫폼
-                </p>
-            </div>
+        <div class="cup-hover-card" style="text-align:center;">
+            <p style="font-size:1.5rem;">🎧</p>
+            <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">Spotify의 강점</p>
+            <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
+            세계 최대 규모 청취 로그 및 오디오 피처 데이터 보유<br>
+            유저 행동 여정·이탈 패턴 분석에 최적화된 플랫폼
+            </p>
+        </div>
 
-            <div class="cup-hover-card" style="text-align:center;">
-                <p style="font-size:1.5rem;">🧭</p>
-                <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">AARRR 기반 분석 방향</p>
-                <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
-                Acquisition → Retention → Revenue<br>
-                단계별 핵심 지표 정의<br>
-                데이터 기반 리텐션·LTV 개선 전략 제안
-                </p>
-            </div>
-            </div>
+        <div class="cup-hover-card" style="text-align:center;">
+            <p style="font-size:1.5rem;">🧭</p>
+            <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">AARRR 기반 분석 방향</p>
+            <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
+            Acquisition → Retention → Revenue<br>
+            단계별 핵심 지표 정의<br>
+            데이터 기반 리텐션·LTV 개선 전략 제안
+            </p>
+        </div>
+        </div>
 
-            <div class="cup-one-liner">“Retention is the new acquisition — 남게 만드는 전략이 Spotify Korea의 성장을 결정한다.”</div>
-            """, unsafe_allow_html=True)
+        <div class="cup-one-liner">“Retention is the new acquisition — 남게 만드는 전략이 Spotify Korea의 성장을 결정한다.”</div>
+        """, unsafe_allow_html=True)
 
-        # (2) 시네마틱 박스 — 카드와 동일한 스타일 + 그린 포인트 + 인라인 미션코드
+        # (2) 시네마틱 박스
         st.markdown("""
         <style>
         /* 카드와 동일한 톤 */
