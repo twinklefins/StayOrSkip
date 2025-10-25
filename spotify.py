@@ -423,7 +423,6 @@ if section == "PROJECT OVERVIEW":
             <div class="cup-scene-title">🎬 가상 시나리오 — <strong>Spotify Korea TF</strong></div>
             <p>한때 ‘음악은 스킵, 구독은 무료’로 시작된 그들의 여정.<br>
             무료의 달콤함만 맛보고 사라진 <strong>‘구독 유목민들’</strong>이 늘어났다.<br>
-            하지만, 리텐션은 새로운 어퀴지션이었다 — <strong>Retention is the new Acquisition.</strong></p>
             <p><strong>Spotify Korea TF</strong>는 데이터로 그들의 발자국을 추적한다.<br>
             <em>“그들은 왜 떠났을까? 그리고 어떻게 다시 머물게 할 수 있을까?”</em><br>
             리텐션 미션을 위해 모인 <strong>데이터컵밥 팀</strong>의 분석이 시작된다.</p>
