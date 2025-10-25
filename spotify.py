@@ -354,21 +354,33 @@ if section == "PROJECT OVERVIEW":
                 box-shadow: 0 0 15px rgba(29,185,84,.25);
             }
             .cup-scene {
-                background: linear-gradient(135deg, rgba(29,185,84,.12), rgba(255,255,255,.03));
+                background: linear-gradient(145deg, rgba(29,185,84,.10), rgba(255,255,255,.02));
                 border: 1px solid rgba(29,185,84,.25);
-                border-radius: 12px;
-                padding: 2rem 2.2rem;
-                margin-top: 1.8rem;
-                font-size: 1.05rem;
-                line-height: 1.9;
+                border-radius: 14px;
+                padding: 2.2rem 2.8rem;
+                margin-top: 2.2rem;
+                text-align: center;
+                font-size: 1.08rem;
+                line-height: 1.95;
                 color: rgba(255,255,255,.92);
+                box-shadow: 0 0 20px rgba(29,185,84,.15);
             }
             .cup-scene strong { color: #1ED760; font-weight: 700; }
+            .cup-scene em { color: rgba(255,255,255,.85); font-style: italic; }
             .cup-scene-title {
                 font-weight: 800;
                 font-size: 1.3rem;
                 color: #1DB954;
-                margin-bottom: .8rem;
+                margin-bottom: 1.0rem;
+            }
+            .cup-one-liner {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #D7E4DC;
+                text-align: center;
+                margin-top: 2.0rem;
+                margin-bottom: -0.8rem;
+                letter-spacing: 0.2px;
             }
             </style>
 
@@ -405,16 +417,19 @@ if section == "PROJECT OVERVIEW":
             </div>
 
             <!-- 🎬 시네마틱 도입부 -->
+            <div class="cup-one-liner">“Retention is the new acquisition — 남게 만드는 전략이 Spotify Korea의 성장을 결정한다.”</div>
+
             <div class="cup-scene">
             <div class="cup-scene-title">🎬 가상 시나리오 — <strong>Spotify Korea TF</strong></div>
             <p>한때 ‘음악은 스킵, 구독은 무료’로 시작된 그들의 여정.<br>
             무료의 달콤함만 맛보고 사라진 <strong>‘구독 유목민들’</strong>이 늘어났다.<br>
             하지만, 리텐션은 새로운 어퀴지션이었다 — <strong>Retention is the new Acquisition.</strong></p>
-            <p>이제 <strong>Spotify Korea TF</strong>는 데이터로 그들의 발자국을 추적한다.<br>
+            <p><strong>Spotify Korea TF</strong>는 데이터로 그들의 발자국을 추적한다.<br>
             <em>“그들은 왜 떠났을까? 그리고 어떻게 다시 머물게 할 수 있을까?”</em><br>
-            리텐션 미션을 위해 모인 데이터컵밥 팀의 분석이 시작된다.</p>
+            리텐션 미션을 위해 모인 <strong>데이터컵밥 팀</strong>의 분석이 시작된다.</p>
             </div>
             """, unsafe_allow_html=True)
+
 
     # ---- Dataset (tabs[3]) ----
     with tabs[3]:
