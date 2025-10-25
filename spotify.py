@@ -448,7 +448,7 @@ if section == "PROJECT OVERVIEW":
             </p>
 
             <p style="margin-top:1.0rem; font-size:1.05rem;">
-                <b><span class="brand">Spotify Korea TF</span>데이터컵밥팀</b>은
+                <b><span class="brand">Spotify Korea TF</span> 데이터컵밥팀</b>은
                 <b class="brand">유저의 행동 여정</b>을 데이터로 추적해,<br>
                 ‘<b class="brand">스킵 제너레이션</b>’을 이탈로부터 구하고<br>
                 ‘<b class="brand">스테이 제너레이션</b>’으로 재탄생시키기 위한 <b class="brand">작전</b>을 시작했다.
