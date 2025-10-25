@@ -1,134 +1,133 @@
-0
-0.11091235822091898
-0.10014254556860293
-0.0553723897147728
-0.03653439985974852
-0.026845566792731316
-0.0261729967362113
-0.022057281781858215
-0.020328278261606002
-0.017183117890494776
-0.01595981579777504
-0.015829274081472885
-0.015575839456411902
-0.014936705281468182
-0.014923531302420353
-0.01491534563726067
-0.01460562866749102
-0.013366580987869263
-0.013336706477990809
-0.012611433792545297
-0.012434960588840084
-0.012341807773465661
-0.012217263148448171
-0.011937348009502854
-0.011592690192562715
-0.011432447204847812
-0.011394390159764725
-0.011291069877220856
-0.010707268861002256
-0.010461433441484203
-0.010175929997928072
-0.010142590982692379
-0.010121330617273156
-0.010082304563853606
-0.010056230364613093
-0.00991167467997364
-0.009541849969319194
-0.009220299060196318
-0.009187372505958644
-0.009010910287892023
-0.00841560468173645
-0.008269778086656675
-0.008189408520889894
-0.008179145951919748
-0.007830131659323673
-0.007717813236110989
-0.0075765244277787745
-0.0074431751090987125
-0.007423843365466651
-0.006872631164187866
-0.006861551982624298
-0.00666183727497996
-0.006600560341338813
-0.006489899332846403
-0.006466852029692628
-0.0062070603201791735
-0.0061638977218379815
-0.006131134139160205
-0.005805987012668591
-0.005787179485350728
-0.004255240508237469
-0.004106237966337598
-0.003997425673292698
-0.003877666065695645
-0.0038370217031080157
-0.003699747301317846
-0.003693686515457815
-0.003630774014050518
-0.0035824983708449823
-0.0033822119726569354
-0.0030060478185284633
-0.002976262211536807
-0.002926019159814117
-0.0028076886966163436
-0.002428393617889908
-0.0023683284496813103
-0.002254414310603405
-0.0022148676606895904
-0.0019767531438915757
-0.00177982704263257
-0.0016227638637534847
-0.0015622459525422
-0.0015016685197233206
-0.0014832218264214294
-0.0014816462614262733
-0.0013833868004124522
-0.0008857449181402167
-0.000863686914478004
-0.0007778262677280048
-0.0007181680967931888
-0.0006497802420626646
-0.0006025644328177747
-0.0005802329495664457
-0.0005473183035793301
-0.000506857066201417
-0.0005017270385289952
-0.0004922322100243881
-0.000480514877230988
-0.00042334182979810977
-0.0004131850383147092
-0.00040788366404513496
-0.00040723951749482715
-0.0003868162757677272
-0.00038125658364449017
-0.0003075229002155183
-0.00021299635627251148
-0.00018437133450902062
-0.00016438913726671804
-0.00015873596817445246
-0.00013214919023240003
-0.00012890903839390762
-0.00010593515088783868
-0.00010529654390162059
-9.81033512323058e-05
-9.798450759221703e-05
-9.725384434283062e-05
-6.82314279321508e-05
-5.659445606492506e-05
-4.986301724133139e-05
-4.792193103672195e-05
-4.1880460887923385e-05
-3.6567760520619046e-05
-3.4796948608273296e-05
-2.1681741538806933e-05
-2.1408839430847446e-05
-0.0
-0.0
-0.0
-0.0
-0.0
-0.0
-0.0
-0.0
-0.0
+,importance
+subscription_plan_Premium,0.10626420110351686
+is_premium,0.10479070268600502
+music_recc_rating,0.0564170320273355
+music_Influencial_mood_Sadness or melancholy,0.036556077602195376
+preffered_pod_duration_Longer,0.026351876525802825
+fav_pod_genre_Sports,0.02586636294351725
+fav_music_genre_Rap,0.02242726616319635
+"spotify_listening_device_Smartphone, Computer or laptop, Smart speakers or voice assistants",0.020629972932989023
+spotify_listening_device_Smartphone,0.016923098672081457
+pod_host_preference_Well known individuals,0.01685210407232054
+music_lis_frequency_While Traveling,0.016175844435974883
+fav_pod_genre_Lifestyle and Health,0.0159988589376078
+music_expl_method_Playlists,0.015141338890896684
+pod_lis_frequency_Several times a week,0.014624173016835803
+music_lis_frequency_Workout session,0.014573096574018868
+music_lis_frequency_leisure time,0.014570003652022366
+pod_variety_satisfaction_Satisfied,0.013686454029921453
+pod_variety_satisfaction_Neutral,0.013189002625658813
+pod_lis_frequency_Rarely,0.013031797193499678
+fav_music_genre_Melody,0.012784445544568927
+preffered_pod_format_Story telling,0.012366897785820568
+"music_expl_method_recommendations, Playlists, Radio",0.012356032803651199
+"spotify_listening_device_Smartphone, Computer or laptop",0.012334090965601185
+music_time_slot_Morning,0.01228177287111562
+music_lis_frequency_Study Hours,0.011450688177690061
+fav_music_genre_Rock,0.01124343048535867
+"music_lis_frequency_While Traveling, leisure time",0.011045862699149681
+"music_expl_method_recommendations, Playlists",0.010791641739636346
+music_expl_method_recommendations,0.010671413593701832
+fav_pod_genre_Health and Fitness,0.00997127097097837
+fav_music_genre_classical,0.009915125456172668
+fav_pod_genre_Comedy,0.009880241061745097
+spotify_listening_device_Smart speakers or voice assistants,0.009753240657961813
+preffered_pod_format_Educational,0.00972912836031667
+music_expl_method_Radio,0.009703377255136815
+fav_music_genre_Pop,0.009437264122325649
+"music_lis_frequency_Office hours, Study Hours, While Traveling, Workout session, leisure time,",0.00920581117879431
+music_time_slot_Night,0.009109854076217928
+"spotify_listening_device_Computer or laptop, Smart speakers or voice assistants",0.008446021313621576
+pod_host_preference_unknown Podcasters,0.008351120355010939
+preffered_pod_format_No preference / Not applicable,0.00809394537226305
+preferred_listening_content_Podcast,0.008005399565941675
+preffered_pod_duration_Shorter,0.007805393525312784
+"music_Influencial_mood_Relaxation and stress relief, Sadness or melancholy",0.007758995616982318
+music_Influencial_mood_Social gatherings or parties,0.007750972949106907
+pod_lis_frequency_Once a week,0.007666064518672046
+"music_Influencial_mood_Sadness or melancholy, Social gatherings or parties",0.0074241613861695315
+"music_expl_method_recommendations, Playlists, Others",0.00716832399673368
+music_Influencial_mood_Uplifting and motivational,0.006848512355152272
+"music_expl_method_recommendations, Radio",0.006722355885336795
+"music_lis_frequency_Office hours, While Traveling",0.00665294915097324
+"spotify_listening_device_Smartphone, Computer or laptop, Smart speakers or voice assistants, Wearable devices",0.006608177480901133
+fav_pod_genre_Food and cooking,0.006218758326935475
+pod_lis_frequency_Never,0.006113003916147489
+"music_lis_frequency_While Traveling, Workout session, leisure time",0.00597315131762855
+"music_Influencial_mood_Relaxation and stress relief, Uplifting and motivational, Sadness or melancholy, Social gatherings or parties",0.0059722880451332306
+preffered_pod_format_Interview,0.005784045962020802
+"music_lis_frequency_Workout session, leisure time",0.005592592319334518
+fav_pod_genre_No preference / Not applicable,0.005426971170197288
+pod_host_preference_No preference / Not applicable,0.004842763003977042
+"music_expl_method_Playlists, Radio",0.004631757569473038
+"spotify_listening_device_Computer or laptop, Wearable devices",0.004086907528873441
+"music_Influencial_mood_Relaxation and stress relief, Social gatherings or parties",0.004080111525864092
+preffered_pod_duration_No preference / Not applicable,0.0037510003818843995
+"music_expl_method_recommendations, Others",0.0035863701483905214
+"music_lis_frequency_Office hours, While Traveling, leisure time",0.0034845460817737608
+"music_Influencial_mood_Relaxation and stress relief, Uplifting and motivational",0.0034823602936644147
+"music_lis_frequency_Office hours, Workout session, leisure time",0.0034810549330967114
+"music_lis_frequency_Study Hours, While Traveling, Workout session",0.0034460903499228183
+"music_Influencial_mood_Relaxation and stress relief, Uplifting and motivational, Sadness or melancholy",0.003377584613155466
+"fav_music_genre_Classical & melody, dance",0.0029691304266141055
+"music_Influencial_mood_Uplifting and motivational, Sadness or melancholy",0.0029446141210749486
+"music_lis_frequency_Office hours, Study Hours, Workout session",0.002658582436829158
+"music_lis_frequency_Study Hours, Workout session, leisure time",0.002497394674371133
+"music_Influencial_mood_Relaxation and stress relief, Uplifting and motivational, Social gatherings or parties",0.0023344610884476493
+fav_music_genre_Electronic/Dance,0.0022972891944342054
+"music_expl_method_Playlists, Radio, Others",0.0020276791126516234
+"spotify_listening_device_Smartphone, Smart speakers or voice assistants",0.00198850126374496
+"music_Influencial_mood_Relaxation and stress relief, Sadness or melancholy, Social gatherings or parties",0.0018666801137898292
+"music_lis_frequency_While Traveling, Workout session",0.0017760326191543982
+"music_lis_frequency_While Traveling, Before bed",0.0014955440030164548
+"music_expl_method_Radio, Others",0.0014063925659075949
+"spotify_listening_device_Smart speakers or voice assistants, Wearable devices",0.001344817183897623
+"music_Influencial_mood_Uplifting and motivational, Social gatherings or parties",0.0012566251063843106
+"music_lis_frequency_Study Hours, Workout session",0.0012402732437345005
+spotify_listening_device_Wearable devices,0.0009749177437866988
+"music_lis_frequency_Office hours, Workout session",0.0009060636976976873
+"music_lis_frequency_Office hours, Study Hours, While Traveling, Workout session, leisure time",0.0008331125942735203
+"music_lis_frequency_Office hours, While Traveling, Workout session",0.0007446229853498193
+"music_lis_frequency_Study Hours, While Traveling, leisure time",0.0006786449619463316
+"music_lis_frequency_Office hours, Study Hours, While Traveling",0.0006697142570301071
+"music_expl_method_recommendations, Playlists, Radio, Others",0.0006389132978106509
+"spotify_listening_device_Computer or laptop, Smart speakers or voice assistants, Wearable devices",0.0006384361679794931
+"music_lis_frequency_Study Hours, While Traveling",0.000628235873301188
+fav_pod_genre_Stories,0.0006137717382063019
+"music_lis_frequency_Study Hours, leisure time",0.0005950022439652853
+"music_lis_frequency_Office hours, While Traveling, Workout session, leisure time",0.0005466753542128363
+"music_expl_method_Playlists, Others",0.0004543049304223775
+"spotify_listening_device_Smartphone, Wearable devices",0.0004114904608595998
+"music_lis_frequency_Study Hours, While Traveling, Workout session, leisure time",0.00039967090696959326
+"music_lis_frequency_Office hours, leisure time",0.0003852176253440755
+music_lis_frequency_Social gatherings,0.0003751981559613465
+"spotify_listening_device_Smartphone, Smart speakers or voice assistants, Wearable devices",0.000299564399379941
+fav_music_genre_Kpop,0.0002863795078508067
+"music_lis_frequency_Office hours, Study Hours, While Traveling, leisure time",0.0002511743086951051
+"music_expl_method_recommendations, Radio, Others",0.00018227929622998621
+"music_expl_method_Others, Friends",0.00017271400444678563
+fav_pod_genre_Novels,0.00015440653758811812
+music_lis_frequency_Random,0.00014018941638849417
+"spotify_listening_device_Smartphone, Computer or laptop, Wearable devices",0.00013989626850114306
+"music_expl_method_Others, Social media",0.0001331069402536482
+fav_pod_genre_Educational,0.00012896945789123818
+"music_expl_method_Others, Search",0.00010278088622840367
+fav_music_genre_trending songs random,9.529805892154585e-05
+fav_pod_genre_Murder Mystery,9.107919229881987e-05
+"music_lis_frequency_Office hours, While Traveling,",8.735315793136168e-05
+"music_expl_method_recommendations,Others, Social media",8.697892032061605e-05
+fav_pod_genre_General knowledge,7.791431801568112e-05
+"music_lis_frequency_Office hours, Study Hours, While Traveling, Workout session",7.03524426725669e-05
+fav_music_genre_Old songs,6.440137598347135e-05
+fav_pod_genre_Self help,3.970665006593524e-05
+fav_pod_genre_Finance related and current affairs,3.168280202923036e-05
+fav_pod_genre_Everything,1.175394352176901e-05
+"music_expl_method_recommendations, Others, Social media",1.0222175600801076e-05
+fav_pod_genre_Spiritual and devotional,7.465976370723482e-06
+fav_pod_genre_Dance and Relevant cases,1.7149626533902173e-06
+"music_lis_frequency_Office hours,Study Hours, While Traveling, leisure time",0.0
+"fav_pod_genre_Political, informative, topics that interests me",0.0
+fav_pod_genre_Technology,0.0
+"music_lis_frequency_While Traveling, Workout session, leisure time, Night time, when cooking",0.0
+"music_Influencial_mood_Uplifting and motivational, Sadness or melancholy, Social gatherings or parties",0.0
+fav_pod_genre_Informative stuff,0.0
