@@ -397,9 +397,6 @@ if section == "PROJECT OVERVIEW":
         </div>
         </div>
 
-        <div class="cup-one-liner">“Retention is the new acquisition — 남게 만드는 전략이 Spotify Korea의 성장을 결정한다.”</div>
-        """, unsafe_allow_html=True)
-
         # (2) 시네마틱 박스
         st.markdown("""
         <style>
