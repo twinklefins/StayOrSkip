@@ -430,7 +430,35 @@ if section == "PROJECT OVERVIEW":
             리텐션 미션을 위해 모인 <strong>데이터컵밥 팀</strong>의 분석이 지금 시작된다.</p>
             </div>
             """, unsafe_allow_html=True)
+            st.markdown("""
+                <div style="
+                background:linear-gradient(135deg, rgba(25,20,20,0.95), rgba(0,0,0,0.85));
+                border:1px solid rgba(255,255,255,0.08);
+                border-radius:14px;
+                padding:2.2rem 2.5rem;
+                text-align:center;
+                color:#F9FCF9;
+                line-height:1.75;
+                box-shadow:0 0 25px rgba(29,185,84,.25);
+            ">
+                <p style="font-size:1.3rem; margin-bottom:1.2rem;">🎧 <b>“Skip Generation — 스킵은 빠르지만, 이탈은 더 빨랐다.”</b></p>
 
+                <p style="font-size:1.05rem; color:rgba(255,255,255,.85);">
+                스트리밍 세상의 체험 유목민들.<br>
+                한 곡 듣고 넘기고, 한 달 듣고 떠난 사람들.
+                </p>
+
+                <p style="margin-top:1.2rem; font-size:1.05rem; color:rgba(255,255,255,.9);">
+                <b>Spotify Korea TF 데이터컵밥팀</b>은 그들의 <b>패턴</b>을 데이터로 추적해,<br>
+                ‘<b>스킵 제너레이션</b>’을 이탈로부터 구하고<br>
+                ‘<b>스테이 제너레이션</b>’으로 재탄생시키기 위한 <b>작전</b>을 시작했다.
+                </p>
+
+                <p style="margin-top:1.6rem; font-size:1.1rem; color:#1DB954; font-weight:700;">
+                🎯 미션 코드: <span style="color:#1ED760;">AARRR</span>
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
 
     # ---- Dataset (tabs[3]) ----
     with tabs[3]:
