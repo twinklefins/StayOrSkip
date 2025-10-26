@@ -771,9 +771,6 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
     # ④ Revenue (★ 네 파트: 우리가 만든 CSV 사용)
     # -------------------------------
     with tabs[3]:
-        st.subheader("Revenue")
-        st.caption("CSV(export) 기반 KPI / 트렌드 / 취향별 LTV / 중요 요인")
-
         # sections/revenue.py  — simple & robust + captions + insights box
         import os, glob
         import pandas as pd
