@@ -817,7 +817,7 @@ elif section == "DATA EXPLORATION":
 
         st.markdown("""
         <div class="cup-card">
-        결측치, 이상치, 문자열 컬럼 정규화 과정을 통해 분석 가능한 형태로 정제합니다.<br><br>
+        결측치, 이상치, 문자열 컬럼 정규화 과정을 통해 분석 가능한 형태로 정제했습니다.<br><br>
         주요 처리 단계:
         <ul>
             <li>문자형 매출(`₩`, `,`, `원`) 제거 → 숫자형 변환</li>
@@ -854,7 +854,7 @@ elif section == "DATA EXPLORATION":
         tight_top(-36)
         st.markdown("""
         <div class="cup-card">
-        유저 분포, 구독 요금제 비율, 청취 기기 및 시간대 등 주요 변수를 시각화하여 트렌드를 탐색합니다.
+        유저 분포, 구독 요금제 비율, 청취 기기 및 시간대 등 주요 변수를 시각화하여 트렌드를 탐색했습니다.
         </div>
         """, unsafe_allow_html=True)
 
