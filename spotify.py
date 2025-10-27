@@ -898,64 +898,55 @@ elif section == "DATA EXPLORATION":
             st.caption("• x축 라벨을 가로로 고정하고 Spotify 그린 컬러로 표시했습니다.")
         else:
             st.info("청취 시간대 관련 컬럼이 없습니다.")
-            
-        # 🔎 요약 인사이트 (데이터 기반 자동 계산)
+
+        # 🔎 요약 인사이트 (마크다운 굵게 제거 + 실제 비율 기반 문구)
         section_title("EDA Summary Insight")
 
-        # 요금제 컬럼 탐색
-        plan_col = None
-        for c in ["subscription_plan", "spotify_subscription_plan"]:
-            if c in tidy.columns:
-                plan_col = c
-                break
-
-        # 디바이스 컬럼 탐색
-        device_col = None
-        for c in ["spotify_listening_device", "listening_device", "device"]:
-            if c in tidy.columns:
-                device_col = c
-                break
+        # 요금제/디바이스 컬럼 탐색
+        plan_col = next((c for c in ["subscription_plan","spotify_subscription_plan"] if c in tidy.columns), None)
+        device_col = next((c for c in ["spotify_listening_device","listening_device","device"] if c in tidy.columns), None)
 
         ins = []
 
-        # ① Premium 비중
+        # ① Premium 비중 문구 (낮으면 '대다수가 Free')
         if plan_col:
-            prem_ratio = (tidy[plan_col].astype(str).str.contains("Premium", case=False, na=False)).mean()
-            ins.append(f"Premium 비중이 **{prem_ratio*100:.1f}%**로 높습니다.")
-        else:
-            ins.append("요금제 컬럼을 찾지 못해 Premium 비중 계산을 생략했습니다.")
-
-        # ② 주 사용 기기 (스마트폰 강조)
-        if device_col:
-            dev = (
-                tidy[device_col].astype(str).str.strip()
-                .replace({"Mobile": "Smartphone", "Phone":"Smartphone"})
-            )
-            top = dev.value_counts(normalize=True, dropna=False).head(1)
-            top_name = top.index[0] if len(top) else "—"
-            top_ratio = float(top.iloc[0])*100 if len(top) else 0.0
-
-            # “거의 다 스마트폰” 메시지 우선
-            if dev.str.contains("Smartphone|Mobile|Phone", case=False, na=False).mean() >= 0.6:
-                ins.append("사용자의 **대부분이 스마트폰**으로 이용합니다.")
+            is_premium = tidy[plan_col].astype(str).str.contains("Premium", case=False, na=False)
+            prem_ratio = float(is_premium.mean())   # 0~1
+            prem_pct = prem_ratio * 100.0
+            if prem_ratio >= 0.50:
+                ins.append(f"Premium 비중 {prem_pct:.1f}%.")
             else:
-                ins.append(f"가장 많이 쓰는 기기는 **{top_name} ({top_ratio:.1f}%)** 입니다.")
+                ins.append(f"대다수가 Free이며, Premium 비중은 {prem_pct:.1f}%입니다.")
         else:
-            ins.append("주 사용 기기 컬럼이 없어 디바이스 인사이트를 생략했습니다.")
+            ins.append("요금제 컬럼이 없어 비중을 계산하지 못했습니다.")
 
-        # ③ 청취 시간대 한 줄 요약 (있으면)
-        if "music_time_slot" in tidy.columns:
-            slot_top = tidy["music_time_slot"].value_counts().head(1)
-            if len(slot_top):
-                ins.append(f"청취는 **{slot_top.index[0]}** 시간대가 가장 활발합니다.")
+        # ② 주 사용 기기 (스마트폰 비중 우선 노출)
+        if device_col:
+            dev_series = tidy[device_col].astype(str).str.strip()
+            smart_mask = dev_series.str.contains(r"Smartphone|Mobile|Phone|휴대폰|스마트폰", case=False, na=False)
+            smart_pct = smart_mask.mean() * 100.0
+            if smart_mask.mean() >= 0.60:
+                ins.append(f"스마트폰 사용이 압도적입니다(약 {smart_pct:.1f}%).")
+            else:
+                top = dev_series.value_counts(normalize=True, dropna=False).head(1)
+                if len(top):
+                    ins.append(f"가장 많이 쓰는 기기는 {top.index[0]}(약 {float(top.iloc[0])*100:.1f}%)입니다.")
+        else:
+            ins.append("주 사용 기기 정보를 찾지 못했습니다.")
 
+        # ③ 청취 시간대 한 줄 요약
+        if "music_time_slot" in tidy.columns and tidy["music_time_slot"].notna().any():
+            top_slot = tidy["music_time_slot"].value_counts().idxtop()
+            ins.append(f"청취는 {top_slot} 시간대가 가장 활발합니다.")
+
+        # 박스 렌더 (HTML – 마크다운 굵게 미사용)
         st.markdown(
-            f"""
+            """
         <div style="background:rgba(29,185,84,.08); border:1px solid rgba(29,185,84,.35);
                     border-radius:12px; padding:1.1rem 1.3rem;">
         <p style="margin:0 0 .4rem 0; font-weight:800; color:#1ED760;">📦 EDA Summary Insight</p>
-        <ul style="margin:.2rem 0 0 1.1rem;">
-            {''.join([f'<li style="line-height:1.8;color:#E6F4EC">{x}</li>' for x in ins])}
+        <ul style="margin:.2rem 0 0 1.1rem; color:#E6F4EC; line-height:1.8;">
+            """ + "".join([f"<li>{msg}</li>" for msg in ins]) + """
         </ul>
         </div>
         """,
