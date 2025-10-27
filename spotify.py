@@ -865,32 +865,102 @@ elif section == "DATA EXPLORATION":
 
         # 3️⃣ 청취 시간대별 분포
         section_title("Listening Time Slot Distribution", "시간대별 음악 청취 비율")
+
         if "music_time_slot" in tidy.columns:
-            time_cnt = tidy["music_time_slot"].value_counts().reset_index()
-            time_cnt.columns = ["time_slot", "users"]
+            # 원하는 순서 (필요하면 Evening 추가/변경)
+            order = ["Morning", "Afternoon", "Evening", "Night"]
+
+            time_cnt = (
+                tidy["music_time_slot"]
+                .value_counts(dropna=False)
+                .rename_axis("time_slot")
+                .reset_index(name="users")
+            )
+
+            # 순서 적용 + 없는 라벨은 제거
+            time_cnt["time_slot"] = pd.Categorical(time_cnt["time_slot"], categories=order, ordered=True)
+            time_cnt = time_cnt.dropna(subset=["time_slot"]).sort_values("time_slot")
+
             line = (
                 alt.Chart(time_cnt)
-                .mark_line(point=True, color="#80DEEA")
+                .mark_line(point=alt.OverlayMarkDef(size=70, filled=True, fill="#1DB954"), stroke="#1DB954", strokeWidth=3)
                 .encode(
-                    x=alt.X("time_slot:N", sort=None, title=None),
+                    x=alt.X("time_slot:N", sort=order, title=None,
+                            axis=alt.Axis(labelAngle=0, labelOverlap=False)),
                     y=alt.Y("users:Q", title="User Count"),
-                    tooltip=["time_slot", "users"]
+                    tooltip=[alt.Tooltip("time_slot:N", title="Time Slot"),
+                            alt.Tooltip("users:Q", title="Users", format=",.0f")]
                 )
-                .properties(height=260)
+                .properties(height=280)
+                .configure_axis(labelColor="#CFE3D8", titleColor="#CFE3D8", grid=True, gridOpacity=0.12)
             )
             st.altair_chart(line, use_container_width=True)
-            st.caption("• 출퇴근 시간대(오전·저녁)에 청취 비율이 가장 높음.")
+            st.caption("• x축 라벨을 가로로 고정하고 Spotify 그린 컬러로 표시했습니다.")
         else:
             st.info("청취 시간대 관련 컬럼이 없습니다.")
+            
+        # 🔎 요약 인사이트 (데이터 기반 자동 계산)
+        section_title("EDA Summary Insight")
 
-        # 종합 인사이트
-        st.markdown("---")
-        st.success("""
-        ### 📦 EDA Summary Insight
-        - Premium 비중이 전체의 절반 이상이며, Free → Premium 전환 여지가 큼  
-        - 스피커·데스크톱 사용자층이 충성도가 높아 보임  
-        - 청취 시간대는 출퇴근 시간대가 집중 구간으로 리텐션 전략 타깃 가능
-        """)
+        # 요금제 컬럼 탐색
+        plan_col = None
+        for c in ["subscription_plan", "spotify_subscription_plan"]:
+            if c in tidy.columns:
+                plan_col = c
+                break
+
+        # 디바이스 컬럼 탐색
+        device_col = None
+        for c in ["spotify_listening_device", "listening_device", "device"]:
+            if c in tidy.columns:
+                device_col = c
+                break
+
+        ins = []
+
+        # ① Premium 비중
+        if plan_col:
+            prem_ratio = (tidy[plan_col].astype(str).str.contains("Premium", case=False, na=False)).mean()
+            ins.append(f"Premium 비중이 **{prem_ratio*100:.1f}%**로 높습니다.")
+        else:
+            ins.append("요금제 컬럼을 찾지 못해 Premium 비중 계산을 생략했습니다.")
+
+        # ② 주 사용 기기 (스마트폰 강조)
+        if device_col:
+            dev = (
+                tidy[device_col].astype(str).str.strip()
+                .replace({"Mobile": "Smartphone", "Phone":"Smartphone"})
+            )
+            top = dev.value_counts(normalize=True, dropna=False).head(1)
+            top_name = top.index[0] if len(top) else "—"
+            top_ratio = float(top.iloc[0])*100 if len(top) else 0.0
+
+            # “거의 다 스마트폰” 메시지 우선
+            if dev.str.contains("Smartphone|Mobile|Phone", case=False, na=False).mean() >= 0.6:
+                ins.append("사용자의 **대부분이 스마트폰**으로 이용합니다.")
+            else:
+                ins.append(f"가장 많이 쓰는 기기는 **{top_name} ({top_ratio:.1f}%)** 입니다.")
+        else:
+            ins.append("주 사용 기기 컬럼이 없어 디바이스 인사이트를 생략했습니다.")
+
+        # ③ 청취 시간대 한 줄 요약 (있으면)
+        if "music_time_slot" in tidy.columns:
+            slot_top = tidy["music_time_slot"].value_counts().head(1)
+            if len(slot_top):
+                ins.append(f"청취는 **{slot_top.index[0]}** 시간대가 가장 활발합니다.")
+
+        st.markdown(
+            f"""
+        <div style="background:rgba(29,185,84,.08); border:1px solid rgba(29,185,84,.35);
+                    border-radius:12px; padding:1.1rem 1.3rem;">
+        <p style="margin:0 0 .4rem 0; font-weight:800; color:#1ED760;">📦 EDA Summary Insight</p>
+        <ul style="margin:.2rem 0 0 1.1rem;">
+            {''.join([f'<li style="line-height:1.8;color:#E6F4EC">{x}</li>' for x in ins])}
+        </ul>
+        </div>
+        """,
+            unsafe_allow_html=True
+        )
 
     # ─────────────── 🧮 ③ Metrics Definition ───────────────
     with tabs[2]:
