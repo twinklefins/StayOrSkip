@@ -800,10 +800,10 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
     tabs = st.tabs(["Acquisition", "Activation", "Retention", "Revenue"])
 
     # -------------------------------
-    # ① Acquisition (기존 Funnel 재사용)
+    # ① Acquisition
     # -------------------------------
     with tabs[0]:
-        st.subheader("Acquisition (Funnel)")
+        st.subheader("Acquisition")
         st.caption("방문 → 가입 → 첫 재생 → 구독 전환율을 단계별로 비교합니다.")
 
     # -------------------------------
