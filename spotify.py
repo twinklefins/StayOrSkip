@@ -12,6 +12,90 @@ import os
 import re
 import altair as alt  # ★ 인터랙티브 차트용
 
+# ====== Global Dark Theme (matplotlib + Altair + Streamlit widgets) ======
+def apply_global_dark():
+    import streamlit as st, matplotlib.pyplot as plt, altair as alt
+
+    # 2-1) Matplotlib 전역 (rgba 문자열 금지 → hex + alpha)
+    plt.rcParams.update({
+        "figure.facecolor":          "#121212",
+        "axes.facecolor":            "#191414",
+        "savefig.facecolor":         "#121212",
+        "axes.edgecolor":            "#CFE3D8",
+        "axes.labelcolor":           "#CFE3D8",
+        "xtick.color":               "#CFE3D8",
+        "ytick.color":               "#CFE3D8",
+        "text.color":                "#EAFBF1",
+        "grid.color":                "#2A2A2A",
+        "grid.alpha":                0.35,
+        "axes.grid":                 False,       # 각 차트에서 켜고 싶으면 개별 설정
+    })
+
+    # 2-2) Altair 전역 테마 등록/활성
+    def _alt_dark():
+        return {
+            "config": {
+                "background": "#121212",
+                "view": {"fill": "#191414", "strokeOpacity": 0},
+                "axis": {
+                    "labelColor": "#CFE3D8",
+                    "titleColor": "#CFE3D8",
+                    "grid": True,
+                    "gridColor": "#2A2A2A",
+                    "tickColor": "#CFE3D8"
+                },
+                "legend": {"labelColor": "#CFE3D8", "titleColor": "#CFE3D8"},
+                "range": {
+                    "category": ["#1DB954","#80DEEA","#FFC857","#F95D6A","#6A4C93","#43BCCD"]
+                }
+            }
+        }
+    alt.themes.register("cup_dark", _alt_dark)
+    alt.themes.enable("cup_dark")
+
+    # 2-3) Streamlit 위젯/표/탭 등 전역 CSS 오버라이드 (KPI 라벨 포함)
+    st.markdown("""
+    <style>
+    :root{
+      --bg:#121212; --panel:#191414; --text:#F9FCF9; --muted:#D7E4DC; --line:rgba(255,255,255,.08);
+      --brand:#1DB954; --brand-2:#1ED760;
+    }
+    html, body, .stApp,[data-testid="stAppViewContainer"], [data-testid="stMain"]{
+      background:var(--bg)!important; color:var(--text)!important;
+    }
+    [data-testid="stHeader"]{ background:var(--bg)!important; box-shadow:none!important; }
+
+    /* Tabs / 강조 색 */
+    .stTabs [data-baseweb="tab"] p{ color:rgba(255,255,255,0.72)!important; }
+    .stTabs [data-baseweb="tab"][aria-selected="true"]{ border-bottom:2px solid var(--brand)!important; }
+    .stTabs [data-baseweb="tab"]:hover{ border-bottom-color: var(--brand-2)!important; }
+
+    /* KPI 카드 — 라벨 더 밝게, 값은 브랜드 초록 */
+    div[data-testid="stMetric"] div[data-testid="stMetricLabel"] p{
+      color:#EAFBF1!important; font-weight:700!important;
+    }
+    div[data-testid="stMetric"] div[data-testid="stMetricValue"]{
+      color:#1DB954!important; font-weight:800!important;
+    }
+
+    /* DataFrame (AG Grid) 다크 */
+    [data-testid="stDataFrame"] .ag-root-wrapper,
+    [data-testid="stDataFrame"] .ag-body-viewport,
+    [data-testid="stDataFrame"] .ag-header { background:#191414!important; }
+    [data-testid="stDataFrame"] div[role="columnheader"],
+    [data-testid="stDataFrame"] div[role="gridcell"]{
+      color:#EAFBF1!important; border-color:rgba(255,255,255,.08)!important;
+    }
+
+    /* Altair 컨테이너/툴팁 */
+    .vega-embed, .vega-embed details, .vega-embed details summary{
+      background:#121212!important; color:#EAFBF1!important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+# ====== call once (바로 아래 줄 추가) ======
+apply_global_dark()
+
 # ---------- App config ----------
 st.set_page_config(page_title="Stay or Skip 🎧", page_icon="🎧", layout="wide")
 
@@ -214,12 +298,6 @@ div[data-testid="stMarkdownContainer"] ul{ margin-top:.05rem!important; margin-b
 
 /* 카드 안 code가 초록색으로 보이지 않게 – 일반 텍스트처럼 */
 .cup-card code{ color:var(--text)!important; background:transparent!important; padding:0!important; }
-            
-/* Dataframe(AgGrid 아님) 다크 가독성 */
-.stDataFrame, .stDataFrame [class^="st-"] { color:#EAF7EF !important; }
-.stDataFrame table { color:#EAF7EF !important; }
-.stDataFrame thead tr th { background:#1f1f1f !important; color:#EAF7EF !important; }
-.stDataFrame tbody tr { background:#161616 !important; }
 </style>
 """, unsafe_allow_html=True)
 
