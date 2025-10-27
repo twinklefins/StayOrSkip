@@ -1196,14 +1196,12 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
             )
             .properties(height=max(520, 38*len(view)))
         )
-        st.altair_chart(ch_imp, use_container_width=True)
+        st.altair_chart(_base_alt(ch_top10), use_container_width=True)
         try:
-            st.caption(f"• 가장 큰 영향 요인: **{topk.iloc[0]['feature']}** (중요도 {topk.iloc[0]['importance']:.3f})")
+            top_seg = view.iloc[0]
+            st.caption(f"• 상위 세그먼트: **{top_seg['variable']} = {top_seg['group']}**, 평균 LTV **{top_seg['avg_ltv']:,.0f}원**")
         except Exception:
             pass
-
-        # 🚿 Altair 그래프 버퍼 초기화 (다음 섹션 겹침 방지)
-        st.empty()
 
         # ===== 통계적으로 유의한 요인 =====
         st.markdown("### 🔍 통계적으로 유의한 요인 (p<0.05)")
