@@ -214,6 +214,12 @@ div[data-testid="stMarkdownContainer"] ul{ margin-top:.05rem!important; margin-b
 
 /* 카드 안 code가 초록색으로 보이지 않게 – 일반 텍스트처럼 */
 .cup-card code{ color:var(--text)!important; background:transparent!important; padding:0!important; }
+            
+/* Dataframe(AgGrid 아님) 다크 가독성 */
+.stDataFrame, .stDataFrame [class^="st-"] { color:#EAF7EF !important; }
+.stDataFrame table { color:#EAF7EF !important; }
+.stDataFrame thead tr th { background:#1f1f1f !important; color:#EAF7EF !important; }
+.stDataFrame tbody tr { background:#161616 !important; }
 </style>
 """, unsafe_allow_html=True)
 
