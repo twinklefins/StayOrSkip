@@ -12,89 +12,96 @@ import os
 import re
 import altair as alt  # ★ 인터랙티브 차트용
 
-# ====== Global Dark Theme (matplotlib + Altair + Streamlit widgets) ======
-def apply_global_dark():
-    import streamlit as st, matplotlib.pyplot as plt, altair as alt
+# =============================
+# 🎨 Dark Mode — Global Theme (safe, idempotent)
+# =============================
 
-    # 2-1) Matplotlib 전역 (rgba 문자열 금지 → hex + alpha)
-    plt.rcParams.update({
-        "figure.facecolor":          "#121212",
-        "axes.facecolor":            "#191414",
-        "savefig.facecolor":         "#121212",
-        "axes.edgecolor":            "#CFE3D8",
-        "axes.labelcolor":           "#CFE3D8",
-        "xtick.color":               "#CFE3D8",
-        "ytick.color":               "#CFE3D8",
-        "text.color":                "#EAFBF1",
-        "grid.color":                "#2A2A2A",
-        "grid.alpha":                0.35,
-        "axes.grid":                 False,       # 각 차트에서 켜고 싶으면 개별 설정
-    })
+# ---- Colors (Dark) ----
+BG_DARK   = "#121212"   # page background
+PANEL     = "#191414"   # plot panel
+TEXT      = "#F9FCF9"
+MUTED     = "#CFE3D8"
+GREEN     = "#1DB954"   # Spotify Green
+MINT      = "#7CE0B8"   # light green for lines
+CYAN      = "#80DEEA"   # cyan accent
+GRID_CLR  = "#FFFFFF"
+GRID_ALPHA= 0.07        # ← 예전 GRID_A 대체
 
-    # 2-2) Altair 전역 테마 등록/활성
-    def _alt_dark():
-        return {
-            "config": {
-                "background": "#121212",
-                "view": {"fill": "#191414", "strokeOpacity": 0},
-                "axis": {
-                    "labelColor": "#CFE3D8",
-                    "titleColor": "#CFE3D8",
-                    "grid": True,
-                    "gridColor": "#2A2A2A",
-                    "tickColor": "#CFE3D8"
-                },
-                "legend": {"labelColor": "#CFE3D8", "titleColor": "#CFE3D8"},
-                "range": {
-                    "category": ["#1DB954","#80DEEA","#FFC857","#F95D6A","#6A4C93","#43BCCD"]
-                }
-            }
+# 호환용(이전 코드 잔재 대비)
+SPOTIFY_GREEN = GREEN
+SPOTIFY_MINT  = MINT
+
+# ---- Streamlit base colors (page + sidebar) ----
+import streamlit as st
+st.markdown(f"""
+<style>
+:root {{
+  --bg:{BG_DARK}; --panel:{PANEL}; --text:{TEXT}; --muted:{MUTED};
+  --brand:{GREEN};
+}}
+html, body, .stApp,[data-testid="stAppViewContainer"], [data-testid="stMain"]{{
+  background:{BG_DARK}!important; color:{TEXT}!important;
+}}
+section[data-testid="stSidebar"]{{ background:{PANEL}!important; color:{TEXT}!important; }}
+/* KPI: 라벨/값 가독성 업 */
+div[data-testid="stMetric"] div[data-testid="stMetricLabel"] p{{ color:#EAF7EF!important; font-weight:700!important; }}
+div[data-testid="stMetric"] div[data-testid="stMetricValue"]{{ color:{GREEN}!important; font-weight:800!important; }}
+/* 공통 selectbox 강조 */
+.cu-select .stSelectbox>div>div{{ border:1px solid rgba(29,185,84,.65)!important; border-radius:8px; }}
+/* 섹션 타이틀(그래프 섹션과 동일 톤) */
+.cu-h2{{ display:flex; align-items:center; gap:.6rem; font-weight:800; font-size:1.25rem; margin:.2rem 0 .8rem 0; }}
+.cu-h2::before{{ content:""; width:4px; height:20px; background:{GREEN}; border-radius:2px; }}
+</style>
+""", unsafe_allow_html=True)
+
+# ---- Matplotlib (dark-safe) ----
+import matplotlib.pyplot as plt
+plt.rcParams.update({
+    "figure.facecolor": BG_DARK,
+    "axes.facecolor":   PANEL,
+    "axes.edgecolor":   MUTED,
+    "axes.labelcolor":  MUTED,
+    "xtick.color":      MUTED,
+    "ytick.color":      MUTED,
+    "text.color":       MUTED,
+    "grid.color":       GRID_CLR,     # rgba 문자열 금지 → 색상 + alpha 분리
+    "grid.alpha":       GRID_ALPHA,
+    "axes.grid":        True
+})
+
+# ---- Altair (dark-safe) ----
+import altair as alt
+
+def _alt_dark():
+    return {
+        "config": {
+            "background": BG_DARK,
+            "view": {"stroke": "transparent"},
+            "axis": {
+                "labelColor": MUTED,
+                "titleColor": MUTED,
+                "gridColor": GRID_CLR,
+                "gridOpacity": GRID_ALPHA,
+                "tickColor": MUTED
+            },
+            "legend": {"labelColor": MUTED, "titleColor": MUTED},
+            "range": {"category": [GREEN, MINT, CYAN, "#A7FFEB", "#B39DDB"]},
         }
+    }
+
+try:
     alt.themes.register("cup_dark", _alt_dark)
-    alt.themes.enable("cup_dark")
+except Exception:
+    pass
+alt.themes.enable("cup_dark")
 
-    # 2-3) Streamlit 위젯/표/탭 등 전역 CSS 오버라이드 (KPI 라벨 포함)
-    st.markdown("""
-    <style>
-    :root{
-      --bg:#121212; --panel:#191414; --text:#F9FCF9; --muted:#D7E4DC; --line:rgba(255,255,255,.08);
-      --brand:#1DB954; --brand-2:#1ED760;
-    }
-    html, body, .stApp,[data-testid="stAppViewContainer"], [data-testid="stMain"]{
-      background:var(--bg)!important; color:var(--text)!important;
-    }
-    [data-testid="stHeader"]{ background:var(--bg)!important; box-shadow:none!important; }
-
-    /* Tabs / 강조 색 */
-    .stTabs [data-baseweb="tab"] p{ color:rgba(255,255,255,0.72)!important; }
-    .stTabs [data-baseweb="tab"][aria-selected="true"]{ border-bottom:2px solid var(--brand)!important; }
-    .stTabs [data-baseweb="tab"]:hover{ border-bottom-color: var(--brand-2)!important; }
-
-    /* KPI 카드 — 라벨 더 밝게, 값은 브랜드 초록 */
-    div[data-testid="stMetric"] div[data-testid="stMetricLabel"] p{
-      color:#EAFBF1!important; font-weight:700!important;
-    }
-    div[data-testid="stMetric"] div[data-testid="stMetricValue"]{
-      color:#1DB954!important; font-weight:800!important;
-    }
-
-    /* DataFrame (AG Grid) 다크 */
-    [data-testid="stDataFrame"] .ag-root-wrapper,
-    [data-testid="stDataFrame"] .ag-body-viewport,
-    [data-testid="stDataFrame"] .ag-header { background:#191414!important; }
-    [data-testid="stDataFrame"] div[role="columnheader"],
-    [data-testid="stDataFrame"] div[role="gridcell"]{
-      color:#EAFBF1!important; border-color:rgba(255,255,255,.08)!important;
-    }
-
-    /* Altair 컨테이너/툴팁 */
-    .vega-embed, .vega-embed details, .vega-embed details summary{
-      background:#121212!important; color:#EAFBF1!important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-# ====== call once (바로 아래 줄 추가) ======
-apply_global_dark()
+# Altair 기본 여백/폰트/패널 보정
+def _base_alt(chart, height=420):
+    return (
+        chart.properties(height=height)
+        .configure_title(color=TEXT)
+        .configure_view(stroke="transparent")
+    )
 
 # ---------- App config ----------
 st.set_page_config(page_title="Stay or Skip 🎧", page_icon="🎧", layout="wide")
