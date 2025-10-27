@@ -521,7 +521,7 @@ if section == "PROJECT OVERVIEW":
 
             <div class="cup-hover-card">
                 <p style="font-size:1.5rem;">🧭</p>
-                <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">RARR 기반 분석 방향</p>
+                <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">RARRA 기반 분석 방향</p>
                 <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
                 Retention → Revenue<br>
                 단계별 핵심 지표 정의<br>
