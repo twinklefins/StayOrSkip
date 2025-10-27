@@ -772,7 +772,7 @@ if section == "PROJECT OVERVIEW":
         vgap(12)
 
 elif section == "DATA EXPLORATION":
-    tabs = st.tabs(["Cleaning", "EDA", "Metrics Definition"])
+    tabs = st.tabs(["Cleaning", "EDA", "Framework Comparison"])
 
     # ─────────────── 🧼 ① Data Cleaning ───────────────
     with tabs[0]:
