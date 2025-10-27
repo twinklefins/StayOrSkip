@@ -312,7 +312,7 @@ with st.sidebar:
     section = st.radio("", [
         "PROJECT OVERVIEW",
         "DATA EXPLORATION",
-        "RARR DASHBOARD",        # ← 이 라벨이 화면과 동일해야 함
+        "RARA DASHBOARD",        # ← 이 라벨이 화면과 동일해야 함
         "INSIGHTS & STRATEGY",
     ])
     st.markdown('<hr class="cup-footer-line">', unsafe_allow_html=True)
@@ -994,7 +994,7 @@ elif section == "DATA EXPLORATION":
         ]
     })
 
-elif section == "RARR DASHBOARD":   # Retention-first
+elif section == "RARA DASHBOARD":   # Retention-first
     st.markdown('<div class="cup-h2">Visual Analytics Dashboard</div>', unsafe_allow_html=True)
     try: tight_top(-36)
     except: pass
