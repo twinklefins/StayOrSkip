@@ -308,7 +308,13 @@ with st.sidebar:
     # 로고 탐색 강화 (assets/ 포함)
     render_image("Cup_3_copy_4.png")
     st.markdown('<hr class="cup-divider">', unsafe_allow_html=True)
-    section = st.radio("", ["PROJECT OVERVIEW","DATA EXPLORATION","RARR DASHBOARD","INSIGHTS & STRATEGY"])
+    # 꼭 이렇게!
+    section = st.radio("", [
+        "PROJECT OVERVIEW",
+        "DATA EXPLORATION",
+        "RARR DASHBOARD",        # ← 이 라벨이 화면과 동일해야 함
+        "INSIGHTS & STRATEGY",
+    ])
     st.markdown('<hr class="cup-footer-line">', unsafe_allow_html=True)
     st.markdown(
         '<div class="cup-sidebar-footer">'
