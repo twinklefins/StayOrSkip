@@ -1116,7 +1116,7 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
             x = [_short_ret_label(s) for s in retm["from_to"].tolist()]
             y = retm["premium_retention"].astype(float).tolist()
             fig, ax = plt.subplots(figsize=(6.2,3.2))
-            ax.plot(range(len(x)), y, marker="o", linewidth=2, color=MINT)
+            ax.plot(range(len(x)), y, marker="o", linewidth=2, color=GREEN)
             ax.set_xticks(range(len(x))); ax.set_xticklabels(x, rotation=0, ha="center")
             ax.set_ylim(0, 1.05); ax.set_ylabel("Premium Retention")
             ax.grid(True, axis="y", alpha=.25)
@@ -1232,17 +1232,19 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
             df = arpu.copy()
             df["cum_arpu"] = df["arpu"].cumsum()
 
-            # 예: 유지율 vs ARPU 산점도
             ch = (
                 alt.Chart(df)
-                .mark_circle(size=140, color=GREEN)
+                .mark_line(point=alt.OverlayMarkDef(color=MINT, size=80), color=MINT, strokeWidth=3)
                 .encode(
-                    x=alt.X("premium_retention:Q", title="유지율", scale=alt.Scale(domain=[0,1])),
-                    y=alt.Y("arpu:Q", title="ARPU (₩)", axis=alt.Axis(format="~s")),
-                    tooltip=[...],
+                    x=alt.X("month:N", title="Month", axis=alt.Axis(labelAngle=0, labelLimit=1000)),
+                    y=alt.Y("cum_arpu:Q", title="누적 ARPU (₩)", axis=alt.Axis(format="~s")),
+                    tooltip=[
+                        alt.Tooltip("month:N", title="월"),
+                        alt.Tooltip("cum_arpu:Q", title="누적 ARPU", format=",.0f")
+                    ],
                 )
-            ).properties(height=chart_h)
-
+                .properties(height=H)
+            )
             st.altair_chart(_base_alt(ch), use_container_width=True)
             st.caption("• 누적 ARPU는 장기 수익 성장 정도를 보여줌 — **완만한 우상향이면 안정적 성장**")
 
