@@ -995,7 +995,7 @@ elif section == "DATA EXPLORATION":
         ]
     })
 
-elif section == "RARA DASHBOARD":   # Retention-first
+elif section == "RARR DASHBOARD":   # Retention-first
     st.markdown('<div class="cup-h2">Visual Analytics Dashboard</div>', unsafe_allow_html=True)
     try: tight_top(-36)
     except: pass
