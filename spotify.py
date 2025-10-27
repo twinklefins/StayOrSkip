@@ -994,6 +994,8 @@ elif section == "DATA EXPLORATION":
             ]
         })
 
+    st.dataframe(comp, hide_index=True, use_container_width=True)
+
 elif section == "RARA DASHBOARD":   # Retention-first
     st.markdown('<div class="cup-h2">Visual Analytics Dashboard</div>', unsafe_allow_html=True)
     try: tight_top(-36)
