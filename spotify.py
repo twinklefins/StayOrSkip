@@ -895,23 +895,22 @@ elif section == "DATA EXPLORATION":
                 .configure_axis(labelColor="#CFE3D8", titleColor="#CFE3D8", grid=True, gridOpacity=0.12)
             )
             st.altair_chart(line, use_container_width=True)
-            st.caption("• x축 라벨을 가로로 고정하고 Spotify 그린 컬러로 표시했습니다.")
         else:
             st.info("청취 시간대 관련 컬럼이 없습니다.")
 
         # 🔎 요약 인사이트 (마크다운 굵게 제거 + 실제 비율 기반 문구)
         section_title("EDA Summary Insight")
 
-        # 요금제/디바이스 컬럼 탐색
-        plan_col = next((c for c in ["subscription_plan","spotify_subscription_plan"] if c in tidy.columns), None)
+        plan_col   = next((c for c in ["subscription_plan","spotify_subscription_plan"] if c in tidy.columns), None)
         device_col = next((c for c in ["spotify_listening_device","listening_device","device"] if c in tidy.columns), None)
 
         ins = []
 
-        # ① Premium 비중 문구 (낮으면 '대다수가 Free')
-        if plan_col:
-            is_premium = tidy[plan_col].astype(str).str.contains("Premium", case=False, na=False)
-            prem_ratio = float(is_premium.mean())   # 0~1
+        # ① Premium 비중 문구
+        if plan_col and tidy[plan_col].notna().any():
+            plan_s = tidy[plan_col].astype(str)
+            is_premium = plan_s.str.contains("Premium", case=False, na=False)
+            prem_ratio = float(is_premium.mean())  # 0~1
             prem_pct = prem_ratio * 100.0
             if prem_ratio >= 0.50:
                 ins.append(f"Premium 비중 {prem_pct:.1f}%.")
@@ -920,24 +919,26 @@ elif section == "DATA EXPLORATION":
         else:
             ins.append("요금제 컬럼이 없어 비중을 계산하지 못했습니다.")
 
-        # ② 주 사용 기기 (스마트폰 비중 우선 노출)
-        if device_col:
-            dev_series = tidy[device_col].astype(str).str.strip()
+        # ② 주 사용 기기 (스마트폰 우선)
+        if device_col and tidy[device_col].notna().any():
+            dev_series = tidy[device_col].dropna().astype(str).str.strip()
             smart_mask = dev_series.str.contains(r"Smartphone|Mobile|Phone|휴대폰|스마트폰", case=False, na=False)
             smart_pct = smart_mask.mean() * 100.0
             if smart_mask.mean() >= 0.60:
                 ins.append(f"스마트폰 사용이 압도적입니다(약 {smart_pct:.1f}%).")
             else:
-                top = dev_series.value_counts(normalize=True, dropna=False).head(1)
-                if len(top):
-                    ins.append(f"가장 많이 쓰는 기기는 {top.index[0]}(약 {float(top.iloc[0])*100:.1f}%)입니다.")
+                vc = dev_series.value_counts(normalize=True)
+                if not vc.empty:
+                    ins.append(f"가장 많이 쓰는 기기는 {vc.index[0]}(약 {float(vc.iloc[0])*100:.1f}%)입니다.")
         else:
             ins.append("주 사용 기기 정보를 찾지 못했습니다.")
 
-        # ③ 청취 시간대 한 줄 요약
+        # ③ 청취 시간대 한 줄 요약 (← 여기 수정: idxtop → idxmax)
         if "music_time_slot" in tidy.columns and tidy["music_time_slot"].notna().any():
-            top_slot = tidy["music_time_slot"].value_counts().idxtop()
-            ins.append(f"청취는 {top_slot} 시간대가 가장 활발합니다.")
+            slot_s = tidy["music_time_slot"].dropna().astype(str).str.strip()
+            if not slot_s.empty:
+                top_slot = slot_s.value_counts().idxmax()
+                ins.append(f"청취는 {top_slot} 시간대가 가장 활발합니다.")
 
         # 박스 렌더 (HTML – 마크다운 굵게 미사용)
         st.markdown(
