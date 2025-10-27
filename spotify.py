@@ -369,7 +369,7 @@ if section == "PROJECT OVERVIEW":
           <p class="cup-team-line"><span class="cup-team-name">이유주</span><span class="cup-team-role">데이터 스토리텔링 & 대시보드 디자인</span></p>
           <p class="cup-team-line"><span class="cup-team-name">김채린</span><span class="cup-team-role">데이터 정제 및 파생 변수 설계</span></p>
           <p class="cup-team-line"><span class="cup-team-name">서별</span><span class="cup-team-role">데이터 수집 및 탐색 과정 지원</span></p>
-          <p class="cup-team-line"><span class="cup-team-name">-> 데이터셋 변경 이슈로 AARR 개별 분석 진행</span></p> 
+          <p class="cup-team-line">-> 데이터셋 변경 이슈로 AARR 개별 분석 진행</span></p> 
         </div>
         """, unsafe_allow_html=True)
 
