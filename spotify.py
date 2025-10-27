@@ -965,36 +965,37 @@ elif section == "DATA EXPLORATION":
         section_title("Framework Comparison")
         tight_top(-36)
 
-    # ======================
-    # 📊 Framework Comparison
-    # ======================
+        # ======================
+        # 📊 Framework Comparison
+        # ======================
 
-    st.markdown("### ⚙️ Growth Framework: AARRR vs RARRA")
+        st.markdown("### ⚙️ Growth Framework: AARRR vs RARRA")
 
-    st.markdown("""
-    두 프레임워크 모두 고객 여정을 데이터로 이해하기 위한 대표적 모델입니다.  
-    하지만 접근 방식과 핵심 목표가 다르기 때문에, Spotify처럼 **'유지율(Stickiness)'이 중요한 구독형 서비스**는 RARRA가 더 적합합니다.
-    """)
+        st.markdown("""
+        두 프레임워크 모두 고객 여정을 데이터로 이해하기 위한 대표적 모델입니다.  
+        하지만 접근 방식과 핵심 목표가 다르기 때문에, Spotify처럼 **'유지율(Stickiness)'이 중요한 구독형 서비스**는 RARRA가 더 적합합니다.
+        """)
+        vgap(20)
+        
+        comp = pd.DataFrame({
+            "구분": ["핵심 목표", "접근 방식", "적합한 비즈니스", "장점", "단점"],
+            "AARRR": [
+                "신규 고객 확보 및 초기 시장 진출",
+                "획득 중심의 선형적인 성장 깔때기",
+                "초기 스타트업: 시장 진입 단계에서 빠르게 고객 기반을 확보하려는 경우.",
+                "비즈니스 성장의 각 단계를 명확히 파악하고, 병목 현상을 찾아 개선하기 용이.",
+                "획득에만 집중하다 보면 낮은 고객 유지율로 인해 성장이 멈추는 '밑 빠진 독'이 될 수 있음."
+            ],
+            "RARRA": [
+                "고객 충성도 및 장기적 가치 증대",
+                "유지 중심의 순환적이고 지속 가능한 성장 고리",
+                "SaaS, 구독 서비스 / 성숙 시장 진입: 고객 이탈 방지가 중요한 모델.",
+                "비용이 많이 드는 신규 고객 확보보다 기존 고객을 유지하고 활용해 안정적 성장 가능.",
+                "초기 단계에서 고객 기반이 없으면 적용하기 어려움."
+            ]
+        })
 
-    comp = pd.DataFrame({
-        "구분": ["핵심 목표", "접근 방식", "적합한 비즈니스", "장점", "단점"],
-        "AARRR": [
-            "신규 고객 확보 및 초기 시장 진출",
-            "획득 중심의 선형적인 성장 깔때기",
-            "초기 스타트업: 시장 진입 단계에서 빠르게 고객 기반을 확보하려는 경우.",
-            "비즈니스 성장의 각 단계를 명확히 파악하고, 병목 현상을 찾아 개선하기 용이.",
-            "획득에만 집중하다 보면 낮은 고객 유지율로 인해 성장이 멈추는 '밑 빠진 독'이 될 수 있음."
-        ],
-        "RARRA": [
-            "고객 충성도 및 장기적 가치 증대",
-            "유지 중심의 순환적이고 지속 가능한 성장 고리",
-            "SaaS, 구독 서비스 / 성숙 시장 진입: 고객 이탈 방지가 중요한 모델.",
-            "비용이 많이 드는 신규 고객 확보보다 기존 고객을 유지하고 활용해 안정적 성장 가능.",
-            "초기 단계에서 고객 기반이 없으면 적용하기 어려움."
-        ]
-    })
-
-    st.dataframe(comp, hide_index=True, use_container_width=True)
+        st.dataframe(comp, hide_index=True, use_container_width=True)
 
 elif section == "RARA DASHBOARD":   # Retention-first
     st.markdown('<div class="cup-h2">Visual Analytics Dashboard</div>', unsafe_allow_html=True)
