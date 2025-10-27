@@ -304,24 +304,25 @@ div[data-testid="stMarkdownContainer"] ul{ margin-top:.05rem!important; margin-b
 
 # ================= Sidebar =================
 with st.sidebar:
-    # 원하는 표기로 표시(예: RARR DASHBOARD)
-    section = st.radio(
-        "",
-        ["PROJECT OVERVIEW", "DATA EXPLORATION", "RARR DASHBOARD", "INSIGHTS & STRATEGY"]
+    st.caption("build: v2025-10-24-spotify-compat-CSV")  # ← 새 코드 적용 확인용
+    # 로고 탐색 강화 (assets/ 포함)
+    render_image("Cup_3_copy_4.png")
+    st.markdown('<hr class="cup-divider">', unsafe_allow_html=True)
+    # 꼭 이렇게!
+    section = st.radio("", [
+        "PROJECT OVERVIEW",
+        "DATA EXPLORATION",
+        "RARR DASHBOARD",        # ← 이 라벨이 화면과 동일해야 함
+        "INSIGHTS & STRATEGY",
+    ])
+    st.markdown('<hr class="cup-footer-line">', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="cup-sidebar-footer">'
+        '<a href="https://colab.research.google.com/drive/1kmdOCUneO2tjT8NqOd5MvYaxJqiiqb9y?usp=sharing" '
+        'target="_blank" class="cup-link-btn">🔗 Open in Google Colab</a><br>'
+        '© DATA CUPBOP | Stay or Skip'
+        '</div>', unsafe_allow_html=True
     )
-
-# 안전하게 분기 키 정규화
-import re as _re
-sec_key = _re.sub(r"\s+", " ", section).strip().upper()
-
-st.markdown('<hr class="cup-footer-line">', unsafe_allow_html=True)
-st.markdown(
-    '<div class="cup-sidebar-footer">'
-    '<a href="https://colab.research.google.com/drive/1kmdOCUneO2tjT8NqOd5MvYaxJqiiqb9y?usp=sharing" '
-    'target="_blank" class="cup-link-btn">🔗 Open in Google Colab</a><br>'
-    '© DATA CUPBOP | Stay or Skip'
-    '</div>', unsafe_allow_html=True
-)
 
 # ================= Demo data (페이지 데모용 - 그대로) =================
 np.random.seed(42)
@@ -994,33 +995,12 @@ elif section == "DATA EXPLORATION":
         ]
     })
 
-if sec_key in ("RARR DASHBOARD", "RARA DASHBOARD", "AARRR DASHBOARD"):
+elif section == "RARA DASHBOARD":   # Retention-first
     st.markdown('<div class="cup-h2">Visual Analytics Dashboard</div>', unsafe_allow_html=True)
-    try:
-        tight_top(-36)
-    except Exception:
-        pass
+    try: tight_top(-36)
+    except: pass
 
-    import os, re, textwrap
-    import numpy as np
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    import altair as alt
-
-    # --- 다크 테마용 색상 ---
-    BG_DARK   = "#121212"; PLOT_DARK = "#191414"; TICK = "#CFE3D8"
-    GREEN     = "#1DB954"   # 요청: 라인=초록, 포인트=초록
-    GREEN_LT  = "#7CE0B8"
-
-    plt.rcParams.update({
-        "figure.facecolor": BG_DARK, "axes.facecolor": PLOT_DARK,
-        "axes.edgecolor": TICK, "axes.labelcolor": TICK,
-        "xtick.color": TICK, "ytick.color": TICK, "text.color": TICK,
-        "grid.color": "#ffffff", "grid.alpha": 0.07, "axes.grid": True,
-        "font.family": "DejaVu Sans", "axes.unicode_minus": False
-    })
-
-    # 🔄 탭: R → A → R(Revenue) → A(qcquisition)
+    # 🔄 RARA: Retention / Activation / Revenue / Acquisition
     tabs = st.tabs(["Retention", "Activation", "Revenue", "Acquisition"])
 
     # ---------------- ① Retention ----------------
@@ -1033,9 +1013,28 @@ if sec_key in ("RARR DASHBOARD", "RARA DASHBOARD", "AARRR DASHBOARD"):
         st.subheader("Activation")
         st.caption("가입 직후 첫 재생까지의 활성화 지표(예시)")
 
-    # ---------------- ③ Revenue ----------------
+    # ---------------- ③ Revenue (CSV export 기반) ----------------
     with tabs[2]:
-        # --- CSV 로더 ---
+        import os, re, textwrap
+        import numpy as np
+        import pandas as pd
+        import matplotlib.pyplot as plt
+        import altair as alt
+
+        # --- 색상(다크) ---
+        BG_DARK   = "#121212"; PLOT_DARK = "#191414"; TICK = "#CFE3D8"
+        GREEN     = "#1DB954"   # 요청: 라인=초록, 포인트=초록
+        GREEN_LT  = "#7CE0B8"
+
+        plt.rcParams.update({
+            "figure.facecolor": BG_DARK, "axes.facecolor": PLOT_DARK,
+            "axes.edgecolor": TICK, "axes.labelcolor": TICK,
+            "xtick.color": TICK, "ytick.color": TICK, "text.color": TICK,
+            "grid.color": "#ffffff", "grid.alpha": 0.07, "axes.grid": True,
+            "font.family": "DejaVu Sans", "axes.unicode_minus": False
+        })
+
+        # --- 파일 로더 ---
         def _load_csv(name:str):
             for p in (os.path.join("data", name), name):
                 if os.path.exists(p): return pd.read_csv(p)
@@ -1176,7 +1175,7 @@ if sec_key in ("RARR DASHBOARD", "RARA DASHBOARD", "AARRR DASHBOARD"):
 
         st.markdown("---")
 
-        # --- 📊 다양한 분석(선택형) ---
+        # --- 다양한 분석(선택형) ---
         st.markdown("### 📊 다양한 분석")
         st.markdown(
             """
@@ -1313,20 +1312,11 @@ if sec_key in ("RARR DASHBOARD", "RARA DASHBOARD", "AARRR DASHBOARD"):
     with tabs[3]:
         st.subheader("Acquisition")
         st.caption("방문 → 가입 → 첫 재생 → 구독 전환율을 단계별로 비교합니다.(예시)")
-
-# =========================
-# 나머지 섹션 (인사이트/전략 등)
-# =========================
-elif sec_key == "PROJECT OVERVIEW":
-    ...  # 기존 코드 유지
-elif sec_key == "DATA EXPLORATION":
-    ...  # 기존 코드 유지
+        
 else:
     tabs = st.tabs(["Insights", "Strategy", "Next Steps"])
     with tabs[0]:
-        st.markdown('<div class="cup-h2">Key Insights by AARRR Stage</div>', unsafe_allow_html=True)
-        try: tight_top(-36)
-        except: pass
+        st.markdown('<div class="cup-h2">Key Insights by AARRR Stage</div>', unsafe_allow_html=True); tight_top(-36)
         st.markdown("""
         <div class="cup-card">
           • Activation: 첫 재생 구간 이탈 높음 → 온보딩·첫 추천 큐레이션 개선<br>
@@ -1335,7 +1325,7 @@ else:
         </div>
         """, unsafe_allow_html=True)
     with tabs[1]:
-        st.markdown('<div class="cup-h2">Data-driven Strategy Proposal</div>', unsafe_allow_html=True)
+        st.markdown('<div class="cup-h2">Data-driven Strategy Proposal</div>', unsafe_allow_html=True); tight_top(-36)
         st.markdown("""
         <div class="cup-card">
           ① 온보딩 개선(튜토리얼 간소화, 첫 추천 강화)<br>
@@ -1345,7 +1335,7 @@ else:
         </div>
         """, unsafe_allow_html=True)
     with tabs[2]:
-        st.markdown('<div class="cup-h2">Limitations & Next Steps</div>', unsafe_allow_html=True)
+        st.markdown('<div class="cup-h2">Limitations & Next Steps</div>', unsafe_allow_html=True); tight_top(-36)
         st.markdown("""
         <div class="cup-card">
           관찰 기간·외생 변수 제한 → 외부 데이터 결합 및 예측모델(이탈 예측·LTV 추정) 확장
