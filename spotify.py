@@ -957,13 +957,8 @@ elif section == "DATA EXPLORATION":
 
     # ─────────────── 🧮 ③ Metrics Definition ───────────────
     with tabs[2]:
-        section_title("AARRR Metrics Definition")
+        section_title("Framework Comparison")
         tight_top(-36)
-        st.markdown("""
-        <div class="cup-card">
-        프로젝트에서 사용하는 주요 AARRR 지표를 명확히 정의합니다.
-        </div>
-        """, unsafe_allow_html=True)
 
     # ======================
     # 📊 Framework Comparison
