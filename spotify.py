@@ -804,21 +804,21 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
     # -------------------------------
     with tabs[0]:
         st.subheader("Acquisition")
-        st.caption("방문 → 가입 → 첫 재생 → 구독 전환율을 단계별로 비교합니다.")
+        st.caption("방문 → 가입 → 첫 재생 → 구독 전환율을 단계별로 비교합니다.(예시)")
 
     # -------------------------------
     # ② Activation (간단 예시: 가입→첫 재생 비율/시간)
     # -------------------------------
     with tabs[1]:
         st.subheader("Activation")
-        st.caption("가입 직후 첫 재생까지의 활성화 지표(예시). 실제 지표로 교체 예정.")
+        st.caption("가입 직후 첫 재생까지의 활성화 지표(예시)")
 
     # -------------------------------
     # ③ Retention (기존 유지율 예시)
     # -------------------------------
     with tabs[2]:
         st.subheader("Retention")
-        st.caption("N-Day/Weekly 커브 예시 (실데이터로 교체 예정).")
+        st.caption("N-Day/Weekly 커브(예시))")
 
     # -------------------------------
     # ④ Revenue (CSV export 기반)
