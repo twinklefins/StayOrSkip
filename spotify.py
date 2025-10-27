@@ -811,34 +811,14 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
     # -------------------------------
     with tabs[1]:
         st.subheader("Activation")
-        st.caption("가입 직후 첫 재생까지의 활성화 지표(예시). 실제 지표로 교체 권장.")
-
-        # 예시 1) 가입 → 첫 재생 전환율 유사 지표
-        daily = df_demo.groupby("date")["event"].count().sort_index()
-        act_like = (daily.rolling(7).mean()/(daily.rolling(7).max()+1e-9)*100).fillna(0)
-
-        fig, ax = plt.subplots(figsize=(6,3))
-        ax.plot(act_like.index, act_like.values, color="#80DEEA")
-        ax.set_ylabel("Activation-like %", color="#CFE3D8"); ax.set_xlabel("date", color="#CFE3D8")
-        ax.set_facecolor("#191414"); fig.set_facecolor("#121212"); ax.tick_params(colors="#CFE3D8")
-        try: sp(fig)
-        except: st.pyplot(fig, use_container_width=True)
+        st.caption("가입 직후 첫 재생까지의 활성화 지표(예시). 실제 지표로 교체 예정.")
 
     # -------------------------------
     # ③ Retention (기존 유지율 예시)
     # -------------------------------
     with tabs[2]:
         st.subheader("Retention")
-        st.caption("N-Day/Weekly 커브 예시 (실데이터로 교체 권장).")
-        daily = df_demo.groupby("date")["event"].count().sort_index()
-        roll = (daily.rolling(7).mean() / (daily.rolling(7).max()+1e-9) * 100).fillna(0)
-
-        fig, ax = plt.subplots(figsize=(6,3))
-        ax.plot(roll.index, roll.values, color="#80DEEA")
-        ax.set_ylabel("Retention-like %", color="#CFE3D8"); ax.set_xlabel("date", color="#CFE3D8")
-        ax.set_facecolor("#191414"); fig.set_facecolor("#121212"); ax.tick_params(colors="#CFE3D8")
-        try: sp(fig)
-        except: st.pyplot(fig, use_container_width=True)
+        st.caption("N-Day/Weekly 커브 예시 (실데이터로 교체 예정).")
 
     # -------------------------------
     # ④ Revenue (CSV export 기반)
