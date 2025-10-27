@@ -453,6 +453,37 @@ if section == "PROJECT OVERVIEW":
                 transform: translateY(-4px);
                 box-shadow: 0 0 15px rgba(29,185,84,.25);
             }
+                        
+            /* 3열 카드 */
+            .cup-3col {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.2rem;
+            }
+            .cup-hover-card {
+                transition: all .25s ease;
+                background: rgba(255,255,255,.03);
+                border: 1px solid rgba(255,255,255,.10);
+                border-radius: 12px;
+                padding: 1.6rem 1.8rem;
+                text-align: center;
+            }
+
+            /* 🧭 Responsive (모바일 대응) */
+            @media screen and (max-width: 900px) {
+            .cup-3col {
+                grid-template-columns: repeat(2, 1fr); /* 태블릿 */
+            }
+            }
+
+            @media screen and (max-width: 600px) {
+            .cup-3col {
+                grid-template-columns: 1fr; /* 모바일 */
+            }
+            .cup-hover-card {
+                padding: 1.2rem 1.3rem; /* 여백 축소 */
+            }
+            }
 
             /* 🎬 시네마틱 섹션 */
             .cup-scene {
