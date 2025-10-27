@@ -965,49 +965,49 @@ elif section == "DATA EXPLORATION":
         </div>
         """, unsafe_allow_html=True)
 
-        # ======================
-        # 📊 Framework Comparison
-        # ======================
+    # ======================
+    # 📊 Framework Comparison
+    # ======================
 
-        st.markdown("### ⚙️ Growth Framework: AARRR vs RARRA")
+    st.markdown("### ⚙️ Growth Framework: AARRR vs RARRA")
 
-        st.markdown("""
-        두 프레임워크 모두 고객 여정을 데이터로 이해하기 위한 대표적 모델입니다.  
-        그러나 접근 방식과 핵심 목표가 다르기 때문에, Spotify처럼 **'유지율(Stickiness)'이 중요한 구독형 서비스**는 RARRA가 더 적합합니다.
-        """)
+    st.markdown("""
+    두 프레임워크 모두 고객 여정을 데이터로 이해하기 위한 대표적 모델입니다.  
+    그러나 접근 방식과 핵심 목표가 다르기 때문에, Spotify처럼 **'유지율(Stickiness)'이 중요한 구독형 서비스**는 RARRA가 더 적합합니다.
+    """)
 
-        comp = pd.DataFrame({
-            "구분": ["핵심 목표", "접근 방식", "적합한 비즈니스", "장점", "단점"],
-            "AARRR": [
-                "신규 고객 확보 및 초기 시장 진출",
-                "획득 중심의 선형적인 성장 깔때기",
-                "초기 스타트업: 시장 진입 단계에서 빠르게 고객 기반을 확보하려는 경우.",
-                "비즈니스 성장의 각 단계를 명확히 파악하고, 병목 현상을 찾아 개선하기 용이.",
-                "획득에만 집중하다 보면 낮은 고객 유지율로 인해 성장이 멈추는 '밑 빠진 독'이 될 수 있음."
-            ],
-            "RARRA": [
-                "고객 충성도 및 장기적 가치 증대",
-                "유지 중심의 순환적이고 지속 가능한 성장 고리",
-                "SaaS, 구독 서비스 / 성숙 시장 진입: 고객 이탈 방지가 중요한 모델.",
-                "비용이 많이 드는 신규 고객 확보보다 기존 고객을 유지하고 활용해 안정적 성장 가능.",
-                "초기 단계에서 고객 기반이 없으면 적용하기 어려움."
-            ]
-        })
+    comp = pd.DataFrame({
+        "구분": ["핵심 목표", "접근 방식", "적합한 비즈니스", "장점", "단점"],
+        "AARRR": [
+            "신규 고객 확보 및 초기 시장 진출",
+            "획득 중심의 선형적인 성장 깔때기",
+            "초기 스타트업: 시장 진입 단계에서 빠르게 고객 기반을 확보하려는 경우.",
+            "비즈니스 성장의 각 단계를 명확히 파악하고, 병목 현상을 찾아 개선하기 용이.",
+            "획득에만 집중하다 보면 낮은 고객 유지율로 인해 성장이 멈추는 '밑 빠진 독'이 될 수 있음."
+        ],
+        "RARRA": [
+            "고객 충성도 및 장기적 가치 증대",
+            "유지 중심의 순환적이고 지속 가능한 성장 고리",
+            "SaaS, 구독 서비스 / 성숙 시장 진입: 고객 이탈 방지가 중요한 모델.",
+            "비용이 많이 드는 신규 고객 확보보다 기존 고객을 유지하고 활용해 안정적 성장 가능.",
+            "초기 단계에서 고객 기반이 없으면 적용하기 어려움."
+        ]
+    })
 
-        st.dataframe(comp, use_container_width=True, hide_index=True)
-        st.caption("※ 데이터컵밥팀 프로젝트는 ‘Retention-first’ 관점의 RARRA 프레임워크를 채택했습니다.")
+    st.dataframe(comp, use_container_width=True, hide_index=True)
+    st.caption("※ 데이터컵밥팀 프로젝트는 ‘Retention-first’ 관점의 RARRA 프레임워크를 채택했습니다.")
 
-elif section == "RARA DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 AARR로
+elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 AARR로
     st.markdown('<div class="cup-h2">Visual Analytics Dashboard</div>', unsafe_allow_html=True)
     try: tight_top(-36)
     except: pass
 
-    # 🔄 RARA: Retention / Activation / Revenue / Acquisition
-    tabs = st.tabs(["Retention", "Activation", "Revenue", "Aquisition"])
+    # 🔄 AARR: Acquisition / Activation / Retention / Revenue
+    tabs = st.tabs(["Acquisition", "Activation", "Retention", "Revenue"])
 
-    # ---------------- ① Retention ----------------
+    # ---------------- ① Acquisition ----------------
     with tabs[0]:
-        st.subheader("Retention")
+        st.subheader("Acquisition")
         st.caption("방문 → 가입 → 첫 재생 → 구독 전환율을 단계별로 비교합니다.(예시)")
 
     # ---------------- ② Activation ----------------
@@ -1015,8 +1015,13 @@ elif section == "RARA DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 
         st.subheader("Activation")
         st.caption("가입 직후 첫 재생까지의 활성화 지표(예시)")
 
+    # ---------------- ③ Retention ----------------
+    with tabs[2]:
+        st.subheader("Retention")
+        st.caption("N-Day/Weekly 커브(예시)")
+
     # =========================
-    # ③ Revenue (CSV export 기반) — clean reset
+    # ④ Revenue (CSV export 기반) — clean reset
     # =========================
     with tabs[3]:
         import os, re, textwrap
@@ -1313,11 +1318,6 @@ elif section == "RARA DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 
             "- **ARPU는 꾸준히 개선** → 상위 세그먼트 공략 유지\n"
             "- **월 매출은 완만한 상승** → 시즌/프로모션으로 추가 상승 여지"
         )
-
-     # ---------------- ④ Aquisition ----------------
-    with tabs[2]:
-        st.subheader("Aquisition")
-        st.caption("N-Day/Weekly 커브(예시)")
         
 else:
     tabs = st.tabs(["Insights", "Strategy", "Next Steps"])
