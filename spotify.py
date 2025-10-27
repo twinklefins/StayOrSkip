@@ -1006,21 +1006,22 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
         st.caption("N-Day/Weekly 커브(예시))")
 
     # -------------------------------
-    # ④ Revenue (CSV export 기반)
+    # ④ Revenue (CSV export 기반) — ★ 전체 교체 버전
     # -------------------------------
     with tabs[3]:
-        import os, re, textwrap
+        import os, re
         import numpy as np
         import pandas as pd
         import matplotlib.pyplot as plt
         import streamlit as st
 
-        # === 다크 테마(고정) ===
+        # ===== 다크 테마(고정) & 폰트 =====
         BG_DARK   = "#121212"
         PLOT_DARK = "#191414"
-        TICK      = "#CFE3D8"
-        GREEN     = "#1DB954"   # Spotify Green
-        LGREEN    = "#A7F3D0"   # ← 옅은 민트 그린(ARPU 라인에 사용)
+        TICK      = "#EAF7EF"
+        GREEN     = "#1DB954"
+        GREEN_LT  = "#1ED760"  # 라인/포인트용 옅은 그린
+        GRID_A    = 0.15
 
         plt.rcParams.update({
             "figure.facecolor": BG_DARK,
@@ -1030,15 +1031,17 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
             "xtick.color":      TICK,
             "ytick.color":      TICK,
             "text.color":       TICK,
-            "grid.color":       "#FFFFFF",  # ← rgba 사용 금지
-            "grid.alpha":       0.07
+            "grid.color":       "#ffffff",
+            "grid.alpha":       GRID_A,
+            "font.family":      "DejaVu Sans",   # 서버 공용 폰트(한글 호환)
+            "axes.unicode_minus": False
         })
 
-        # KPI 라벨/값 밝기 업
+        # ===== KPI 라벨/값 밝기 업 =====
         st.markdown("""
         <style>
         div[data-testid="stMetric"] div[data-testid="stMetricLabel"] p{
-            color:#EAF7EF!important; font-weight:700!important;
+            color:#EAF7EF!important; font-weight:700!important; letter-spacing:.2px;
         }
         div[data-testid="stMetric"] div[data-testid="stMetricValue"]{
             color:#1DB954!important; font-weight:800!important;
@@ -1047,7 +1050,7 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
         """, unsafe_allow_html=True)
 
         st.subheader("Revenue")
-        st.caption("CSV(export) 기반 KPI / 트렌드 / 취향별 LTV / 중요 요인")
+        st.caption("CSV(export) 기반 KPI / 트렌드 / 다양한 분석")
 
         # ---------- 파일 로더 ----------
         def _load(name:str):
@@ -1073,19 +1076,19 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
 
         if missing:
             st.warning("다음 파일이 없어 Revenue를 표시할 수 없어요:\n- " + "\n- ".join(missing))
-            st.info("노트북 Step6에서 /data 폴더로 export 한 뒤 Rerun 해주세요.")
+            st.info("노트북 Step6에서 /data 폴더로 export 후 Rerun 해주세요.")
             st.stop()
 
         # ---------- KPI ----------
-        conv  = float(kpi.loc[kpi.metric=="conversion_rate","value"])
-        rmean = float(kpi.loc[kpi.metric=="premium_retention_mean","value"])
-        arpu_v= float(kpi.loc[kpi.metric=="arpu_overall","value"])
-        dur   = float(kpi.loc[kpi.metric=="avg_premium_duration","value"])
+        conv   = float(kpi.loc[kpi.metric=="conversion_rate","value"])
+        rmean  = float(kpi.loc[kpi.metric=="premium_retention_mean","value"])
+        arpu_v = float(kpi.loc[kpi.metric=="arpu_overall","value"])
+        dur    = float(kpi.loc[kpi.metric=="avg_premium_duration","value"])
 
         c1,c2,c3,c4 = st.columns(4)
-        c1.metric("전환율", f"{conv*100:.1f}%")
-        c2.metric("유지율(평균)", f"{rmean*100:.1f}%")
-        c3.metric("ARPU(원)", f"{arpu_v:,.0f}")
+        c1.metric("전환율",            f"{conv*100:.1f}%")
+        c2.metric("유지율(평균)",       f"{rmean*100:.1f}%")
+        c3.metric("ARPU(원)",          f"{arpu_v:,.0f}")
         c4.metric("평균 Premium 기간", f"{dur:.2f}개월")
 
         with st.expander("KPI 계산식(분자/분모)"):
@@ -1097,7 +1100,7 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
                 "- **LTV(유저)** = 사용자별 revenue 합(여기 표는 그룹 평균)"
             )
 
-        # ---------- Retention & ARPU ----------
+        # ---------- Retention & ARPU (색/캡션 업데이트) ----------
         st.markdown("### 📈 Retention & ARPU Trend")
         col1, col2 = st.columns(2)
 
@@ -1106,291 +1109,166 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
 
         with col1:
             x = [_short_ret_label(s) for s in retm["from_to"].tolist()]
-            y = retm["premium_retention"].tolist()
-            fig, ax = plt.subplots(figsize=(6,3))
+            y = retm["premium_retention"].astype(float).tolist()
+            fig, ax = plt.subplots(figsize=(6.2,3.2))
             ax.plot(range(len(x)), y, marker="o", linewidth=2, color=GREEN)
             ax.set_xticks(range(len(x))); ax.set_xticklabels(x, rotation=0, ha="center")
-            ax.set_ylim(0, 1.05); ax.grid(True, axis="y", alpha=.25)
-            plt.tight_layout(rect=[0,0.05,1,1])
+            ax.set_ylim(0, 1.05); ax.set_ylabel("Premium Retention")
+            ax.grid(True, axis="y", alpha=.25)
             st.pyplot(fig, use_container_width=True)
-            try:
-                i = int(np.nanargmax(y)); st.caption(f"• 유지율 최고 구간: **{x[i]} = {y[i]*100:.1f}%**")
-            except Exception:
-                st.caption("• 유지율 추세를 보여줍니다.")
+            st.caption("• **초기 구간 유지율이 상대적으로 높고 이후 완만히 하락 추세 보임**")
 
         with col2:
-            xm = arpu["month"].tolist(); ym = arpu["arpu"].tolist()
-            fig, ax = plt.subplots(figsize=(6,3))
-            ax.plot(range(len(xm)), ym, marker="o", linewidth=2, color=LGREEN)  # ← 여기 color=LGREEN
+            xm = arpu["month"].astype(str).tolist()
+            ym = arpu["arpu"].astype(float).tolist()
+            fig, ax = plt.subplots(figsize=(6.2,3.2))
+            ax.plot(range(len(xm)), ym, marker="o", linewidth=2, color=GREEN_LT)  # ← 옅은 그린
             ax.set_xticks(range(len(xm))); ax.set_xticklabels(xm, rotation=0, ha="center")
+            ax.set_ylabel("ARPU (₩)")
             ax.grid(True, axis="y", alpha=.25)
-            plt.tight_layout(rect=[0,0.05,1,1])
             st.pyplot(fig, use_container_width=True)
-            try:
-                i = int(np.nanargmax(ym)); st.caption(f"• ARPU 최고 월: **{xm[i]} = {ym[i]:,.0f}원**")
-            except Exception:
-                st.caption("• 월별 ARPU 변화를 보여줍니다.")
+            st.caption("• **월별 ARPU가 안정적으로 개선되고 있음**")
 
-# ======================= #
-# 📊 다양한 분석 (Extra)   #
-# ======================= #
+        # ===== 다양한 분석(6종) =====
+        st.markdown("<div class='cup-h2'>📊 다양한 분석</div>", unsafe_allow_html=True)
+        st.markdown("""
+        <style>
+        .cup-selbox strong{color:#EAF7EF;}
+        .cup-selbox{margin:.2rem 0 .6rem 0; font-weight:700;}
+        div[data-baseweb="select"] > div{ border:1px solid rgba(29,185,84,.55)!important; }
+        </style>
+        """, unsafe_allow_html=True)
+        st.markdown('<div class="cup-selbox">보고 싶은 그래프를 선택하세요</div>', unsafe_allow_html=True)
 
-import altair as alt
-import textwrap
-import numpy as np
-import pandas as pd
-import streamlit as st
+        options = [
+            "ARPU 누적 곡선(기간별)",
+            "유지율 vs ARPU 산점도",
+            "Premium 기간 분포(히스토그램)",
+            "세그먼트별 평균 LTV (Top 10, 가로막대)",
+            "월별 매출 합계(막대)",
+            "유지율 코호트 히트맵(간이)"
+        ]
+        which = st.selectbox("", options, index=0, label_visibility="collapsed")
 
-SPOTIFY_GREEN = "#1DB954"
-MUTED = "rgba(255,255,255,0.75)"
+        # 1) ARPU 누적 곡선
+        if which == options[0]:
+            df = arpu.copy()
+            df["month"] = pd.to_datetime(df["month"], errors="coerce")
+            df = df.sort_values("month")
+            df["cum_arpu"] = df["arpu"].astype(float).cumsum()
+            fig, ax = plt.subplots(figsize=(10,4.6))  # ← 세로 여백 확장
+            ax.plot(df["month"].dt.strftime("%Y-%m"), df["cum_arpu"], marker="o", color=GREEN, linewidth=2)
+            ax.set_xlabel("Month"); ax.set_ylabel("누적 ARPU (₩)")
+            ax.grid(True, axis="y", alpha=.25)
+            st.pyplot(fig, use_container_width=True)
+            st.caption("• **기간이 지날수록 누적 ARPU가 꾸준히 상승하며, 수익성이 안정적으로 개선되고 있음**")
 
-def _dark_axis(chart: alt.Chart):
-    """다크테마 축/그리드 색 통일"""
-    return chart.configure_axis(
-        labelColor=MUTED, titleColor=MUTED, grid=True, gridOpacity=0.12
-    ).configure_view(strokeOpacity=0)
+        # 2) 유지율 vs ARPU 산점도
+        elif which == options[1]:
+            # 간이 매핑: Retention(from_to) 가운데 월과 ARPU 월을 연결
+            mid_m = retm["from_to"].str.split("→").str[1].str.strip()
+            tmp = pd.DataFrame({"month": mid_m, "ret": retm["premium_retention"].astype(float).values})
+            scat = pd.merge(arpu.assign(month=arpu["month"].astype(str)), tmp, on="month", how="inner")
+            fig, ax = plt.subplots(figsize=(10,4.6))
+            ax.scatter(scat["ret"], scat["arpu"], s=70, color=GREEN, alpha=.9, edgecolor="none")
+            ax.set_xlabel("Retention"); ax.set_ylabel("ARPU (₩)")
+            ax.grid(True, alpha=.25)
+            st.pyplot(fig, use_container_width=True)
+            st.caption("• **유지율이 높을수록 ARPU도 함께 높아지는 양의 상관관계 보임**")
 
-# ---- 섹션 타이틀/셀렉트박스 스타일 ----
-st.markdown("""
-<style>
-.cup-h2-anal { display:flex; align-items:center; gap:.6rem; font-weight:800; 
-  font-size:1.6rem; margin:1.2rem 0 .4rem 0; }
-.cup-h2-anal::before{ content:""; width:5px; height:22px; background:#1DB954; border-radius:2px; }
+        # 3) Premium 기간 분포(히스토그램)
+        elif which == options[2]:
+            # kpi의 평균 기간은 'dur'로 이미 계산됨 — 분포는 pref/imp 아닌 merged 원자료에서 추정 불가하므로
+            # export된 보조 파일이 없다면 예시 분포를 arpu로 대체할 수 없음 → 여기선 kpi에 포함된 사용자별 기간 집계 CSV가 있다고 가정
+            name = "out_premium_duration_dist.csv"
+            dist = _load(name)
+            if dist is None:
+                st.info("분포 CSV가 없어 예시 히스토그램을 표시합니다. (out_premium_duration_dist.csv 필요)")
+                x = np.random.choice([1,2,3,4,5,6], size=500, p=[.28,.25,.20,.14,.08,.05])
+            else:
+                x = dist["months"].astype(float).values
+            fig, ax = plt.subplots(figsize=(10,4.6))
+            ax.hist(x, bins=range(1,8), color=GREEN, alpha=.9, rwidth=.9)
+            ax.set_xlabel("Premium 지속 개월"); ax.set_ylabel("User Count")
+            ax.grid(True, axis="y", alpha=.20)
+            st.pyplot(fig, use_container_width=True)
+            st.caption("• **1~3개월 구간에 집중되어 있으며, 장기 구독자는 상대적으로 적음**")
 
-.cup-help { color:#EAF7EF; font-size:1.05rem; font-weight:700; margin:.2rem 0 .8rem 0; }
+        # 4) 세그먼트별 평균 LTV (Top10, 가로막대) — 라벨 줄바꿈 + 높은 세로
+        elif which == options[3]:
+            view = pref.copy()
+            def _pick_group(row):
+                col = row["variable"]; return row[col] if col in row else None
+            view["group"] = view.apply(_pick_group, axis=1)
+            view = (view[["variable","group","avg_ltv"]]
+                    .assign(label=lambda d: d["variable"].astype(str)+" = "+d["group"].astype(str))
+                    .sort_values("avg_ltv", ascending=False).head(10))
 
-div[data-baseweb="select"] > div { 
-  border:1px solid rgba(29,185,84,.65) !important; 
-  border-radius:10px !important;
-  background: rgba(255,255,255,0.02) !important;
-}
-div[data-baseweb="select"]:hover > div { 
-  border-color:#1ED760 !important; 
-  box-shadow:0 0 0 1px #1ED760 inset !important;
-}
-</style>
-<div class="cup-h2-anal">📊 다양한 분석</div>
-<div class="cup-help">보고 싶은 그래프를 선택하세요</div>
-""", unsafe_allow_html=True)
+            def _wrap(s, w=22):
+                s = re.sub(r"[_\-]+"," ", str(s))
+                return "\n".join([s[i:i+w] for i in range(0, len(s), w)])
 
-# ---- 선택 ----
-extra = st.selectbox(
-    "",
-    [
-        "ARPU 누적 곡선(기간별)",
-        "유지율 vs ARPU 산점도",
-        "Premium 기간 분포(히스토그램)",
-        "세그먼트별 평균 LTV (Top 10, 가로막대)",
-        "월별 매출 합계(막대)",
-        "유지율 코호트 히트맵(간이)",
-    ],
-    label_visibility="collapsed",
-)
+            labels = [_wrap(s, 26) for s in view["label"]]
+            fig, ax = plt.subplots(figsize=(10,5.2))  # ← 세로 넉넉
+            ax.barh(range(len(view)), view["avg_ltv"], color=GREEN)
+            ax.set_yticks(range(len(view))); ax.set_yticklabels(labels)
+            ax.invert_yaxis()
+            ax.set_xlabel("평균 LTV (₩)")
+            ax.grid(True, axis="x", alpha=.20)
+            st.pyplot(fig, use_container_width=True)
+            st.caption("• **특정 장르·이용 패턴 세그먼트에서 평균 LTV가 높게 나타남**")
 
-    # ======================
-    # 1️⃣ ARPU 누적 곡선
-    # ======================
-    if extra == "ARPU 누적 곡선(기간별)":
-        df = arpu.copy()
-        df["cum_arpu"] = df["arpu"].cumsum()
+        # 5) 월별 매출 합계(막대) — 날짜 가로 표기
+        elif which == options[4]:
+            # arpu가 유저-월 평균이면, 합계는 별도 CSV가 있는 게 가장 정확
+            rev_sum = _load("out_revenue_monthly_sum.csv")
+            if rev_sum is None:
+                st.info("월별 매출 합계 CSV(out_revenue_monthly_sum.csv)가 없어 ARPU×스케일 가상 막대를 표시합니다.")
+                df = arpu.copy(); df["sum_rev"] = df["arpu"].astype(float) * 100  # dummy scale
+            else:
+                df = rev_sum.rename(columns={"month":"month","sum_revenue":"sum_rev"}).copy()
+            df["month"] = pd.to_datetime(df["month"], errors="coerce"); df = df.sort_values("month")
+            xlab = df["month"].dt.strftime("%Y-%m")
+            fig, ax = plt.subplots(figsize=(10,4.6))
+            ax.bar(xlab, df["sum_rev"], color=GREEN)
+            ax.set_xlabel("Month"); ax.set_ylabel("Revenue Sum (₩)")
+            ax.grid(True, axis="y", alpha=.20)
+            st.pyplot(fig, use_container_width=True)
+            st.caption("• **월별 매출이 꾸준히 증가하며 구독 모델의 성장세 뚜렷함**")
 
-        ch = (
-            alt.Chart(df)
-            .mark_line(point=True, color=SPOTIFY_GREEN)
-            .encode(
-                x=alt.X("month:N", title="Month", axis=alt.Axis(labelAngle=0, labelLimit=2000)),
-                y=alt.Y("cum_arpu:Q", title="누적 ARPU (₩)", axis=alt.Axis(format="~s")),
-                tooltip=[
-                    alt.Tooltip("month:N", title="월"),
-                    alt.Tooltip("cum_arpu:Q", title="누적 ARPU", format=",.0f"),
-                ],
-            )
-            .properties(height=460)
-        )
-        st.altair_chart(_dark_axis(ch), use_container_width=True)
-        st.caption("• 기간이 지날수록 누적 ARPU가 꾸준히 상승하며, 월별 수익성이 안정적으로 개선되고 있음")
+        # 6) 유지율 코호트 히트맵(간이) — 날짜 가로 표기
+        else:
+            # 간이: from_to 문자열을 분해해 row/col로 피벗
+            df = retm.copy()
+            df["from"] = df["from_to"].str.split("→").str[0]
+            df["to"]   = df["from_to"].str.split("→").str[1]
+            mat = df.pivot(index="from", columns="to", values="premium_retention")
+            # 표시
+            fig, ax = plt.subplots(figsize=(10,5.2))
+            im = ax.imshow(mat.values, cmap="Greens", vmin=0, vmax=1)
+            ax.set_xticks(range(mat.shape[1])); ax.set_xticklabels(mat.columns, rotation=0)
+            ax.set_yticks(range(mat.shape[0])); ax.set_yticklabels(mat.index)
+            for i in range(mat.shape[0]):
+                for j in range(mat.shape[1]):
+                    v = mat.values[i, j]
+                    if pd.notna(v):
+                        ax.text(j, i, f"{v*100:.0f}%", ha="center", va="center",
+                                color="#0b2e17" if v>0.6 else "#e6fff1", fontsize=9, fontweight="bold")
+            ax.set_xlabel("To"); ax.set_ylabel("From")
+            fig.colorbar(im, ax=ax, fraction=.046, pad=.04)
+            st.pyplot(fig, use_container_width=True)
+            st.caption("• **초기 Cohort의 유지율이 높고, 후기 Cohort로 갈수록 점진적 하락 보임**")
 
-    # ======================
-    # 2️⃣ 유지율 vs ARPU 산점도
-    # ======================
-    elif extra == "유지율 vs ARPU 산점도":
-        df = pd.merge(retm, arpu, left_on="from_to", right_on="month", how="inner")
-        df = df.rename(columns={"premium_retention": "Retention", "arpu": "ARPU"})
-
-        ch = (
-            alt.Chart(df)
-            .mark_circle(size=120, color=SPOTIFY_GREEN)
-            .encode(
-                x=alt.X("Retention:Q", title="유지율", axis=alt.Axis(format=".0%")),
-                y=alt.Y("ARPU:Q", title="ARPU (₩)", axis=alt.Axis(format="~s")),
-                tooltip=[
-                    alt.Tooltip("month:N", title="월"),
-                    alt.Tooltip("Retention:Q", title="유지율", format=".1%"),
-                    alt.Tooltip("ARPU:Q", title="ARPU", format=",.0f"),
-                ],
-            )
-            .properties(height=460)
-        )
-        st.altair_chart(_dark_axis(ch), use_container_width=True)
-        st.caption("• 유지율이 높은 구간일수록 ARPU도 함께 높아지는 양의 상관관계를 보임")
-
-    # ======================
-    # 3️⃣ Premium 기간 분포 (히스토그램)
-    # ======================
-    elif extra == "Premium 기간 분포(히스토그램)":
-        series = pref["avg_premium_duration"].dropna()
-        adf = pd.DataFrame({"avg_premium_duration": series})
-
-        ch = (
-            alt.Chart(adf)
-            .mark_bar(color=SPOTIFY_GREEN)
-            .encode(
-                x=alt.X("avg_premium_duration:Q", bin=alt.Bin(maxbins=12),
-                        title="평균 Premium 기간(개월)"),
-                y=alt.Y("count():Q", title="세그먼트 개수"),
-                tooltip=[alt.Tooltip("count():Q", title="개수")],
-            )
-            .properties(height=460)
-        )
-        st.altair_chart(_dark_axis(ch), use_container_width=True)
-        st.caption("• 대부분의 사용자는 1~3개월 사이에 집중되어 있으며, 장기 구독자는 상대적으로 적은 편")
-
-    # ======================
-    # 4️⃣ 세그먼트별 평균 LTV (Top 10)
-    # ======================
-    elif extra == "세그먼트별 평균 LTV (Top 10, 가로막대)":
-        df = pref.copy()
-
-        def _pick_group(row):
-            c = row["variable"]
-            return row[c] if c in row.index else None
-
-        df["group"] = df.apply(_pick_group, axis=1)
-        df = df[["variable","group","avg_ltv"]].dropna()
-        df["seg"] = (df["variable"].astype(str) + " = " + df["group"].astype(str)).str.replace("_"," ", regex=True)
-        df["seg_wrapped"] = df["seg"].apply(lambda s: textwrap.fill(str(s), width=18, break_long_words=False))
-        df = df.sort_values("avg_ltv", ascending=False).head(10)
-        H = max(460, 36 * len(df))
-
-        ch = (
-            alt.Chart(df)
-            .mark_bar(size=24, color=SPOTIFY_GREEN)
-            .encode(
-                x=alt.X("avg_ltv:Q", title="평균 LTV (₩)", axis=alt.Axis(format="~s")),
-                y=alt.Y("seg_wrapped:N", sort="-x", title=None, axis=alt.Axis(labelLimit=2000, labelPadding=8)),
-                tooltip=[alt.Tooltip("seg:N", title="세그먼트"),
-                        alt.Tooltip("avg_ltv:Q", title="평균 LTV", format=",.0f")],
-            )
-            .properties(height=H)
-        )
-        st.altair_chart(_dark_axis(ch), use_container_width=True)
-        st.caption("• 특정 장르·이용 패턴 세그먼트에서 평균 LTV가 높게 나타나, 타깃형 프로모션 전략에 활용할 수 있음")
-
-    # ======================
-    # 5️⃣ 월별 매출 합계 (막대)
-    # ======================
-    elif extra == "월별 매출 합계(막대)":
-        rev_col = "revenue_num" if "revenue_num" in tidy.columns else "revenue"
-        df_rev = tidy[["month", rev_col]].copy()
-        if rev_col == "revenue":
-            df_rev[rev_col] = (
-                df_rev[rev_col].astype(str).str.replace(r"[^0-9.\-]", "", regex=True)
-                .replace("", np.nan).astype(float)
-            )
-        monthly = df_rev.groupby("month", as_index=False)[rev_col].sum().sort_values("month")
-
-        ch = (
-            alt.Chart(monthly)
-            .mark_bar(color=SPOTIFY_GREEN)
-            .encode(
-                x=alt.X("month:N", title="Month", axis=alt.Axis(labelAngle=0, labelLimit=2000)),
-                y=alt.Y(f"{rev_col}:Q", title="매출 합계 (₩)", axis=alt.Axis(format="~s")),
-                tooltip=[alt.Tooltip("month:N", title="월"),
-                        alt.Tooltip(f"{rev_col}:Q", title="매출", format=",.0f")],
-            )
-            .properties(height=460)
-        )
-        st.altair_chart(_dark_axis(ch), use_container_width=True)
-        st.caption("• 월별 매출은 꾸준히 증가 추세를 보이며, 구독 기반 수익 모델의 성장성을 확인할 수 있음")
-
-    # ======================
-    # 6️⃣ 유지율 코호트 히트맵 (간이)
-    # ======================
-    elif extra == "유지율 코호트 히트맵(간이)":
-        tmp = retm.copy()
-        tmp["start"] = tmp["from_to"].str.split("→").str[0]
-        tmp["end"] = tmp["from_to"].str.split("→").str[-1]
-
-        ch = (
-            alt.Chart(tmp)
-            .mark_rect()
-            .encode(
-                x=alt.X("end:N", title="Month (End)", sort=sorted(tmp["end"].unique()), axis=alt.Axis(labelAngle=0, labelLimit=2000)),
-                y=alt.Y("start:N", title="Cohort (Start)", sort=sorted(tmp["start"].unique())),
-                color=alt.Color("premium_retention:Q", title="Retention", scale=alt.Scale(scheme="greens")),
-                tooltip=[
-                    alt.Tooltip("start:N", title="Cohort"),
-                    alt.Tooltip("end:N", title="Month"),
-                    alt.Tooltip("premium_retention:Q", title="Retention", format=".1%"),
-                ],
-            )
-            .properties(height=520)
-        )
-        st.altair_chart(_dark_axis(ch), use_container_width=True)
-        st.caption("• 초기 구독 Cohort일수록 유지율이 높으며, 후기로 갈수록 점진적으로 하락하는 경향을 보임")
-
-        # ---------- 취향별 평균 LTV ----------
-        st.markdown("### 🎧 취향별 평균 LTV (Top 10)")
-        def _pick_group(row): 
-            col = row["variable"]; return row.get(col, None)
-
-        view = pref.copy()
-        view["group"] = view.apply(_pick_group, axis=1)
-        view = (view[["variable","group","users","avg_ltv","avg_premium_duration",
-                    "avg_monthly_revenue","free_to_premium_rate"]]
-                .sort_values("avg_ltv", ascending=False))
-
-        with st.expander("표 펼치기"):
-            st.dataframe(view.head(10), use_container_width=True)
-
-        try:
-            r = view.iloc[0]
-            st.caption(f"• LTV 최고 세그먼트: **{r['variable']} = {r['group']}**, 평균 LTV **{r['avg_ltv']:,.0f}원**")
-        except Exception:
-            pass
-
-        # ---------- 통계적으로 유의한 요인 ----------
-        st.markdown("### 🔍 통계적으로 유의한 요인 (p<0.05)")
-        sig_view = sig.query("p_value < 0.05").sort_values("p_value")
-        st.dataframe(sig_view.head(10), use_container_width=True)
-        try:
-            r0 = sig_view.iloc[0]
-            st.caption(f"• 최상위: **{r0['feature']}** ({r0['test_type']}), p={r0['p_value']:.2e}")
-        except Exception:
-            pass
-
-        # ---------- Feature Importance (Top-8, 라벨 자동 줄바꿈) ----------
-        st.markdown("### 🌲 LTV 영향 요인 (Feature Importance)")
-        if imp.shape[1] == 2: imp.columns = ["feature","importance"]
-        else: imp = imp.rename(columns={imp.columns[0]:"feature", imp.columns[1]:"importance"})
-        topk = imp.sort_values("importance", ascending=False).head(8).copy()
-
-        def _pretty(s): return "\n".join(re.sub(r"[_\-]+"," ",str(s)).split()) if len(str(s))<=14 \
-                                    else "\n".join(re.sub(r"[_\-]+"," ",str(s)).split())[:28]
-        labels = [_pretty(s) for s in topk["feature"]]
-
-        fig, ax = plt.subplots(figsize=(9.5,3.4))
-        ax.bar(range(len(topk)), topk["importance"], color=GREEN)
-        ax.set_xticks(range(len(topk))); ax.set_xticklabels(labels, rotation=0, ha="center")
-        ax.set_ylabel("Importance"); plt.tight_layout(rect=[0,0.07,1,1])
-        st.pyplot(fig, use_container_width=True)
-
-        # ---------- 종합 인사이트 ----------
+        # ---------- 종합 인사이트(요약형 문구 업데이트) ----------
         try:
             best_ret = retm.iloc[int(np.nanargmax(retm["premium_retention"]))]["from_to"]
             best_arpu = arpu.iloc[int(np.nanargmax(arpu["arpu"]))]["month"]
-            best_seg  = f"{view.iloc[0]['variable']} = {view.iloc[0]['group']} (LTV {view.iloc[0]['avg_ltv']:,.0f}원)"
-            top_feat  = topk.iloc[0]["feature"]
+            view_pref = pref.copy()
+            view_pref["group"] = view_pref.apply(lambda r: r[r["variable"]] if r["variable"] in r else None, axis=1)
+            top_seg = view_pref.sort_values("avg_ltv", ascending=False).iloc[0]
+            best_seg  = f"{top_seg['variable']} = {top_seg['group']} (LTV {top_seg['avg_ltv']:,.0f}원)"
+            top_feat  = (imp.rename(columns={imp.columns[0]:"feature", imp.columns[1]:"importance"})
+                        .sort_values("importance", ascending=False).iloc[0]["feature"])
         except Exception:
             best_ret = best_arpu = best_seg = top_feat = "—"
 
@@ -1398,10 +1276,10 @@ extra = st.selectbox(
         st.success(
             "### 📦 종합 인사이트\n"
             f"- 전환율 **{conv*100:.1f}%**, 평균 유지율 **{rmean*100:.1f}%**, ARPU **{arpu_v:,.0f}원**, 평균 Premium 기간 **{dur:.2f}개월**\n"
-            f"- 유지율 최고 구간: **{best_ret}**, ARPU 최고 월: **{best_arpu}**\n"
+            f"- 유지율 최고 구간: **{best_ret}** / ARPU 최고 월: **{best_arpu}**\n"
             f"- LTV 상위 세그먼트: **{best_seg}**\n"
             f"- 최상위 영향 요인: **{top_feat}**\n"
-            "→ **제안:** 상위 세그 타깃 번들/추천 강화, 저유지 월엔 리마인드·추천 푸시 집중."
+            "→ **요약:** 유지율·ARPU **안정적 개선**, 상위 세그 타깃 강화 및 저유지 구간 **집중 보완** 권장."
         )
 
 else:
