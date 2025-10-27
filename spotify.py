@@ -550,7 +550,7 @@ if section == "PROJECT OVERVIEW":
                 ‘<span class="brand">스테이 제너레이션</span>’으로 재탄생시키기 위한 작전을 시작했다.
             </p>
 
-            <div class="cup-mission">MISSION CODE · AARRR</div>
+            <div class="cup-mission">MISSION CODE · RARRA</div>
 
             <div class="cup-one-liner-bottom">
                 “Retention is the new acquisition — 남게 만드는 전략이 Spotify Korea의 성장을 결정한다.”
