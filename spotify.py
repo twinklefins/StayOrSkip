@@ -777,7 +777,7 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
         import matplotlib.pyplot as plt
         import streamlit as st
 
-        # === 다크 테마(고정) & 폰트 컬러 세팅 ===
+        # === 다크 테마(고정) ===
         BG_DARK   = "#121212"
         PLOT_DARK = "#191414"
         TICK      = "#CFE3D8"
@@ -792,11 +792,11 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
             "xtick.color":      TICK,
             "ytick.color":      TICK,
             "text.color":       TICK,
-            "grid.color":       "#FFFFFF",  # ← hex로
-            "grid.alpha":       0.07        # ← 투명도는 여기서
+            "grid.color":       "#FFFFFF",  # ← rgba 사용 금지
+            "grid.alpha":       0.07
         })
 
-        # KPI 라벨·값 명도 ↑
+        # KPI 라벨/값 밝기 업
         st.markdown("""
         <style>
         div[data-testid="stMetric"] div[data-testid="stMetricLabel"] p{
@@ -814,8 +814,7 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
         # ---------- 파일 로더 ----------
         def _load(name:str):
             for p in (os.path.join("data", name), name):
-                if os.path.exists(p):
-                    return pd.read_csv(p)
+                if os.path.exists(p): return pd.read_csv(p)
             return None
 
         kpi   = _load("out_revenue_kpis.csv")
@@ -862,55 +861,42 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
 
         # ---------- Retention & ARPU ----------
         st.markdown("### 📈 Retention & ARPU Trend")
-
         col1, col2 = st.columns(2)
 
-        # 보조: 라벨 짧게
-        def short_ret_label(s: str) -> str:
-            # '2023-01→2023-02' → '01→02'
-            if "→" in s and len(s) >= 7:
-                a,b = s.split("→")
-                return f"{a[-2:]}→{b[-2:]}"
-            return s
+        def _short_ret_label(s: str) -> str:
+            return f"{s.split('→')[0][-2:]}→{s.split('→')[-1][-2:]}" if "→" in s else s
 
         with col1:
-            x = [short_ret_label(s) for s in retm["from_to"].tolist()]
+            x = [_short_ret_label(s) for s in retm["from_to"].tolist()]
             y = retm["premium_retention"].tolist()
             fig, ax = plt.subplots(figsize=(6,3))
             ax.plot(range(len(x)), y, marker="o", linewidth=2, color=GREEN)
-            ax.set_xticks(range(len(x)))
-            ax.set_xticklabels(x, rotation=0, ha="center")
-            ax.set_ylim(0, 1.05)
-            ax.grid(True, axis="y", alpha=.25)
-            plt.tight_layout(rect=[0,0.05,1,1])  # 하단 여백 확보
+            ax.set_xticks(range(len(x))); ax.set_xticklabels(x, rotation=0, ha="center")
+            ax.set_ylim(0, 1.05); ax.grid(True, axis="y", alpha=.25)
+            plt.tight_layout(rect=[0,0.05,1,1])
             st.pyplot(fig, use_container_width=True)
             try:
-                i = int(np.nanargmax(y))
-                st.caption(f"• 유지율 최고 구간: **{x[i]} = {y[i]*100:.1f}%**")
+                i = int(np.nanargmax(y)); st.caption(f"• 유지율 최고 구간: **{x[i]} = {y[i]*100:.1f}%**")
             except Exception:
                 st.caption("• 유지율 추세를 보여줍니다.")
 
         with col2:
-            xm = arpu["month"].tolist()
-            ym = arpu["arpu"].tolist()
+            xm = arpu["month"].tolist(); ym = arpu["arpu"].tolist()
             fig, ax = plt.subplots(figsize=(6,3))
             ax.plot(range(len(xm)), ym, marker="o", linewidth=2, color=CYAN)
-            ax.set_xticks(range(len(xm)))
-            ax.set_xticklabels(xm, rotation=0, ha="center")
+            ax.set_xticks(range(len(xm))); ax.set_xticklabels(xm, rotation=0, ha="center")
             ax.grid(True, axis="y", alpha=.25)
             plt.tight_layout(rect=[0,0.05,1,1])
             st.pyplot(fig, use_container_width=True)
             try:
-                i = int(np.nanargmax(ym))
-                st.caption(f"• ARPU 최고 월: **{xm[i]} = {ym[i]:,.0f}원**")
+                i = int(np.nanargmax(ym)); st.caption(f"• ARPU 최고 월: **{xm[i]} = {ym[i]:,.0f}원**")
             except Exception:
                 st.caption("• 월별 ARPU 변화를 보여줍니다.")
 
-        # ---------- 취향별 평균 LTV (Top 10) ----------
+        # ---------- 취향별 평균 LTV ----------
         st.markdown("### 🎧 취향별 평균 LTV (Top 10)")
-        def _pick_group(row):
-            col = row["variable"]
-            return row.get(col, None)
+        def _pick_group(row): 
+            col = row["variable"]; return row.get(col, None)
 
         view = pref.copy()
         view["group"] = view.apply(_pick_group, axis=1)
@@ -922,10 +908,10 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
             st.dataframe(view.head(10), use_container_width=True)
 
         try:
-            top_row = view.iloc[0]
-            st.caption(f"• LTV 최고 세그먼트: **{top_row['variable']} = {top_row['group']}**, 평균 LTV **{top_row['avg_ltv']:,.0f}원**")
+            r = view.iloc[0]
+            st.caption(f"• LTV 최고 세그먼트: **{r['variable']} = {r['group']}**, 평균 LTV **{r['avg_ltv']:,.0f}원**")
         except Exception:
-            st.caption("• 취향별 평균 LTV 상위 그룹을 보여줍니다.")
+            pass
 
         # ---------- 통계적으로 유의한 요인 ----------
         st.markdown("### 🔍 통계적으로 유의한 요인 (p<0.05)")
@@ -937,40 +923,28 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
         except Exception:
             pass
 
-        # ---------- Feature Importance (Top-8 + 라벨 줄이기/회전) ----------
+        # ---------- Feature Importance (Top-8, 라벨 자동 줄바꿈) ----------
         st.markdown("### 🌲 LTV 영향 요인 (Feature Importance)")
-        if imp.shape[1] == 2:
-            imp.columns = ["feature","importance"]
-        else:
-            imp = imp.rename(columns={imp.columns[0]:"feature", imp.columns[1]:"importance"})
+        if imp.shape[1] == 2: imp.columns = ["feature","importance"]
+        else: imp = imp.rename(columns={imp.columns[0]:"feature", imp.columns[1]:"importance"})
         topk = imp.sort_values("importance", ascending=False).head(8).copy()
 
-        # 라벨 가독화(길면 줄바꿈)
-        def pretty_feat(s: str) -> str:
-            s = re.sub(r"[_\-]+", " ", str(s))
-            return "\n".join(textwrap.wrap(s, width=14))  # 2~3줄로 자동 개행
-        labels = [pretty_feat(s) for s in topk["feature"]]
+        def _pretty(s): return "\n".join(re.sub(r"[_\-]+"," ",str(s)).split()) if len(str(s))<=14 \
+                                    else "\n".join(re.sub(r"[_\-]+"," ",str(s)).split())[:28]
+        labels = [_pretty(s) for s in topk["feature"]]
 
         fig, ax = plt.subplots(figsize=(9.5,3.4))
         ax.bar(range(len(topk)), topk["importance"], color=GREEN)
-        ax.set_xticks(range(len(topk)))
-        ax.set_xticklabels(labels, rotation=0, ha="center")
-        ax.set_ylabel("Importance")
-        plt.tight_layout(rect=[0,0.06,1,1])  # 아래 여백 좀 더
+        ax.set_xticks(range(len(topk))); ax.set_xticklabels(labels, rotation=0, ha="center")
+        ax.set_ylabel("Importance"); plt.tight_layout(rect=[0,0.07,1,1])
         st.pyplot(fig, use_container_width=True)
-
-        try:
-            fr, fv = topk.iloc[0]["feature"], topk.iloc[0]["importance"]
-            st.caption(f"• LTV에 가장 큰 영향: **{fr}** (중요도 {fv:.3f})")
-        except Exception:
-            pass
 
         # ---------- 종합 인사이트 ----------
         try:
             best_ret = retm.iloc[int(np.nanargmax(retm["premium_retention"]))]["from_to"]
             best_arpu = arpu.iloc[int(np.nanargmax(arpu["arpu"]))]["month"]
-            best_seg = f"{view.iloc[0]['variable']} = {view.iloc[0]['group']} (LTV {view.iloc[0]['avg_ltv']:,.0f}원)"
-            top_feat = topk.iloc[0]["feature"]
+            best_seg  = f"{view.iloc[0]['variable']} = {view.iloc[0]['group']} (LTV {view.iloc[0]['avg_ltv']:,.0f}원)"
+            top_feat  = topk.iloc[0]["feature"]
         except Exception:
             best_ret = best_arpu = best_seg = top_feat = "—"
 
