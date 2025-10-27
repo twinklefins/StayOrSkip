@@ -989,15 +989,12 @@ elif section == "DATA EXPLORATION":
         ]
     })
 
-    st.dataframe(comp, use_container_width=True, hide_index=True)
-    st.caption("※ 데이터컵밥팀 프로젝트는 ‘Retention-first’ 관점의 RARRA 프레임워크를 채택했습니다.")
-
-elif section == "RARA DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 RARR로
+elif section == "RARA DASHBOARD":   # Retention-first
     st.markdown('<div class="cup-h2">Visual Analytics Dashboard</div>', unsafe_allow_html=True)
     try: tight_top(-36)
     except: pass
 
-    # 🔄 RARA: Retention / Activation / Revenue / Aquisition
+    # 🔄 RARA: Retention / Activation / Revenue / Acquisition
     tabs = st.tabs(["Retention", "Activation", "Revenue", "Acquisition"])
 
     # ---------------- ① Retention ----------------
@@ -1010,9 +1007,7 @@ elif section == "RARA DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 
         st.subheader("Activation")
         st.caption("가입 직후 첫 재생까지의 활성화 지표(예시)")
 
-    # =========================
-    # ③ Revenue (CSV export 기반) — clean reset
-    # =========================
+    # ---------------- ③ Revenue (CSV export 기반) ----------------
     with tabs[2]:
         import os, re, textwrap
         import numpy as np
@@ -1022,8 +1017,8 @@ elif section == "RARA DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 
 
         # --- 색상(다크) ---
         BG_DARK   = "#121212"; PLOT_DARK = "#191414"; TICK = "#CFE3D8"
-        GREEN     = "#1DB954"  # 라인/포인트 초록
-        GREEN_LT  = "#7CE0B8"; CYAN = "#80DEEA"
+        GREEN     = "#1DB954"   # 요청: 라인=초록, 포인트=초록
+        GREEN_LT  = "#7CE0B8"
 
         plt.rcParams.update({
             "figure.facecolor": BG_DARK, "axes.facecolor": PLOT_DARK,
@@ -1080,7 +1075,7 @@ elif section == "RARA DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 
                 "- **LTV(유저)** = 사용자별 revenue 합(여기 표는 그룹 평균)"
             )
 
-        # --- Retention & ARPU Trend (초록 라인+포인트) ---
+        # --- Retention & ARPU Trend (초록 라인 + 초록 포인트) ---
         st.markdown("### 📈 Retention & ARPU Trend")
         col1, col2 = st.columns(2)
 
@@ -1094,7 +1089,7 @@ elif section == "RARA DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 
             ax.plot(range(len(x)), y, marker="o", markersize=6, linewidth=2.2, color=GREEN)
             ax.set_xticks(range(len(x))); ax.set_xticklabels(x, rotation=0, ha="center")
             ax.set_ylim(0, 1.05)
-            ax.set_ylabel("Premium Retention")   # ← 여기가 끊겼던 부분!
+            ax.set_ylabel("Premium Retention")
             ax.grid(True, axis="y", alpha=.25)
             st.pyplot(fig, use_container_width=True)
             try:
@@ -1174,9 +1169,7 @@ elif section == "RARA DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 
 
         st.markdown("---")
 
-        # =========================
-        # 📊 다양한 분석 (선택형)
-        # =========================
+        # --- 다양한 분석(선택형) ---
         st.markdown("### 📊 다양한 분석")
         st.markdown(
             """
