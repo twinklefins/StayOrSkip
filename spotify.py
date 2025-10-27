@@ -805,17 +805,6 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
     with tabs[0]:
         st.subheader("Acquisition (Funnel)")
         st.caption("방문 → 가입 → 첫 재생 → 구독 전환율을 단계별로 비교합니다.")
-        steps = ["visit","signup","first_play","subscribe"]
-        counts = [df_demo.query("event==@s").shape[0] for s in steps]
-        conv = [100] + [round(counts[i]/counts[i-1]*100,1) if counts[i-1] else 0 for i in range(1,len(steps))]
-
-        fig, ax = plt.subplots(figsize=(6,3))
-        ax.plot(steps, conv, marker="o", color="#1DB954")
-        ax.set_ylim(0,105); ax.set_ylabel("Conversion %", color="#CFE3D8")
-        ax.set_facecolor("#191414"); fig.set_facecolor("#121212")
-        ax.tick_params(colors="#CFE3D8")
-        try: sp(fig)
-        except: st.pyplot(fig, use_container_width=True)
 
     # -------------------------------
     # ② Activation (간단 예시: 가입→첫 재생 비율/시간)
