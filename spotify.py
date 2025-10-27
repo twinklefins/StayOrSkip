@@ -792,7 +792,8 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
             "xtick.color":      TICK,
             "ytick.color":      TICK,
             "text.color":       TICK,
-            "grid.color":       "rgba(255,255,255,0.07)"
+            "grid.color":       "#FFFFFF",  # ← hex로
+            "grid.alpha":       0.07        # ← 투명도는 여기서
         })
 
         # KPI 라벨·값 명도 ↑
