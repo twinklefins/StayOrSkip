@@ -468,10 +468,10 @@ if section == "PROJECT OVERVIEW":
             """, unsafe_allow_html=True)
             
     # ---- Dataset (tabs[3]) ----
-        with tabs[3]:
-            # ⚠️ 여기서 새로 함수 만들지 말고, 모듈을 불러 '호출'만 합니다.
-            from sections import revenue   # sections/revenue.py 파일 필요
-            revenue.render()               # ← 이 한 줄이 실제로 화면을 그립니다.
+    with tabs[3]:
+        # ⚠️ 여기서 새로 함수 만들지 말고, 모듈을 불러 '호출'만 합니다.
+        from sections import revenue   # sections/revenue.py 파일 필요
+        revenue.render()               # ← 이 한 줄이 실제로 화면을 그립니다.
         # sections/revenue.py
         import os
         import numpy as np
