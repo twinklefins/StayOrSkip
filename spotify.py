@@ -975,7 +975,7 @@ elif section == "DATA EXPLORATION":
 | **Referral** | 초대/공유율 | 콘텐츠 공유 건수 비율 | share_count / active_users |
 """)
 
-elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 AARR로 변경
+elif section == "RARA DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 AARR로 변경
     st.markdown('<div class="cup-h2">Visual Analytics Dashboard</div>', unsafe_allow_html=True)
     try:
         tight_top(-36)   # 네 앱에 있던 헬퍼 함수면 사용, 없으면 무시
