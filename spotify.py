@@ -968,7 +968,7 @@ elif section == "DATA EXPLORATION":
 
     st.markdown("""
     두 프레임워크 모두 고객 여정을 데이터로 이해하기 위한 대표적 모델입니다.  
-    그러나 접근 방식과 핵심 목표가 다르기 때문에, Spotify처럼 **'유지율(Stickiness)'이 중요한 구독형 서비스**는 RARRA가 더 적합합니다.
+    하지만 접근 방식과 핵심 목표가 다르기 때문에, Spotify처럼 **'유지율(Stickiness)'이 중요한 구독형 서비스**는 RARRA가 더 적합합니다.
     """)
 
     comp = pd.DataFrame({
