@@ -1001,7 +1001,7 @@ elif section == "RARA DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 
     tabs = st.tabs(["Retention", "Activation", "Revenue", "Acquisition"])
 
     # ---------------- ① Retention ----------------
-    with tabs[2]:
+    with tabs[0]:
         st.subheader("Retention")
         st.caption("N-Day/Weekly 커브(예시)")
 
@@ -1013,7 +1013,7 @@ elif section == "RARA DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 
     # =========================
     # ③ Revenue (CSV export 기반) — clean reset
     # =========================
-    with tabs[3]:
+    with tabs[2]:
         import os, re, textwrap
         import numpy as np
         import pandas as pd
@@ -1310,7 +1310,7 @@ elif section == "RARA DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 
         )
 
     # ---------------- ④ Acquisition ----------------
-    with tabs[0]:
+    with tabs[3]:
         st.subheader("Acquisition")
         st.caption("방문 → 가입 → 첫 재생 → 구독 전환율을 단계별로 비교합니다.(예시)")
         
