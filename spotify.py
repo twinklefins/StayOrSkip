@@ -554,7 +554,7 @@ if section == "PROJECT OVERVIEW":
                 <p style="font-size:1.5rem;">🧭</p>
                 <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">RARRA 기반 분석 방향</p>
                 <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
-                Retention → Revenue<br>
+                Retention → Activation → Revenue → Acquisition<br>
                 단계별 핵심 지표 정의<br>
                 데이터 기반 리텐션·LTV 개선 전략 제안
                 </p>
