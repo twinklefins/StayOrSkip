@@ -1201,47 +1201,65 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
 
         elif extra == "Premium 기간 분포(히스토그램)":
             df = pref.copy()
-            # 개별 유저가 아니므로 평균 기간 분포를 보는 용도
             series = df["avg_premium_duration"].dropna()
-            fig, ax = plt.subplots(figsize=(7,3.2))
-            ax.hist(series, bins=10, color=SPOTIFY_GREEN, alpha=0.9, edgecolor=PLOT_DARK)
-            ax.set_facecolor(PLOT_DARK); fig.set_facecolor(BG_DARK)
-            ax.tick_params(colors=TICK_COLOR); ax.yaxis.label.set_color(TICK_COLOR); ax.xaxis.label.set_color(TICK_COLOR)
-            ax.set_xlabel("평균 Premium 기간(개월)"); ax.set_ylabel("세그먼트 개수")
-            st.pyplot(fig, use_container_width=True)
+            adf = pd.DataFrame({"avg_premium_duration": series})
+
+            ch = (
+                alt.Chart(adf)
+                .mark_bar()
+                .encode(
+                    x=alt.X("avg_premium_duration:Q",
+                            bin=alt.Bin(maxbins=12),
+                            title="평균 Premium 기간(개월)"),
+                    y=alt.Y("count():Q", title="세그먼트 개수"),
+                    tooltip=[alt.Tooltip("count():Q", title="개수")]
+                )
+                .properties(height=280)
+                .configure_mark(opacity=0.95, color=SPOTIFY_GREEN)
+            )
+            st.altair_chart(_dark_axis(ch), use_container_width=True)
 
         elif extra == "세그먼트별 평균 LTV (Top 10, 가로막대)":
             df = pref.copy()
-            # 변수명 컬럼을 그룹 라벨로 합치기
+
             def pick_group(row):
                 c = row["variable"]
                 return row[c] if c in row.index else None
+
             df["group"] = df.apply(pick_group, axis=1)
-            df = df[["variable","group","avg_ltv"]].dropna().sort_values("avg_ltv", ascending=False).head(10)
+            df = df[["variable","group","avg_ltv"]].dropna()
             df["seg"] = (df["variable"].astype(str) + " = " + df["group"].astype(str)).str.replace("_"," ")
+
+            # 긴 라벨 줄바꿈(한 줄 14자 기준)
+            import textwrap
+            df["seg_wrapped"] = df["seg"].apply(lambda s: textwrap.fill(s, width=14, break_long_words=False))
+
+            df = df.sort_values("avg_ltv", ascending=False).head(10)
+
             ch = (
                 alt.Chart(df)
                 .mark_bar()
                 .encode(
                     x=alt.X("avg_ltv:Q", title="평균 LTV (₩)", axis=alt.Axis(format="~s")),
-                    y=alt.Y("seg:N", sort="-x", title=None),
-                    tooltip=[alt.Tooltip("seg:N", title="세그먼트"), alt.Tooltip("avg_ltv:Q", title="평균 LTV", format=",.0f")],
+                    y=alt.Y("seg_wrapped:N", sort="-x", title=None),
+                    tooltip=[alt.Tooltip("seg:N", title="세그먼트(전체)"),
+                            alt.Tooltip("avg_ltv:Q", title="평균 LTV", format=",.0f")],
                     color=alt.value(SPOTIFY_GREEN)
                 )
-                .properties(height=280)
+                .properties(height=300)
             )
             st.altair_chart(_dark_axis(ch), use_container_width=True)
 
         elif extra == "월별 매출 합계(막대)":
-            # 기존 tidy의 revenue_num 합을 쓰고 싶을 수 있지만 이 섹션은 CSV 기반이므로 arpu * 사용자수 데이터가 없다면
-            # arpu 자체를 막대로 시각화
             ch = (
                 alt.Chart(arpu)
                 .mark_bar()
                 .encode(
-                    x=alt.X("month:N", title="Month"),
+                    x=alt.X("month:N", title="Month", sort=arpu["month"].tolist(),
+                            axis=alt.Axis(labelAngle=0)),
                     y=alt.Y("arpu:Q", title="ARPU (₩)", axis=alt.Axis(format="~s")),
-                    tooltip=[alt.Tooltip("month:N", title="월"), alt.Tooltip("arpu:Q", title="ARPU", format=",.0f")],
+                    tooltip=[alt.Tooltip("month:N", title="월"),
+                            alt.Tooltip("arpu:Q", title="ARPU", format=",.0f")],
                     color=alt.value(SPOTIFY_GREEN)
                 )
                 .properties(height=280)
@@ -1249,19 +1267,24 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
             st.altair_chart(_dark_axis(ch), use_container_width=True)
 
         elif extra == "유지율 코호트 히트맵(간이)":
-            # from_to: "2023-01→2023-02" 형태라고 가정
             df = retm.copy()
-            split = df["from_to"].astype(str).str.split("→", expand=True)
-            df["from"] = split[0]; df["to"] = split[1]
-            df = df.rename(columns={"premium_retention": "retention"})
+            sp = df["from_to"].astype(str).str.split("→", expand=True)
+            df["from"] = sp[0]; df["to"] = sp[1]
+            df = df.rename(columns={"premium_retention":"retention"})
+
+            # 월 정렬(좌→우) 고정
+            months = sorted(set(df["from"]).union(set(df["to"])))
             ch = (
                 alt.Chart(df)
                 .mark_rect()
                 .encode(
-                    x=alt.X("to:N", title="To Month"),
-                    y=alt.Y("from:N", title="From Month"),
-                    color=alt.Color("retention:Q", title="Retention", scale=alt.Scale(domain=[0,1], scheme="greens")),
-                    tooltip=["from","to",alt.Tooltip("retention:Q", format=".1%")]
+                    x=alt.X("to:N", title="To Month", sort=months, axis=alt.Axis(labelAngle=0)),
+                    y=alt.Y("from:N", title="From Month", sort=months),
+                    color=alt.Color("retention:Q", title="Retention",
+                                    scale=alt.Scale(domain=[0,1], scheme="greens")),
+                    tooltip=[alt.Tooltip("from:N", title="From"),
+                            alt.Tooltip("to:N", title="To"),
+                            alt.Tooltip("retention:Q", title="Retention", format=".1%")]
                 )
                 .properties(height=280)
             )
