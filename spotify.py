@@ -369,7 +369,7 @@ if section == "PROJECT OVERVIEW":
           <p class="cup-team-line"><span class="cup-team-name">이유주</span><span class="cup-team-role">데이터 스토리텔링 & 대시보드 디자인</span></p>
           <p class="cup-team-line"><span class="cup-team-name">김채린</span><span class="cup-team-role">데이터 정제 및 파생 변수 설계</span></p>
           <p class="cup-team-line"><span class="cup-team-name">서별</span><span class="cup-team-role">데이터 수집 및 탐색 과정 지원</span></p>
-          <p class="cup-team-line">-> 데이터셋 변경 이슈로 AARR 개별 분석 진행</span></p> 
+          <p class="cup-team-line">-> 데이터셋 변경 이슈로 개별 분석 진행</span></p> 
         </div>
         """, unsafe_allow_html=True)
 
@@ -772,22 +772,144 @@ if section == "PROJECT OVERVIEW":
 
 elif section == "DATA EXPLORATION":
     tabs = st.tabs(["Cleaning", "EDA", "Metrics Definition"])
+
+    # ─────────────── 🧼 ① Data Cleaning ───────────────
     with tabs[0]:
-        st.markdown('<div class="cup-h2">Data Cleaning & Preprocessing</div>', unsafe_allow_html=True); tight_top(-36)
-        st.markdown('<div class="cup-card">결측/이상치 처리, 타입 정규화, 세션 집계, 파생변수 생성 기준을 명시합니다.</div>', unsafe_allow_html=True)
-    with tabs[1]:
-        st.markdown('<div class="cup-h2">Exploratory Data Analysis (EDA)</div>', unsafe_allow_html=True); tight_top(-36)
-        st.markdown('<div class="cup-card">채널별 유입 분포, 활동량 분포, 이탈 여부에 따른 차이를 탐색합니다.</div>', unsafe_allow_html=True)
-    with tabs[2]:
-        st.markdown('<div class="cup-h2">AARRR Metrics Definition</div>', unsafe_allow_html=True); tight_top(-36)
+        section_title("Data Cleaning & Preprocessing")
+        tight_top(-36)
+
         st.markdown("""
-| Stage | Metric (예시) | 계산 개념 |
-|---|---|---|
-| Acquisition | 신규 유저 수 | 특정 기간 내 최초 가입 수 |
-| Activation | 첫 재생 완료율 | first_play / signup |
-| Retention | N-day 유지율 | 기준일 대비 N일 후 복귀 비율 |
-| Revenue | ARPU/LTV | 매출 / 활성 사용자 수, 누적 기여 |
-| Referral | 초대/공유율 | 공유 건수 / 활성 사용자 수 |
+        <div class="cup-card">
+        결측치, 이상치, 문자열 컬럼 정규화 과정을 통해 분석 가능한 형태로 정제합니다.<br><br>
+        주요 처리 단계:
+        <ul>
+            <li>문자형 매출(`₩`, `,`, `원`) 제거 → 숫자형 변환</li>
+            <li>이상치(0 또는 음수 매출) 제거</li>
+            <li>카테고리형 변수(Label Encoding 또는 Dummy화)</li>
+            <li>날짜형 변수(`month`, `timestamp`) 파싱 및 월 단위 정렬</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+        vgap(12)
+        # 결측치 현황
+        section_title("Missing Values Overview", "결측치 비율 상위 10개 컬럼")
+        na = tidy.isna().sum().sort_values(ascending=False)
+        na_top = (na / len(tidy) * 100).head(10).reset_index()
+        na_top.columns = ["column", "missing_rate(%)"]
+
+        ch_na = (
+            alt.Chart(na_top)
+            .mark_bar(color="#1DB954")
+            .encode(
+                x=alt.X("missing_rate(%):Q", title="Missing (%)"),
+                y=alt.Y("column:N", sort="-x", title=None),
+                tooltip=["column", "missing_rate(%)"]
+            )
+            .properties(height=280)
+        )
+        st.altair_chart(ch_na, use_container_width=True)
+        st.caption("• 주요 결측 컬럼은 인코딩/평균 대체 후 분석에 반영합니다.")
+
+    # ─────────────── 🔎 ② Exploratory Data Analysis ───────────────
+    with tabs[1]:
+        section_title("Exploratory Data Analysis (EDA)")
+        tight_top(-36)
+        st.markdown("""
+        <div class="cup-card">
+        유저 분포, 구독 요금제 비율, 청취 기기 및 시간대 등 주요 변수를 시각화하여 트렌드를 탐색합니다.
+        </div>
+        """, unsafe_allow_html=True)
+
+        # 1️⃣ 요금제별 유저 비중
+        section_title("User Distribution by Subscription Plan", "Free vs Premium 비중")
+        plan_col = "subscription_plan" if "subscription_plan" in tidy.columns else \
+                   ("spotify_subscription_plan" if "spotify_subscription_plan" in tidy.columns else None)
+        if plan_col:
+            plan_count = tidy[plan_col].value_counts().reset_index()
+            plan_count.columns = ["plan", "users"]
+            pie = (
+                alt.Chart(plan_count)
+                .mark_arc(innerRadius=60)
+                .encode(
+                    theta=alt.Theta("users:Q"),
+                    color=alt.Color("plan:N", scale=alt.Scale(scheme="greens"), legend=None),
+                    tooltip=["plan", "users"]
+                )
+                .properties(height=280)
+            )
+            st.altair_chart(pie, use_container_width=True)
+            st.caption("• Premium 사용자가 Free 대비 높은 비중을 차지함.")
+        else:
+            st.info("요금제 컬럼을 찾지 못했습니다.")
+
+        # 2️⃣ 청취 기기별 분포
+        section_title("Listening Device Preference", "주 청취 기기 상위 5개")
+        if "spotify_listening_device" in tidy.columns:
+            dev = tidy["spotify_listening_device"].value_counts().head(5).reset_index()
+            dev.columns = ["device", "count"]
+            bar = (
+                alt.Chart(dev)
+                .mark_bar(color="#1DB954")
+                .encode(
+                    x=alt.X("count:Q", title="Users"),
+                    y=alt.Y("device:N", sort="-x", title=None),
+                    tooltip=["device", "count"]
+                )
+                .properties(height=260)
+            )
+            st.altair_chart(bar, use_container_width=True)
+            st.caption("• 데스크톱/스피커 사용량이 모바일보다 다소 높게 나타남.")
+        else:
+            st.info("청취 기기 컬럼이 존재하지 않습니다.")
+
+        # 3️⃣ 청취 시간대별 분포
+        section_title("Listening Time Slot Distribution", "시간대별 음악 청취 비율")
+        if "music_time_slot" in tidy.columns:
+            time_cnt = tidy["music_time_slot"].value_counts().reset_index()
+            time_cnt.columns = ["time_slot", "users"]
+            line = (
+                alt.Chart(time_cnt)
+                .mark_line(point=True, color="#80DEEA")
+                .encode(
+                    x=alt.X("time_slot:N", sort=None, title=None),
+                    y=alt.Y("users:Q", title="User Count"),
+                    tooltip=["time_slot", "users"]
+                )
+                .properties(height=260)
+            )
+            st.altair_chart(line, use_container_width=True)
+            st.caption("• 출퇴근 시간대(오전·저녁)에 청취 비율이 가장 높음.")
+        else:
+            st.info("청취 시간대 관련 컬럼이 없습니다.")
+
+        # 종합 인사이트
+        st.markdown("---")
+        st.success("""
+        ### 📦 EDA Summary Insight
+        - Premium 비중이 전체의 절반 이상이며, Free → Premium 전환 여지가 큼  
+        - 스피커·데스크톱 사용자층이 충성도가 높아 보임  
+        - 청취 시간대는 출퇴근 시간대가 집중 구간으로 리텐션 전략 타깃 가능
+        """)
+
+    # ─────────────── 🧮 ③ Metrics Definition ───────────────
+    with tabs[2]:
+        section_title("AARRR Metrics Definition")
+        tight_top(-36)
+        st.markdown("""
+        <div class="cup-card">
+        프로젝트에서 사용하는 주요 AARRR 지표를 명확히 정의합니다.
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+| Stage | Metric | Definition | Formula |
+|:---|:---|:---|:---|
+| **Acquisition** | 신규 가입자 수 | 특정 기간 내 첫 가입자 | COUNT(signup) |
+| **Activation** | 첫 재생 완료율 | 가입 후 첫 재생 수행자 비율 | first_play / signup |
+| **Retention** | 유지율 | 기준일 대비 N일 후 복귀 비율 | retained_users / base_users |
+| **Revenue** | ARPU / LTV | 매출 / 활성 사용자 수 | SUM(revenue)/active_users |
+| **Referral** | 초대/공유율 | 콘텐츠 공유 건수 비율 | share_count / active_users |
 """)
 
 elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 AARR로 변경
