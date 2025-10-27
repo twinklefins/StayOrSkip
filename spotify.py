@@ -992,7 +992,7 @@ elif section == "DATA EXPLORATION":
     st.dataframe(comp, use_container_width=True, hide_index=True)
     st.caption("※ 데이터컵밥팀 프로젝트는 ‘Retention-first’ 관점의 RARRA 프레임워크를 채택했습니다.")
 
-elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 AARR로
+elif section == "RARR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 AARR로
     st.markdown('<div class="cup-h2">Visual Analytics Dashboard</div>', unsafe_allow_html=True)
     try: tight_top(-36)
     except: pass
