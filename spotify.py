@@ -1,20 +1,16 @@
 # =============================
-# 🎵 Stay or Skip — Main Streamlit App (CSV-ready, minimal patch)
+# 🎨 Dark Mode — Global Theme (final, drop-in)
 # =============================
 import streamlit as st
+st.set_page_config(page_title="Stay or Skip 🎧", page_icon="🎧", layout="wide")  # ← 반드시 최상단!
+
+# ---- Common imports (전역에서 쓰는 것들) ----
+import altair as alt
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter
 from pathlib import Path
-import base64
-import os
-import re
-import altair as alt  # ★ 인터랙티브 차트용
-
-# =============================
-# 🎨 Dark Mode — Global Theme (safe, idempotent)
-# =============================
+import base64, os, re
 
 # ---- Colors (Dark) ----
 BG_DARK   = "#121212"   # page background
@@ -25,37 +21,42 @@ GREEN     = "#1DB954"   # Spotify Green
 MINT      = "#7CE0B8"   # light green for lines
 CYAN      = "#80DEEA"   # cyan accent
 GRID_CLR  = "#FFFFFF"
-GRID_ALPHA= 0.07        # ← 예전 GRID_A 대체
+GRID_ALPHA= 0.07        # (⚠️ 과거 GRID_A → 이 값으로 통일)
 
 # 호환용(이전 코드 잔재 대비)
 SPOTIFY_GREEN = GREEN
 SPOTIFY_MINT  = MINT
 
-# ---- Streamlit base colors (page + sidebar) ----
-import streamlit as st
+# ---- Streamlit CSS (dark fixed) ----
 st.markdown(f"""
 <style>
 :root {{
-  --bg:{BG_DARK}; --panel:{PANEL}; --text:{TEXT}; --muted:{MUTED};
-  --brand:{GREEN};
+  --bg:{BG_DARK}; --panel:{PANEL}; --text:{TEXT}; --muted:{MUTED}; --brand:{GREEN};
 }}
 html, body, .stApp,[data-testid="stAppViewContainer"], [data-testid="stMain"]{{
   background:{BG_DARK}!important; color:{TEXT}!important;
 }}
 section[data-testid="stSidebar"]{{ background:{PANEL}!important; color:{TEXT}!important; }}
+
 /* KPI: 라벨/값 가독성 업 */
 div[data-testid="stMetric"] div[data-testid="stMetricLabel"] p{{ color:#EAF7EF!important; font-weight:700!important; }}
 div[data-testid="stMetric"] div[data-testid="stMetricValue"]{{ color:{GREEN}!important; font-weight:800!important; }}
-/* 공통 selectbox 강조 */
+
+/* 공통 selectbox 강조(테두리 그린) */
 .cu-select .stSelectbox>div>div{{ border:1px solid rgba(29,185,84,.65)!important; border-radius:8px; }}
-/* 섹션 타이틀(그래프 섹션과 동일 톤) */
+
+/* 섹션 타이틀 */
 .cu-h2{{ display:flex; align-items:center; gap:.6rem; font-weight:800; font-size:1.25rem; margin:.2rem 0 .8rem 0; }}
 .cu-h2::before{{ content:""; width:4px; height:20px; background:{GREEN}; border-radius:2px; }}
 </style>
 """, unsafe_allow_html=True)
 
 # ---- Matplotlib (dark-safe) ----
-import matplotlib.pyplot as plt
+try:
+    plt.rcParams["font.family"] = ["Apple SD Gothic Neo","Malgun Gothic","Noto Sans CJK KR","NanumGothic","DejaVu Sans"]
+except Exception:
+    pass
+
 plt.rcParams.update({
     "figure.facecolor": BG_DARK,
     "axes.facecolor":   PANEL,
@@ -64,24 +65,21 @@ plt.rcParams.update({
     "xtick.color":      MUTED,
     "ytick.color":      MUTED,
     "text.color":       MUTED,
-    "grid.color":       GRID_CLR,     # rgba 문자열 금지 → 색상 + alpha 분리
+    "grid.color":       GRID_CLR,
     "grid.alpha":       GRID_ALPHA,
-    "axes.grid":        True
+    "axes.grid":        True,
+    "axes.unicode_minus": False,
 })
 
 # ---- Altair (dark-safe) ----
-import altair as alt
-
 def _alt_dark():
     return {
         "config": {
             "background": BG_DARK,
             "view": {"stroke": "transparent"},
             "axis": {
-                "labelColor": MUTED,
-                "titleColor": MUTED,
-                "gridColor": GRID_CLR,
-                "gridOpacity": GRID_ALPHA,
+                "labelColor": MUTED, "titleColor": MUTED,
+                "gridColor": GRID_CLR, "gridOpacity": GRID_ALPHA,
                 "tickColor": MUTED
             },
             "legend": {"labelColor": MUTED, "titleColor": MUTED},
@@ -95,14 +93,10 @@ except Exception:
     pass
 alt.themes.enable("cup_dark")
 
-# Altair 기본 여백/폰트/패널 보정
-def _base_alt(chart, height=420):
-    return (
-        chart.properties(height=height)
-        .configure_title(color=TEXT)
-        .configure_view(stroke="transparent")
-    )
-
+# Altair 공통 래퍼
+def _base_alt(chart, height=460):
+    return chart.properties(height=height).configure_title(color=TEXT).configure_view(stroke="transparent")
+    
 # ---------- App config ----------
 st.set_page_config(page_title="Stay or Skip 🎧", page_icon="🎧", layout="wide")
 
@@ -1043,7 +1037,7 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
             "ytick.color":      TICK,
             "text.color":       TICK,
             "grid.color":       "#ffffff",
-            "grid.alpha":       GRID_A,
+            "grid.alpha":       GRID_ALPHA,
             "font.family":      "DejaVu Sans",   # 서버 공용 폰트(한글 호환)
             "axes.unicode_minus": False
         })
@@ -1122,7 +1116,7 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
             x = [_short_ret_label(s) for s in retm["from_to"].tolist()]
             y = retm["premium_retention"].astype(float).tolist()
             fig, ax = plt.subplots(figsize=(6.2,3.2))
-            ax.plot(range(len(x)), y, marker="o", linewidth=2, color=GREEN)
+            ax.plot(range(len(x)), y, marker="o", linewidth=2, color=MINT)
             ax.set_xticks(range(len(x))); ax.set_xticklabels(x, rotation=0, ha="center")
             ax.set_ylim(0, 1.05); ax.set_ylabel("Premium Retention")
             ax.grid(True, axis="y", alpha=.25)
@@ -1244,12 +1238,9 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
                 .encode(
                     x=alt.X("month:N", title="Month", axis=alt.Axis(labelAngle=0, labelLimit=1000)),
                     y=alt.Y("cum_arpu:Q", title="누적 ARPU (₩)", axis=alt.Axis(format="~s")),
-                    tooltip=[
-                        alt.Tooltip("month:N", title="월"),
-                        alt.Tooltip("cum_arpu:Q", title="누적 ARPU", format=",.0f")
-                    ],
+                    tooltip=[alt.Tooltip("month:N", title="월"), alt.Tooltip("cum_arpu:Q", title="누적 ARPU", format=",.0f")],
                 )
-                .properties(height=H)
+                .properties(height=chart_h)
             )
             st.altair_chart(_base_alt(ch), use_container_width=True)
             st.caption("• 누적 ARPU는 장기 수익 성장 정도를 보여줌 — **완만한 우상향이면 안정적 성장**")
