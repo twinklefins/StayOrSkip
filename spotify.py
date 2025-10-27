@@ -992,31 +992,26 @@ elif section == "DATA EXPLORATION":
     st.dataframe(comp, use_container_width=True, hide_index=True)
     st.caption("※ 데이터컵밥팀 프로젝트는 ‘Retention-first’ 관점의 RARRA 프레임워크를 채택했습니다.")
 
-elif section == "RARR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 AARR로
+elif section == "RARA DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 RARR로
     st.markdown('<div class="cup-h2">Visual Analytics Dashboard</div>', unsafe_allow_html=True)
     try: tight_top(-36)
     except: pass
 
-    # 🔄 AARR: Acquisition / Activation / Retention / Revenue
-    tabs = st.tabs(["Acquisition", "Activation", "Retention", "Revenue"])
+    # 🔄 RARA: Retention / Activation / Revenue / Aquisition
+    tabs = st.tabs(["Retention", "Activation", "Revenue", "Acquisition"])
 
-    # ---------------- ① Acquisition ----------------
-    with tabs[0]:
-        st.subheader("Acquisition")
-        st.caption("방문 → 가입 → 첫 재생 → 구독 전환율을 단계별로 비교합니다.(예시)")
+    # ---------------- ① Retention ----------------
+    with tabs[2]:
+        st.subheader("Retention")
+        st.caption("N-Day/Weekly 커브(예시)")
 
     # ---------------- ② Activation ----------------
     with tabs[1]:
         st.subheader("Activation")
         st.caption("가입 직후 첫 재생까지의 활성화 지표(예시)")
 
-    # ---------------- ③ Retention ----------------
-    with tabs[2]:
-        st.subheader("Retention")
-        st.caption("N-Day/Weekly 커브(예시)")
-
     # =========================
-    # ④ Revenue (CSV export 기반) — clean reset
+    # ③ Revenue (CSV export 기반) — clean reset
     # =========================
     with tabs[3]:
         import os, re, textwrap
@@ -1313,6 +1308,11 @@ elif section == "RARR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만 
             "- **ARPU는 꾸준히 개선** → 상위 세그먼트 공략 유지\n"
             "- **월 매출은 완만한 상승** → 시즌/프로모션으로 추가 상승 여지"
         )
+
+    # ---------------- ④ Acquisition ----------------
+    with tabs[0]:
+        st.subheader("Acquisition")
+        st.caption("방문 → 가입 → 첫 재생 → 구독 전환율을 단계별로 비교합니다.(예시)")
         
 else:
     tabs = st.tabs(["Insights", "Strategy", "Next Steps"])
