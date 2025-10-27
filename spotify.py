@@ -1133,25 +1133,45 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
         st.caption(f"• 가장 유의한 변수: **{sig_view.iloc[0]['feature']}** (p={sig_view.iloc[0]['p_value']:.2e})")
 
         # ---------- Feature Importance ----------
-        st.markdown("### 🌲 LTV 영향 요인 (Feature Importance)")
+        import re, textwrap
+
+        # 컬럼명 정리
         if imp.shape[1] == 2:
             imp.columns = ["feature", "importance"]
         else:
             imp = imp.rename(columns={imp.columns[0]: "feature", imp.columns[1]: "importance"})
 
-        topk = imp.sort_values("importance", ascending=False).head(10)
-        fig, ax = plt.subplots(figsize=(10, 4.2))
-        ax.bar(range(len(topk)), topk["importance"], color=GREEN)
-        ax.set_xticks(range(len(topk)))
-        ax.set_xticklabels(topk["feature"], rotation=0)
-        ax.set_ylabel("Importance", color=MUTED)
-        ax.set_facecolor(PANEL)
-        fig.set_facecolor(BG_DARK)
-        ax.tick_params(colors=MUTED)
-        for s in ax.spines.values():
-            s.set_color(MUTED)
-        st.pyplot(fig, use_container_width=True)
-        st.caption(f"• 가장 큰 영향 요인: **{topk.iloc[0]['feature']}** (중요도 {topk.iloc[0]['importance']:.3f})")
+        # Top-10 + 라벨 줄바꿈
+        topk = imp.sort_values("importance", ascending=False).head(10).copy()
+
+        def _wrap_label(s, width=28):
+            s = re.sub(r"[_\-]+", " ", str(s))  # snake_case → 공백
+            return "<br>".join(textwrap.wrap(s, width))
+
+        topk["feat_wrapped"] = topk["feature"].apply(lambda s: _wrap_label(s, 28))
+
+        # Altair 가로막대 (다크테마/그린)
+        ch_imp = (
+            alt.Chart(topk)
+            .mark_bar(color=GREEN)
+            .encode(
+                x=alt.X("importance:Q", title="Importance"),
+                y=alt.Y("feat_wrapped:N", sort="-x", title=None,
+                        axis=alt.Axis(labelLimit=700)),  # 긴 라벨도 잘림 없이
+                tooltip=[
+                    alt.Tooltip("feature:N", title="Feature"),
+                    alt.Tooltip("importance:Q", title="Importance", format=".3f"),
+                ],
+            )
+            .properties(height=max(460, 36*len(topk)))  # 세로 여백 넉넉히
+        )
+        st.altair_chart(ch_imp, use_container_width=True)
+
+        # 한 줄 요약
+        try:
+            st.caption(f"• 가장 큰 영향 요인: **{topk.iloc[0]['feature']}** (중요도 {topk.iloc[0]['importance']:.3f})")
+        except Exception:
+            pass
 
         # ---------- 다양한 분석 ----------
         st.markdown("### 📊 다양한 분석")
@@ -1249,7 +1269,7 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
             f"- LTV 상위 세그먼트: **{view.iloc[0]['variable']} = {view.iloc[0]['group']}**, 주요 영향 요인: **{topk.iloc[0]['feature']}**\n"
             "→ **제안:** 상위 세그먼트 집중 관리, 저유지 월 대상 리텐션 프로모션 강화."
         )
-        
+
 else:
     tabs = st.tabs(["Insights", "Strategy", "Next Steps"])
     with tabs[0]:
