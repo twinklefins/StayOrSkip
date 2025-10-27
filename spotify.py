@@ -1,5 +1,5 @@
 # =============================
-# 🎵 Stay or Skip — Main Streamlit App (CSV-ready, minimal patch)
+# 🎵 Stay or Skip — Main Streamlit App (CSV-ready, stable)
 # =============================
 import streamlit as st
 import pandas as pd
@@ -10,7 +10,7 @@ from pathlib import Path
 import base64
 import os
 import re
-import altair as alt  # ★ 인터랙티브 차트용
+import altair as alt  # 인터랙티브 차트용
 
 # ---------- App config ----------
 st.set_page_config(page_title="Stay or Skip 🎧", page_icon="🎧", layout="wide")
@@ -21,54 +21,36 @@ RAW_BASE = "https://raw.githubusercontent.com/twinklefins/modu_project/main/Stay
 
 # ---------- 이미지/플롯 하위호환 래퍼 ----------
 def _st_image_compat(data: bytes):
-    """Streamlit 신/구버전 호환 이미지 렌더"""
-    try:
-        st.image(data, use_container_width=True)
-    except TypeError:
-        st.image(data, use_column_width=True)
+    try: st.image(data, use_container_width=True)
+    except TypeError: st.image(data, use_column_width=True)
 
 def sp(fig):
-    """Streamlit 신/구버전 호환 pyplot 렌더"""
-    try:
-        st.pyplot(fig, use_container_width=True)
-    except TypeError:
-        st.pyplot(fig)
+    try: st.pyplot(fig, use_container_width=True)
+    except TypeError: st.pyplot(fig)
 
 def _try_open_bytes(path: Path):
     try:
-        with path.open("rb") as f:
-            return f.read()
+        with path.open("rb") as f: return f.read()
     except Exception:
         return None
 
 def render_image(filename: str):
     """같은 폴더/자주 쓰는 하위폴더 우선, 실패 시 GitHub Raw 폴백(조용히 패스)"""
-    candidates = [
-        BASE / filename,
-        BASE / "assets" / filename,            # ★ 추가
-        BASE / "StayOrSkip" / filename,        # ★ 추가
-    ]
+    candidates = [BASE / filename, BASE / "assets" / filename, BASE / "StayOrSkip" / filename]
     for p in candidates:
         b = _try_open_bytes(p)
-        if b:
-            _st_image_compat(b); return
+        if b: _st_image_compat(b); return
     # GitHub Raw
     try:
         import urllib.request
         url = f"{RAW_BASE}/{filename}"
         with urllib.request.urlopen(url, timeout=6) as resp:
             _st_image_compat(resp.read())
-        return
     except Exception:
-        pass  # 패스
+        pass
 
 def img_to_datauri(filename: str) -> str:
-    """이미지를 data URI로 변환(로컬→실패 시 GitHub Raw 폴백)"""
-    candidates = [
-        BASE / filename,
-        BASE / "assets" / filename,            # ★ 추가
-        BASE / "StayOrSkip" / filename,        # ★ 추가
-    ]
+    candidates = [BASE / filename, BASE / "assets" / filename, BASE / "StayOrSkip" / filename]
     for p in candidates:
         try:
             with p.open("rb") as f:
@@ -76,7 +58,6 @@ def img_to_datauri(filename: str) -> str:
             return f"data:image/png;base64,{b64}"
         except Exception:
             pass
-    # Raw
     try:
         import urllib.request
         url = f"{RAW_BASE}/{filename}"
@@ -84,55 +65,37 @@ def img_to_datauri(filename: str) -> str:
             b64 = base64.b64encode(resp.read()).decode("ascii")
         return f"data:image/png;base64,{b64}"
     except Exception:
-        # 마지막: 빈 투명 픽셀(1x1)
         return "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
 
-# ---------- 간격 유틸 ----------
-def vgap(px: int):
-    st.markdown(f"<div style='height:{px}px;'></div>", unsafe_allow_html=True)
-
-def tight_top(px: int):
-    st.markdown(f"<div style='margin-top:{px}px;'></div>", unsafe_allow_html=True)
-
-# ---------- 소제목/간격 유틸 ----------
+# ---------- 간격/소제목 유틸 ----------
+def vgap(px: int): st.markdown(f"<div style='height:{px}px;'></div>", unsafe_allow_html=True)
+def tight_top(px: int): st.markdown(f"<div style='margin-top:{px}px;'></div>", unsafe_allow_html=True)
 def section_title(text: str, caption: str = "", top_gap: int = 18, bottom_gap: int = 8):
-    """제목 + 작은 설명 + 위아래 여백을 한 번에 출력"""
     vgap(top_gap)
     st.markdown(f"<div class='cup-h2'>{text}</div>", unsafe_allow_html=True)
-    if caption:
-        st.markdown(f"<span style='color:#A7B9AF;font-size:0.92rem;'>{caption}</span>", unsafe_allow_html=True)
+    if caption: st.markdown(f"<span style='color:#A7B9AF;font-size:0.92rem;'>{caption}</span>", unsafe_allow_html=True)
     vgap(bottom_gap)
 
-# ---------- 데이터 로드 (★ CSV 우선, 없으면 기존 XLSX) ----------
+# ---------- 데이터 로드 (CSV 우선, 없으면 XLSX) ----------
 @st.cache_data(show_spinner=False)
 def load_data():
-    """
-    Dataset Overview용: 머지된 엑셀(spotify_merged.xlsx) 우선.
-    없으면 동일 스키마의 CSV를 백업으로 사용.
-    """
     xlsx = BASE / "spotify_merged.xlsx"
     if xlsx.exists():
-        df = pd.read_excel(xlsx)
-        source = "xlsx"
+        df = pd.read_excel(xlsx); source = "xlsx"
     else:
-        # 백업: 같은 파일명이거나 data/raw 경로의 csv
         csv_cands = [BASE / "spotify_merged.csv", BASE / "data" / "raw" / "spotify_merged.csv"]
         hit = next((p for p in csv_cands if p.exists()), None)
         if hit is None:
             raise FileNotFoundError("spotify_merged.xlsx(우선) 또는 spotify_merged.csv 를 찾지 못했습니다.")
-        df = pd.read_csv(hit)
-        source = "csv"
+        df = pd.read_csv(hit); source = "csv"
 
-    # 최소 정리: revenue → 숫자, month → str  (차트/지표 안정화)
+    # 최소 정리: revenue → 숫자, month → str
     if "revenue" in df.columns and "revenue_num" not in df.columns:
         def to_num(x):
             s = re.sub(r"[^0-9.\-]", "", str(x)) if pd.notna(x) else ""
             return float(s) if s else np.nan
         df["revenue_num"] = df["revenue"].map(to_num)
-
-    if "month" in df.columns:
-        df["month"] = df["month"].astype(str)
-
+    if "month" in df.columns: df["month"] = df["month"].astype(str)
     return df, source
 
 try:
@@ -181,46 +144,32 @@ h1{ font-weight:800; letter-spacing:-0.2px; margin:0 0 -0.2rem 0!important; }
 .cup-h2::before{ content:""; display:inline-block; width:4px; height:22px; background:var(--brand); border-radius:2px; }
 .cup-card{ background:transparent; border:1px solid var(--line); border-radius:10px; padding:1rem 1.2rem; margin:1.1rem 0; }
 
-.stTabs [aria-selected="true"], .stTabs [data-baseweb="tab"]:focus, .stTabs [data-baseweb="tab"]:active { background:transparent; box-shadow:none; filter:none; }
 .stTabs [aria-selected="true"] p{ color:var(--brand-2); }
-.stTabs [role="tablist"]{ border-color: rgba(255,255,255,.08); }
 .stTabs [data-baseweb="tab"]{ border-bottom:2px solid transparent; }
 .stTabs [data-baseweb="tab"][aria-selected="true"]{ border-bottom-color:var(--brand); }
 .stTabs [data-baseweb="tab"]:hover{ border-bottom-color:var(--brand-2); }
-.stTabs [data-baseweb="tab-highlight"]{ background:var(--brand)!important; }
-.stTabs [data-baseweb="tab"] p{ color:rgba(255,255,255,0.72)!important; transition:color .15s ease; }
-.stTabs [data-baseweb="tab"]:hover p{ color:var(--brand-2)!important; }
 
 div[data-testid="stMetric"] div[data-testid="stMetricValue"]{ color:var(--brand)!important; font-weight:800!important; font-size:2.2rem!important; line-height:1.1!important; white-space:nowrap!important; }
 div[data-testid="stMetric"] div[data-testid="stMetricLabel"] p{ font-size:1.05rem!important; color:var(--muted)!important; letter-spacing:.2px; }
-.cup-kpi-plus small{ font-size:60%; opacity:.85; vertical-align:super; }
-.kpi-tight [data-testid="stHorizontalBlock"]{ gap:.2rem!important; }
-.kpi-tight [data-testid="column"]{ padding-left:.05rem!important; padding-right:.05rem!important; }
-.kpi-tight [data-testid="stMetric"]{ margin-bottom:0!important; }
 
 .cup-info-box{ background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.10); border-radius:12px; padding:1.6rem 1.8rem; }
 .cup-team-line{ color:rgba(255,255,255,.9); font-size:1.05rem; line-height:2.0; margin:.2rem 0; display:flex; align-items:center; }
 .cup-team-name{ display:inline-block; width:70px; font-weight:600; color:#fff; }
 .cup-team-role{ margin-left:.4rem; }
-.cup-spotify-box{ background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.10); border-radius:12px; padding:1.2rem 1.4rem; }
 
 div[data-testid="stMarkdownContainer"] > p{ margin-bottom:.15rem!important; }
 div[data-testid="stMarkdownContainer"] ul{ margin-top:.05rem!important; margin-bottom:.4rem!important; margin-left:1.1rem!important; padding-left:0!important; }
 .cup-gap-top{ margin-top:1.2rem!important; }
 .cup-gap-y{ height:1.2rem; }
-            
-/* 섹션 제목의 기본 여백을 없애고(=0), 아래쪽만 section_title()로 제어 */
-.cup-h2{ margin:0 0 .9rem 0 !important; }
 
-/* 카드 안 code가 초록색으로 보이지 않게 – 일반 텍스트처럼 */
+.cup-h2{ margin:0 0 .9rem 0 !important; }
 .cup-card code{ color:var(--text)!important; background:transparent!important; padding:0!important; }
 </style>
 """, unsafe_allow_html=True)
 
 # ================= Sidebar =================
 with st.sidebar:
-    st.caption("build: v2025-10-24-spotify-compat-CSV")  # ← 새 코드 적용 확인용
-    # 로고 탐색 강화 (assets/ 포함)
+    st.caption("build: v2025-10-24-spotify-compat-CSV")
     render_image("Cup_3_copy_4.png")
     st.markdown('<hr class="cup-divider">', unsafe_allow_html=True)
     section = st.radio("", ["PROJECT OVERVIEW","DATA EXPLORATION","AARRR DASHBOARD","INSIGHTS & STRATEGY"])
@@ -233,7 +182,7 @@ with st.sidebar:
         '</div>', unsafe_allow_html=True
     )
 
-# ================= Demo data (페이지 데모용 - 그대로) =================
+# ================= Demo data (페이지 데모용) =================
 np.random.seed(42)
 dates = pd.date_range("2025-01-01", periods=60, freq="D")
 df_demo = pd.DataFrame({
@@ -244,9 +193,8 @@ df_demo = pd.DataFrame({
 })
 
 # ================= Title =================
-# ▶︎ 아이콘 경로 보강: assets/ 경로도 자동 탐색
 icon_datauri = img_to_datauri("StayOrSkip/free-icon-play-4604241.png")
-if icon_datauri.endswith("AQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="):  # 폴백픽셀이면 assets로 재시도
+if icon_datauri.endswith("AQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="):
     icon_datauri = img_to_datauri("free-icon-play-4604241.png")
 if icon_datauri.endswith("AQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="):
     icon_datauri = img_to_datauri("assets/free-icon-play-4604241.png")
@@ -270,8 +218,7 @@ if section == "PROJECT OVERVIEW":
 
     # ---- Team Intro ----
     with tabs[0]:
-        section_title("Team Introduction")
-        tight_top(-36)
+        section_title("Team Introduction"); tight_top(-36)
         st.markdown("<style>.cup-logo{ display:block; margin:-1.2rem 0 2.2rem 0; width:35%; max-width:520px; height:auto; }</style>", unsafe_allow_html=True)
         logo_uri = img_to_datauri("Cup_8_copy_2.png")
         if logo_uri.endswith("AQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="):
@@ -290,9 +237,7 @@ if section == "PROJECT OVERVIEW":
 
     # ---- About Spotify ----
     with tabs[1]:
-        section_title("About Spotify")
-        tight_top(-36)
-
+        section_title("About Spotify"); tight_top(-36)
         st.markdown('<div class="kpi-tight">', unsafe_allow_html=True)
         c1, c2, c3 = st.columns(3)
         with c1: st.metric("Monthly Active Users", "696M")
@@ -334,164 +279,246 @@ if section == "PROJECT OVERVIEW":
         """, unsafe_allow_html=True)
         st.caption("*Spotify 공식 회사 정보 기준 요약")
 
-        # ---- Background & Objectives ----
-        with tabs[2]:
-            section_title("Background & Objectives")
-            tight_top(-36)
+    # ---- Background & Objectives ----
+    with tabs[2]:
+        section_title("Background & Objectives"); tight_top(-36)
+        st.markdown("""
+        <div class="cup-spotify-box" style="margin-top:.5rem;">
+          Acquisition → Retention → Revenue 흐름으로 핵심 지표를 정의하고,
+          데이터 기반 리텐션·LTV 개선 전략을 제안합니다.
+        </div>
+        """, unsafe_allow_html=True)
 
-            # ===================== CSS =====================
-            st.markdown("""
-            <style>
-            /* 3열 카드 */
-            .cup-3col {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 1.2rem;
-            }
-            .cup-hover-card {
-                transition: all .25s ease;
-                background: rgba(255,255,255,.03);
-                border: 1px solid rgba(255,255,255,.10);
-                border-radius: 12px;
-                padding: 1.6rem 1.8rem;
-                text-align: center;
-            }
-            .cup-hover-card:hover {
-                background: rgba(255,255,255,.08);
-                border-color: rgba(255,255,255,.18);
-                transform: translateY(-4px);
-                box-shadow: 0 0 15px rgba(29,185,84,.25);
-            }
-
-            /* 🎬 시네마틱 섹션 */
-            .cup-scene {
-                background: rgba(255,255,255,.03);
-                border: 1px solid rgba(255,255,255,.10);
-                border-radius: 12px;
-                padding: 2.2rem 2.6rem;
-                text-align: center;
-                color: #F9FCF9;
-                line-height: 1.9;
-                box-shadow: 0 0 15px rgba(29,185,84,.18);
-                margin-top: 1.4rem;
-            }
-            .cup-scene .brand { color: #1ED760; font-weight: 700; }
-            .cup-scene .em { color: rgba(255,255,255,.85); font-style: italic; }
-            .cup-scene strong { color: #FFF; }
-
-            /* 🎯 미션 코드 */
-            .cup-mission {
-                display: inline-block;
-                margin-top: 1.4rem;
-                padding: .32rem .75rem;
-                border-radius: 6px;
-                border: 1px solid rgba(29,185,84,.45);
-                background: rgba(29,185,84,.08);
-                color: #1ED760;
-                font-weight: 800;
-                font-size: .88rem;
-                letter-spacing: .13em;
-                text-transform: uppercase;
-            }
-
-            /* 💬 엔딩 원라이너 */
-            .cup-one-liner-bottom {
-                font-size: 1.05rem;
-                font-weight: 500;
-                color: #D7E4DC;
-                text-align: center;
-                margin-top: 1.5rem;
-                letter-spacing: .2px;
-            }
-            </style>
-            """, unsafe_allow_html=True)
-
-            # ===================== 카드 섹션 =====================
-            st.markdown("""
-            <div class="cup-3col">
-            <div class="cup-hover-card">
-                <p style="font-size:1.5rem;">📈</p>
-                <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">스트리밍 시장 성장과 도전</p>
-                <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
-                글로벌 시장 급성장, 유입률↑ 이탈률↑<br>
-                높은 경쟁 속 체험 후 구독 전환율 하락<br>
-                콘텐츠 피로도·사용자 유지가 핵심 과제로 부상
-                </p>
-            </div>
-
-            <div class="cup-hover-card">
-                <p style="font-size:1.5rem;">🎧</p>
-                <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">Spotify의 강점</p>
-                <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
-                세계 최대 규모 청취 로그 및 오디오 피처 데이터 보유<br>
-                유저 행동 여정·이탈 패턴 분석에 최적화된 플랫폼
-                </p>
-            </div>
-
-            <div class="cup-hover-card">
-                <p style="font-size:1.5rem;">🧭</p>
-                <p style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">AARRR 기반 분석 방향</p>
-                <p style="color:rgba(255,255,255,.9);font-size:1.05rem;line-height:1.85;">
-                Acquisition → Retention → Revenue<br>
-                단계별 핵심 지표 정의<br>
-                데이터 기반 리텐션·LTV 개선 전략 제안
-                </p>
-            </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-            # ===================== 시네마틱 박스 =====================
-            st.markdown("""
-            <div class="cup-scene">
-            <p style="font-size:1.28rem; margin-bottom:1.1rem;">
-                🎧 <b>“Skip Generation — 스킵은 빠르지만, 이탈은 더 빨랐다.”</b>
-            </p>
-
-            <p style="font-size:1.05rem; color:rgba(255,255,255,.86);">
-                스트리밍 세상의 <span class="em">체험 유목민들</span>.<br>
-                한 곡 듣고 넘기고, 한 달 듣고 떠난 사람들.
-            </p>
-
-            <p style="margin-top:1.1rem; font-size:1.05rem;">
-                <b><span class="brand">Spotify Korea TF</span></b> <strong>데이터컵밥팀</strong>은<br>
-                <span class="brand">유저의 행동 여정</span>을 데이터로 추적해,<br>
-                ‘<span class="brand">스킵 제너레이션</span>’을 이탈로부터 구하고<br>
-                ‘<span class="brand">스테이 제너레이션</span>’으로 재탄생시키기 위한 작전을 시작했다.
-            </p>
-
-            <div class="cup-mission">MISSION CODE · AARRR</div>
-
-            <div class="cup-one-liner-bottom">
-                “Retention is the new acquisition — 남게 만드는 전략이 Spotify Korea의 성장을 결정한다.”
-            </div>
-            </div>
-            """, unsafe_allow_html=True)
-            
     # ---- Dataset (tabs[3]) ----
-    # -------------------------------
-    # ④ Revenue (CSV export 사용, 단일 블록)
-    # -------------------------------
+    with tabs[3]:
+        section_title("Dataset Overview")
+        n_rows, n_cols = tidy.shape
+        month_min = tidy["month"].min() if "month" in tidy.columns else "—"
+        month_max = tidy["month"].max() if "month" in tidy.columns else "—"
+
+        st.markdown(f"""
+        <div class="cup-card" style="margin-top:0.3rem;">
+        <b>데이터셋명</b>: Spotify User Behavior Dataset
+        <b>규모</b>: {n_rows:,}행, {n_cols}개 컬럼<br>
+        <b>주요 컬럼</b>: userid, month, revenue_num, subscription_plan<br>
+        <b>출처</b>: Kaggle 사용자행동 데이터 + 생성 매출 컬럼 병합(merged)
+        </div>
+        """, unsafe_allow_html=True)
+
+        section_title("Full Column List", "머지드 데이터셋의 전체 컬럼 및 설명 요약", top_gap=10, bottom_gap=6)
+        all_columns = [
+            ("userid","사용자 ID"),("month","관측 월"),("revenue","월별 매출(문자)"),("subscription_plan","요금제"),
+            ("timestamp","설문 시각"),("Age","연령대"),("Gender","성별"),("spotify_usage_period","사용 기간"),
+            ("spotify_listening_device","주 청취 기기"),("spotify_subscription_plan","계정 요금제 정보"),
+            ("premium_sub_willingness","프리미엄 의향"),("preffered_premium_plan","선호 프리미엄 플랜"),
+            ("preferred_listening_content","주 청취 콘텐츠"),("fav_music_genre","선호 음악 장르"),
+            ("music_time_slot","청취 시간대"),("music_Influencial_mood","영향 감정"),
+            ("music_lis_frequency","음악 청취 빈도"),("music_expl_method","탐색 방법"),
+            ("music_recc_rating","추천 만족도"),("pod_lis_frequency","팟캐스트 빈도"),
+            ("fav_pod_genre","선호 팟캐스트 장르"),("preffered_pod_format","선호 팟캐스트 형식"),
+            ("pod_host_preference","선호 진행자"),("preffered_pod_duration","선호 길이"),
+            ("pod_variety_satisfaction","다양성 만족도"),
+        ]
+        st.dataframe(pd.DataFrame(all_columns, columns=["컬럼명","설명"]), hide_index=True, use_container_width=True)
+
+        section_title("Dataset Preview", "데이터 상위 5행 미리보기", top_gap=12, bottom_gap=12)
+        st.dataframe(tidy.head(5), use_container_width=True)
+
+        # ===== 인터랙티브 차트들 (Altair) =====
+        brand = "#1DB954"; muted = "rgba(255,255,255,0.65)"
+
+        section_title("Monthly Revenue Trend", "월별 총매출 추이(₩)")
+        rev_col = "revenue_num" if "revenue_num" in tidy.columns else "revenue"
+        df_rev = tidy[["month", rev_col]].copy()
+        if rev_col == "revenue":
+            df_rev[rev_col] = (
+                df_rev[rev_col].astype(str)
+                .str.replace(r"[^0-9.\-]", "", regex=True)
+                .replace("", np.nan).astype(float)
+            )
+        df_rev["month_dt"] = pd.to_datetime(df_rev["month"].astype(str) + "-01", errors="coerce")
+        monthly = df_rev.groupby("month_dt", as_index=False)[rev_col].sum()
+
+        selector = alt.selection_interval(encodings=["x"])
+        line = (
+            alt.Chart(monthly)
+            .mark_line(point=True)
+            .encode(
+                x=alt.X("month_dt:T", axis=alt.Axis(title="Month", labelAngle=0)),
+                y=alt.Y(f"{rev_col}:Q", axis=alt.Axis(title="Revenue (₩)")),
+                tooltip=[alt.Tooltip("month_dt:T", title="Month"),
+                         alt.Tooltip(f"{rev_col}:Q", title="Revenue", format=",.0f")]
+            )
+            .properties(height=320)
+            .interactive()
+            .add_params(selector)
+            .configure_mark(color=brand)
+            .configure_axis(labelColor=muted, titleColor=muted, grid=True, gridOpacity=0.12)
+        )
+        st.altair_chart(line, use_container_width=True)
+
+        section_title("Active Users by Plan — Latest Month", "최신 월 기준 요금제별 고유 사용자 수")
+        if {"month","userid"} <= set(tidy.columns):
+            plan_col = "subscription_plan" if "subscription_plan" in tidy.columns \
+                else ("spotify_subscription_plan" if "spotify_subscription_plan" in tidy.columns else None)
+            if plan_col:
+                latest = tidy["month"].max()
+                users_mix = (
+                    tidy[tidy["month"] == latest]
+                    .groupby(plan_col)["userid"].nunique()
+                    .reset_index(name="users").sort_values("users", ascending=False)
+                )
+                ch_users = (
+                    alt.Chart(users_mix).mark_bar()
+                    .encode(
+                        x=alt.X("users:Q", title="Users (unique)"),
+                        y=alt.Y(f"{plan_col}:N", sort="-x", title=None),
+                        tooltip=[alt.Tooltip(f"{plan_col}:N", title="Plan"),
+                                 alt.Tooltip("users:Q", title="Users", format=",.0f")],
+                        color=alt.value(brand)
+                    ).properties(height=220).configure_axis(labelColor=muted, titleColor=muted)
+                )
+                st.altair_chart(ch_users, use_container_width=True)
+            else:
+                st.info("요금제 컬럼을 찾을 수 없어요.")
+        else:
+            st.info("month / userid 컬럼이 필요합니다.")
+
+        section_title("Revenue by Plan (Total)", "관측 기간 동안 요금제별 총 매출 합계")
+        if 'plan_col' in locals() and plan_col and rev_col in tidy.columns:
+            plan_rev = (
+                tidy.groupby(plan_col, as_index=False)[rev_col]
+                .sum().rename(columns={rev_col:"revenue_sum"}).sort_values("revenue_sum", ascending=False)
+            )
+            ch_rev = (
+                alt.Chart(plan_rev).mark_bar()
+                .encode(
+                    x=alt.X("revenue_sum:Q", title="Revenue (₩)"),
+                    y=alt.Y(f"{plan_col}:N", sort="-x", title=None),
+                    tooltip=[alt.Tooltip(f"{plan_col}:N", title="Plan"),
+                             alt.Tooltip("revenue_sum:Q", title="Revenue", format=",.0f")],
+                    color=alt.value(brand)
+                ).properties(height=220).configure_axis(labelColor=muted, titleColor=muted)
+            )
+            st.altair_chart(ch_rev, use_container_width=True)
+
+        section_title("Data Quality Check", "결측치 현황 및 데이터 정합성")
+        st.markdown(f"""
+        <div class="cup-card">
+        - 병합 기준: <b>userid</b> (매출 ⟷ 원본 설문)<br>
+        - 기간/규모: <b>{month_min} ~ {month_max}</b>, <b>{n_rows:,}행</b><br>
+        - 매출 기준: <b>Premium만 유료매출</b> (Free=0원)
+        </div>
+        """, unsafe_allow_html=True)
+
+        na = tidy.isna().sum().sort_values(ascending=False)
+        na_top = na[na > 0].head(5).reset_index()
+        na_top.columns = ["column", "na_cnt"]
+        if len(na_top) > 0:
+            ch_na = (
+                alt.Chart(na_top).mark_bar()
+                .encode(
+                    x=alt.X("na_cnt:Q", title="Missing Values"),
+                    y=alt.Y("column:N", sort="-x", title=None),
+                    tooltip=[alt.Tooltip("column:N", title="Column"),
+                             alt.Tooltip("na_cnt:Q", title="Missing", format=",.0f")],
+                    color=alt.value("#BFBFBF")
+                ).properties(height=220).configure_axis(labelColor=muted, titleColor=muted)
+            )
+            st.altair_chart(ch_na, use_container_width=True)
+
+        vgap(10)
+        total_rev_val = tidy.get("revenue_num", tidy.get("revenue", 0))
+        try:
+            total_rev = int(np.nansum(pd.to_numeric(total_rev_val, errors="coerce")))
+        except Exception:
+            total_rev = 0
+        st.markdown(f"""
+        <div class="cup-card">
+        ✅ <b>정합성 요약</b><br>
+        - 사용자 수: <b>{tidy['userid'].nunique():,}</b>명 · 기간: <b>{month_min} ~ {month_max}</b><br>
+        - 총 매출(합산): <b>₩{total_rev:,.0f}</b><br>
+        - 분석 가능 상태: <b>양호</b>
+        </div>
+        """, unsafe_allow_html=True)
+        st.success("✅ 데이터 병합 및 품질 검증 완료 — 분석에 활용 가능합니다.")
+
+elif section == "DATA EXPLORATION":
+    tabs = st.tabs(["Cleaning", "EDA", "Metrics Definition"])
+    with tabs[0]:
+        st.markdown('<div class="cup-h2">Data Cleaning & Preprocessing</div>', unsafe_allow_html=True); tight_top(-36)
+        st.markdown('<div class="cup-card">결측/이상치 처리, 타입 정규화, 세션 집계, 파생변수 생성 기준을 명시합니다.</div>', unsafe_allow_html=True)
+    with tabs[1]:
+        st.markdown('<div class="cup-h2">Exploratory Data Analysis (EDA)</div>', unsafe_allow_html=True); tight_top(-36)
+        st.markdown('<div class="cup-card">채널별 유입 분포, 활동량 분포, 이탈 여부에 따른 차이를 탐색합니다.</div>', unsafe_allow_html=True)
+    with tabs[2]:
+        st.markdown('<div class="cup-h2">AARRR Metrics Definition</div>', unsafe_allow_html=True); tight_top(-36)
+        st.markdown("""
+| Stage | Metric (예시) | 계산 개념 |
+|---|---|---|
+| Acquisition | 신규 유저 수 | 특정 기간 내 최초 가입 수 |
+| Activation | 첫 재생 완료율 | first_play / signup |
+| Retention | N-day 유지율 | 기준일 대비 N일 후 복귀 비율 |
+| Revenue | ARPU/LTV | 매출 / 활성 사용자 수, 누적 기여 |
+| Referral | 초대/공유율 | 공유 건수 / 활성 사용자 수 |
+""")
+
+elif section == "AARRR DASHBOARD":
+    st.markdown('<div class="cup-h2">Visual Analytics Dashboard</div>', unsafe_allow_html=True)
+    try: tight_top(-36)
+    except: pass
+
+    tabs = st.tabs(["Acquisition", "Activation", "Retention", "Revenue"])
+
+    # ① Acquisition
+    with tabs[0]:
+        st.subheader("Acquisition (Funnel)")
+        st.caption("방문 → 가입 → 첫 재생 → 구독 전환율을 단계별로 비교합니다.")
+        steps = ["visit","signup","first_play","subscribe"]
+        counts = [df_demo.query("event==@s").shape[0] for s in steps]
+        conv = [100] + [round(counts[i]/counts[i-1]*100,1) if counts[i-1] else 0 for i in range(1,len(steps))]
+        fig, ax = plt.subplots(figsize=(6,3))
+        ax.plot(steps, conv, marker="o", color="#1DB954")
+        ax.set_ylim(0,105); ax.set_ylabel("Conversion %", color="#CFE3D8")
+        ax.set_facecolor("#191414"); fig.set_facecolor("#121212"); ax.tick_params(colors="#CFE3D8")
+        sp(fig)
+
+    # ② Activation
+    with tabs[1]:
+        st.subheader("Activation")
+        st.caption("가입 직후 첫 재생까지의 활성화 지표(예시). 실제 지표로 교체 권장.")
+        daily = df_demo.groupby("date")["event"].count().sort_index()
+        act_like = (daily.rolling(7).mean()/(daily.rolling(7).max()+1e-9)*100).fillna(0)
+        fig, ax = plt.subplots(figsize=(6,3))
+        ax.plot(act_like.index, act_like.values, color="#80DEEA")
+        ax.set_ylabel("Activation-like %", color="#CFE3D8"); ax.set_xlabel("date", color="#CFE3D8")
+        ax.set_facecolor("#191414"); fig.set_facecolor("#121212"); ax.tick_params(colors="#CFE3D8")
+        sp(fig)
+
+    # ③ Retention
+    with tabs[2]:
+        st.subheader("Retention")
+        st.caption("N-Day/Weekly 커브 예시 (실데이터로 교체 권장).")
+        daily = df_demo.groupby("date")["event"].count().sort_index()
+        roll = (daily.rolling(7).mean() / (daily.rolling(7).max()+1e-9) * 100).fillna(0)
+        fig, ax = plt.subplots(figsize=(6,3))
+        ax.plot(roll.index, roll.values, color="#80DEEA")
+        ax.set_ylabel("Retention-like %", color="#CFE3D8"); ax.set_xlabel("date", color="#CFE3D8")
+        ax.set_facecolor("#191414"); fig.set_facecolor("#121212"); ax.tick_params(colors="#CFE3D8")
+        sp(fig)
+
+    # ④ Revenue  —— CSV export 기반(안정/자급자족)
     with tabs[3]:
         st.subheader("Revenue")
         st.caption("CSV(export) 기반 KPI / 트렌드 / 취향별 LTV / 중요 요인")
 
-        # --- 최소 의존(이 블록 내부에서만 사용) ---
-        import os, numpy as np, pandas as pd, matplotlib.pyplot as plt
-
-        SPOTIFY_GREEN = "#1DB954"
-        ACCENT_CYAN   = "#80DEEA"
-        BG_DARK       = "#121212"
-        PLOT_DARK     = "#191414"
-        TICK_COLOR    = "#CFE3D8"
-
+        # 파일 로더 (data/ 우선)
         def _load_csv(name: str):
-            """ /data/name 우선, 루트/name 보조 """
             for p in (os.path.join("data", name), name):
                 if os.path.exists(p):
                     return pd.read_csv(p)
             return None
 
-        # 1) 파일 로드
         kpi  = _load_csv("out_revenue_kpis.csv")
         retm = _load_csv("out_premium_retention_monthly.csv")
         arpu = _load_csv("out_arpu_monthly.csv")
@@ -513,66 +540,61 @@ if section == "PROJECT OVERVIEW":
             st.info("노트북 STEP6에서 /data 폴더로 export 후, 앱을 Rerun 해주세요.")
             st.stop()
 
-        # 2) KPI
+        # KPI
         conv  = float(kpi.loc[kpi.metric=="conversion_rate","value"])
         rmean = float(kpi.loc[kpi.metric=="premium_retention_mean","value"])
         arpu_v= float(kpi.loc[kpi.metric=="arpu_overall","value"])
         dur   = float(kpi.loc[kpi.metric=="avg_premium_duration","value"])
-
         c1,c2,c3,c4 = st.columns(4)
-        c1.metric("전환율",           f"{conv*100:.1f}%")
-        c2.metric("유지율(평균)",      f"{rmean*100:.1f}%")
-        c3.metric("ARPU(원)",         f"{arpu_v:,.0f}")
+        c1.metric("전환율", f"{conv*100:.1f}%")
+        c2.metric("유지율(평균)", f"{rmean*100:.1f}%")
+        c3.metric("ARPU(원)", f"{arpu_v:,.0f}")
         c4.metric("평균 Premium 기간", f"{dur:.2f}개월")
 
         with st.expander("KPI 계산식(분자/분모)"):
             st.markdown(
-                "- **전환율** = 이후 Premium으로 바뀐 사용자 수 / 처음 Free 사용자 수\n"
+                "- **전환율** = Premium으로 전환한 사용자 수 / 최초 Free 사용자 수\n"
                 "- **유지율(A→B)** = A,B 모두 Premium 사용자 수 / A의 Premium 사용자 수\n"
                 "- **ARPU** = revenue 총합 / 전체 유저-월 수\n"
                 "- **평균 Premium 기간** = 사용자별 Premium 개월수 평균\n"
                 "- **LTV(유저)** = 사용자별 revenue 합(표는 그룹 평균)"
             )
 
-        # 3) Retention & ARPU Trend (Matplotlib, 다크 톤)
+        # 트렌드
         st.markdown("### 📈 Retention & ARPU Trend")
         col1, col2 = st.columns(2)
-
-        def _dark_ax(figsize=(6,3)):
-            fig, ax = plt.subplots(figsize=figsize)
-            fig.set_facecolor(BG_DARK); ax.set_facecolor(PLOT_DARK)
-            ax.tick_params(colors=TICK_COLOR)
-            for s in ax.spines.values(): s.set_color(TICK_COLOR)
-            return fig, ax
-
+        # Retention
         with col1:
             x = retm["from_to"].tolist()
-            y = retm["premium_retention"].astype(float).tolist()
-            fig, ax = _dark_ax()
-            ax.plot(range(len(x)), y, marker="o", color=SPOTIFY_GREEN, linewidth=2)
+            y = pd.to_numeric(retm["premium_retention"], errors="coerce").tolist()
+            fig, ax = plt.subplots(figsize=(6,3))
+            ax.plot(range(len(x)), y, marker="o", color="#1DB954", linewidth=2)
             ax.set_xticks(range(len(x))); ax.set_xticklabels(x, rotation=0)
-            ax.set_ylim(0, 1.05)
-            st.pyplot(fig, use_container_width=True)
+            ax.set_ylim(0, 1.05); ax.set_facecolor("#191414"); fig.set_facecolor("#121212")
+            ax.tick_params(colors="#CFE3D8")
+            sp(fig)
             try:
                 best_i = int(np.nanargmax(y))
                 st.caption(f"• 유지율 최고 구간: **{x[best_i]} = {y[best_i]*100:.1f}%**")
             except Exception:
                 st.caption("• 유지율 추세를 보여줍니다.")
-
+        # ARPU
         with col2:
-            x2 = arpu["month"].tolist()
+            x2 = arpu["month"].astype(str).tolist()
             y2 = pd.to_numeric(arpu["arpu"], errors="coerce").tolist()
-            fig, ax = _dark_ax()
-            ax.plot(range(len(x2)), y2, marker="o", color=ACCENT_CYAN, linewidth=2)
+            fig, ax = plt.subplots(figsize=(6,3))
+            ax.plot(range(len(x2)), y2, marker="o", color="#80DEEA", linewidth=2)
             ax.set_xticks(range(len(x2))); ax.set_xticklabels(x2, rotation=0)
-            st.pyplot(fig, use_container_width=True)
+            ax.set_facecolor("#191414"); fig.set_facecolor("#121212")
+            ax.tick_params(colors="#CFE3D8")
+            sp(fig)
             try:
                 best_i = int(np.nanargmax(y2))
                 st.caption(f"• ARPU 최고 월: **{x2[best_i]} = {y2[best_i]:,.0f}원**")
             except Exception:
                 st.caption("• 월별 ARPU 변화를 보여줍니다.")
 
-        # 4) 취향별 평균 LTV
+        # 취향별 평균 LTV
         st.markdown("### 🎧 취향별 평균 LTV")
         def _pick_group(row):
             col = row["variable"]
@@ -580,7 +602,7 @@ if section == "PROJECT OVERVIEW":
         view = pref.copy()
         view["group"] = view.apply(_pick_group, axis=1)
         view = view[["variable","group","users","avg_ltv","avg_premium_duration",
-                    "avg_monthly_revenue","free_to_premium_rate"]].sort_values("avg_ltv", ascending=False)
+                     "avg_monthly_revenue","free_to_premium_rate"]].sort_values("avg_ltv", ascending=False)
 
         with st.expander("Top 10 보기"):
             st.dataframe(view.head(10), use_container_width=True)
@@ -590,7 +612,7 @@ if section == "PROJECT OVERVIEW":
         except Exception:
             st.caption("• 취향별 평균 LTV 상위 그룹을 보여줍니다.")
 
-        # 5) 통계적으로 유의한 요인
+        # 유의 변수
         st.markdown("### 🔍 통계적으로 유의한 요인 (p<0.05)")
         sig_view = sig.copy()
         if "p_value" in sig_view.columns:
@@ -602,18 +624,19 @@ if section == "PROJECT OVERVIEW":
         except Exception:
             st.caption("• p<0.05 변수들이 전환/LTV에 유의미한 차이를 보입니다.")
 
-        # 6) Feature Importance (컬럼명 방어적으로 처리)
+        # Feature Importance
         st.markdown("### 🌲 LTV 영향 요인 (Feature Importance)")
         imp2 = imp.copy()
         if imp2.shape[1] >= 2:
             imp2 = imp2.rename(columns={imp2.columns[0]:"feature", imp2.columns[1]:"importance"})
             imp2["importance"] = pd.to_numeric(imp2["importance"], errors="coerce")
             topk = imp2.sort_values("importance", ascending=False).head(10)
-            fig, ax = _dark_ax((10,3.2))
-            ax.bar(range(len(topk)), topk["importance"], color=SPOTIFY_GREEN)
+            fig, ax = plt.subplots(figsize=(10,3.2))
+            ax.bar(range(len(topk)), topk["importance"], color="#1DB954")
             ax.set_xticks(range(len(topk))); ax.set_xticklabels(topk["feature"], rotation=0)
-            ax.set_ylabel("Importance", color=TICK_COLOR)
-            st.pyplot(fig, use_container_width=True)
+            ax.set_ylabel("Importance", color="#CFE3D8")
+            ax.set_facecolor("#191414"); fig.set_facecolor("#121212"); ax.tick_params(colors="#CFE3D8")
+            sp(fig)
             try:
                 fr, fv = topk.iloc[0]["feature"], topk.iloc[0]["importance"]
                 st.caption(f"• LTV에 가장 큰 영향: **{fr}** (중요도 {fv:.3f})")
@@ -622,15 +645,15 @@ if section == "PROJECT OVERVIEW":
         else:
             st.info("Feature importance 형식이 예상과 달라 그래프를 생략했어요.")
 
-        # 7) 종합 인사이트 박스
+        # 종합 인사이트
         try:
-            best_ret_idx = int(np.nanargmax(retm["premium_retention"].values))
-            best_ret = f"{retm.iloc[best_ret_idx]['from_to']} ({retm.iloc[best_ret_idx]['premium_retention']*100:.1f}%)"
+            best_ret_idx = int(np.nanargmax(pd.to_numeric(retm["premium_retention"], errors="coerce").values))
+            best_ret = f"{retm.iloc[best_ret_idx]['from_to']} ({float(retm.iloc[best_ret_idx]['premium_retention'])*100:.1f}%)"
         except Exception:
             best_ret = "—"
         try:
-            best_arpu_idx = int(np.nanargmax(arpu['arpu'].values))
-            best_arpu = f"{arpu.iloc[best_arpu_idx]['month']} ({arpu.iloc[best_arpu_idx]['arpu']:,.0f}원)"
+            best_arpu_idx = int(np.nanargmax(pd.to_numeric(arpu['arpu'], errors="coerce").values))
+            best_arpu = f"{arpu.iloc[best_arpu_idx]['month']} ({float(arpu.iloc[best_arpu_idx]['arpu']):,.0f}원)"
         except Exception:
             best_arpu = "—"
         try:
@@ -645,7 +668,7 @@ if section == "PROJECT OVERVIEW":
             f"- 전환율 **{conv*100:.1f}%**, 평균 유지율 **{rmean*100:.1f}%**, ARPU **{arpu_v:,.0f}원**, 평균 Premium 기간 **{dur:.2f}개월**\n"
             f"- 유지율 최고 구간: **{best_ret}** / ARPU 최고 월: **{best_arpu}**\n"
             f"- LTV 상위 세그먼트: **{best_seg}**\n"
-            "→ **제안:** 상위 세그 타깃 프로모션(개인화 추천·플랜 번들) + 저유지 구간 집중 리텐션 캠페인."
+            "→ 제안: 상위 세그 타깃 프로모션(개인화 추천·플랜 번들) + 저유지 구간 집중 리텐션 캠페인."
         )
 
 else:
