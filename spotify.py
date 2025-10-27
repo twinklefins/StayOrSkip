@@ -1015,13 +1015,17 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
         import matplotlib.pyplot as plt
         import streamlit as st
 
-        # ===== 다크 테마(고정) & 폰트 =====
-        BG_DARK   = "#121212"
-        PLOT_DARK = "#191414"
-        TICK      = "#EAF7EF"
-        GREEN     = "#1DB954"
-        GREEN_LT  = "#1ED760"  # 라인/포인트용 옅은 그린
-        GRID_A    = 0.15
+        # === 색상 (다크 테마) ===
+        BG_DARK     = "#121212"
+        PLOT_DARK   = "#191414"
+        TICK        = "#CFE3D8"
+        GREEN       = "#1DB954"   # Spotify Green
+        MINT        = "#7CE0B8"   # 옅은 그린(ARPU용)
+        CYAN        = "#80DEEA"
+
+        # 💡호환용 (이전 코드 잔재)
+        SPOTIFY_GREEN = GREEN
+        SPOTIFY_MINT  = MINT
 
         plt.rcParams.update({
             "figure.facecolor": BG_DARK,
@@ -1224,22 +1228,24 @@ elif section == "AARRR DASHBOARD":   # 섹션 이름은 그대로 두고, 탭만
 
         # ---------- ① ARPU 누적 곡선 ----------
         if extra == "ARPU 누적 곡선(기간별)":
-            df = ensure_cols(arpu, num_cols=["arpu"], str_cols=["month"]).dropna(subset=["arpu","month"])
-            if safe_chart(df):
-                df["cum_arpu"] = df["arpu"].cumsum()
-                ch = (
-                    alt.Chart(df)
-                    .mark_line(point=True, color=SPOTIFY_GREEN)
-                    .encode(
-                        x=alt.X("month:N", title="Month", axis=alt.Axis(labelAngle=0, labelLimit=2000)),
-                        y=alt.Y("cum_arpu:Q", title="누적 ARPU (₩)", axis=alt.Axis(format="~s")),
-                        tooltip=[alt.Tooltip("month:N", title="월"),
-                                alt.Tooltip("cum_arpu:Q", title="누적 ARPU", format=",.0f")]
-                    )
-                    .properties(height=chart_h)
+            df = arpu.copy()
+            df["cum_arpu"] = df["arpu"].cumsum()
+
+            ch = (
+                alt.Chart(df)
+                .mark_line(point=alt.OverlayMarkDef(color=MINT, size=80), color=MINT, strokeWidth=3)
+                .encode(
+                    x=alt.X("month:N", title="Month", axis=alt.Axis(labelAngle=0, labelLimit=1000)),
+                    y=alt.Y("cum_arpu:Q", title="누적 ARPU (₩)", axis=alt.Axis(format="~s")),
+                    tooltip=[
+                        alt.Tooltip("month:N", title="월"),
+                        alt.Tooltip("cum_arpu:Q", title="누적 ARPU", format=",.0f")
+                    ],
                 )
-                st.altair_chart(ch, use_container_width=True)
-                st.caption("• ARPU가 **안정적으로 누적 증가**하고 있음.")
+                .properties(height=H)
+            )
+            st.altair_chart(_base_alt(ch), use_container_width=True)
+            st.caption("• 누적 ARPU는 장기 수익 성장 정도를 보여줌 — **완만한 우상향이면 안정적 성장**")
 
         # ---------- ② 유지율 vs ARPU 산점도 ----------
         elif extra == "유지율 vs ARPU 산점도":
